@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="PaddleThroughLychnidos.API/PaddleThroughLychnidos.API.csproj" />
+  <Project Path="PaddleThroughLychnidos.Application/PaddleThroughLychnidos.Application.csproj" />
+  <Project Path="PaddleThroughLychnidos.Domain/PaddleThroughLychnidos.Domain.csproj" />
+  <Project Path="PaddleThroughLychnidos.Infrastructure/PaddleThroughLychnidos.Infrastructure.csproj" />
+</Solution>
