@@ -4,7 +4,11 @@
       "Bash(dotnet --version)",
       "Bash(dotnet new *)",
       "Bash(dotnet sln *)",
-      "Bash(dotnet tool *)"
+      "Bash(dotnet tool *)",
+      "PowerShell(Start-Service -Name 'postgresql-x64-16')",
+      "PowerShell(Get-Service -Name 'postgresql-x64-16')",
+      "Bash(curl -sk -i -X POST https://localhost:7000/api/Categories -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidW5pcXVlX25hbWUiOiJraWtpcyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlJlZ3VsYXJVc2VyIiwiZXhwIjoxNzg2NTQ3MTczLCJpc3MiOiJQYWRkbGVUaHJvdWdoTHljaG5pZG9zIiwiYXVkIjoiUGFkZGxlVGhyb3VnaEx5Y2huaWRvcyJ9.eS6tABbskSRntcbY_MFDxBRbWTozWGLuUW_F_gVfXa8' -H 'Content-Type: application/json' -d '{\"name\":\"Test\",\"iconUrl\":\"http://example.com/icon.png\"}')",
+      "Bash(curl -sk -i -X POST https://localhost:7125/api/Categories -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidW5pcXVlX25hbWUiOiJraWtpcyIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlJlZ3VsYXJVc2VyIiwiZXhwIjoxNzg2NTQ3MTczLCJpc3MiOiJQYWRkbGVUaHJvdWdoTHljaG5pZG9zIiwiYXVkIjoiUGFkZGxlVGhyb3VnaEx5Y2huaWRvcyJ9.eS6tABbskSRntcbY_MFDxBRbWTozWGLuUW_F_gVfXa8' -H 'Content-Type: application/json' -d '{\"name\":\"Test\",\"iconUrl\":\"http://example.com/icon.png\"}')"
     ]
   }
 }

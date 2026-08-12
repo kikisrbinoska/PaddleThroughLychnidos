@@ -19,6 +19,13 @@ namespace PaddleThroughLychnidos.Infrastructure
             services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IShopRepository, ShopRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IRegionRepository, RegionRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IProductVideoRepository, ProductVideoRepository>();
+            services.AddScoped<IShopImageRepository, ShopImageRepository>();
 
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddScoped<IAuthService, AuthService>();
