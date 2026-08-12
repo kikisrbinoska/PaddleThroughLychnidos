@@ -5,7 +5,7 @@ namespace PaddleThroughLychnidos.Application.Abstractions
 {
     public interface IApplicationDbContext
     {
-        DbSet<User> Users { get; }
+        DbSet<PaddleThroughLychnidos.Domain.Entities.User> Users { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

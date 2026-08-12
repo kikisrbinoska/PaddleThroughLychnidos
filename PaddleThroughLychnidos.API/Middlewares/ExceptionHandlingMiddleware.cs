@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using PaddleThroughLychnidos.API;
+using PaddleThroughLychnidos.Domain.Shared;
 
 namespace PaddleThroughLychnidos.API.Middlewares;
 

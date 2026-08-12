@@ -1,4 +1,4 @@
-﻿using PaddleThroughLychnidos.Infrastructure.Data.DataContext;
+using PaddleThroughLychnidos.Infrastructure.Data.DataContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,32 +22,32 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
             _dbSet = dbSet;
         }
 
-        public void Add(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
-            _dbSet.Add(entity);
-            _context.SaveChanges();
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(TEntity entity)
+        public async Task DeleteAsync(TEntity entity)
         {
             _dbSet.Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return _dbSet;
+            return Task.FromResult<IEnumerable<TEntity>>(_dbSet);
         }
 
-        public TEntity? GetById(int id)
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
-            return _dbSet.Find(id);
+            return await _dbSet.FindAsync(id);
         }
 
-        public void Update(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
             _dbSet.Update(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

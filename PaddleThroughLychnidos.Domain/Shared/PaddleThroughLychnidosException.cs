@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace PaddleThroughLychnidos.API
+namespace PaddleThroughLychnidos.Domain.Shared
 {
     public class PaddleThroughLychnidosException : Exception
     {

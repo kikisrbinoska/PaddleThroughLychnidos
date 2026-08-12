@@ -1,4 +1,4 @@
-﻿using PaddleThroughLychnidos.Domain.Entities;
+using PaddleThroughLychnidos.Domain.Entities;
 using PaddleThroughLychnidos.Domain.Repositories;
 using PaddleThroughLychnidos.Infrastructure.Data.DataContext;
 using System;
@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace PaddleThroughLychnidos.Infrastructure.Repositories
 {
@@ -16,20 +17,21 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
         {
         }
 
-        public User? GetByEmail(string email)
+        public async Task<User?> GetByEmailAsync(string email)
         {
-            return _context.Users.Where(u => u.Email == email).FirstOrDefault();
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public User? GetByUsername(string Username)
+        public async Task<User?> GetByUsernameAsync(string username)
         {
-            return _context.Users.Where(u => u.Username == Username).FirstOrDefault();
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        public IEnumerable<User> GetUsersByIds(IEnumerable<int> ids)
+        public async Task<IEnumerable<User>> GetUsersByIdsAsync(IEnumerable<int> ids)
         {
-            return _context.Users
-                .Where(u => ids.Contains(u.Id));
+            return await _context.Users
+                .Where(u => ids.Contains(u.Id))
+                .ToListAsync();
         }
     }
 }

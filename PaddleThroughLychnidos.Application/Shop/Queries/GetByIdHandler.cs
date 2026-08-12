@@ -1,0 +1,63 @@
+using MediatR;
+using PaddleThroughLychnidos.Domain.Repositories;
+using PaddleThroughLychnidos.Domain.Shared;
+using System.Net;
+
+namespace PaddleThroughLychnidos.Application.Shop.Queries
+{
+    public class GetByIdHandler : IRequestHandler<GetByIdRequest, GetByIdResponse>
+    {
+        private readonly IShopRepository _shopRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IRegionRepository _regionRepository;
+        private readonly ICategoryRepository _categoryRepository;
+
+        public GetByIdHandler(
+            IShopRepository shopRepository,
+            IUserRepository userRepository,
+            IRegionRepository regionRepository,
+            ICategoryRepository categoryRepository)
+        {
+            _shopRepository = shopRepository;
+            _userRepository = userRepository;
+            _regionRepository = regionRepository;
+            _categoryRepository = categoryRepository;
+        }
+
+        public async Task<GetByIdResponse> Handle(GetByIdRequest request, CancellationToken cancellationToken)
+        {
+            var shop = await _shopRepository.GetByIdAsync(request.Id);
+            if (shop == null)
+            {
+                throw new PaddleThroughLychnidosException($"Shop with Id {request.Id} not found.", HttpStatusCode.NotFound);
+            }
+
+            var owner = await _userRepository.GetByIdAsync(shop.OwnerId);
+            var region = await _regionRepository.GetByIdAsync(shop.RegionId);
+            var category = await _categoryRepository.GetByIdAsync(shop.CategoryId);
+
+            return new GetByIdResponse
+            {
+                Id = shop.Id,
+                OwnerId = shop.OwnerId,
+                OwnerName = owner?.Name ?? "Unknown",
+                Name = shop.Name,
+                Description = shop.Description,
+                Story = shop.Story,
+                Latitude = shop.Latitude,
+                Longitude = shop.Longitude,
+                Address = shop.Address,
+                RegionId = shop.RegionId,
+                RegionName = region?.Name ?? "Unknown",
+                CategoryId = shop.CategoryId,
+                CategoryName = category?.Name ?? "Unknown",
+                PhoneNumber = shop.PhoneNumber,
+                WhatsappNumber = shop.WhatsappNumber,
+                Email = shop.Email,
+                InstagramHandle = shop.InstagramHandle,
+                IsVerified = shop.IsVerified,
+                OpeningHours = shop.OpeningHours,
+            };
+        }
+    }
+}

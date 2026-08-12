@@ -9,8 +9,8 @@ namespace PaddleThroughLychnidos.Domain.Repositories
 {
     public interface IUserRepository : IRepository<User>
     {
-        public User? GetByEmail(string Email);
-        public User? GetByUsername(string Username);
-        public IEnumerable<User> GetUsersByIds(IEnumerable<int> ids);
+        Task<User?> GetByEmailAsync(string email);
+        Task<User?> GetByUsernameAsync(string username);
+        Task<IEnumerable<User>> GetUsersByIdsAsync(IEnumerable<int> ids);
     }
 }

@@ -8,12 +8,26 @@
 
   <ItemGroup>
     <Folder Include="Abstractions\" />
+    <Folder Include="ProductVideo\Commands\" />
+    <Folder Include="ProductVideo\Queries\" />
+    <Folder Include="Product\Commands\" />
+    <Folder Include="Product\Queries\" />
+    <Folder Include="Region\Comands\" />
+    <Folder Include="Region\Queries\" />
+    <Folder Include="Review\Commands\" />
+    <Folder Include="Review\Queries\" />
+    <Folder Include="ShopImage\Commands\" />
+    <Folder Include="ShopImage\Queries\" />
+    <Folder Include="Shop\Commands\" />
+    <Folder Include="Shop\Queries\" />
+    <Folder Include="User\Commands\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
   </ItemGroup>
 
