@@ -2,15 +2,15 @@ using MediatR;
 using PaddleThroughLychnidos.Domain.DTOs;
 using PaddleThroughLychnidos.Domain.Repositories;
 
-namespace PaddleThroughLychnidos.Application.Shop.Queries
+namespace PaddleThroughLychnidos.Application.Itinerary.Queries
 {
     public class GetPagedHandler : IRequestHandler<GetPagedRequest, GetPagedResponse>
     {
-        private readonly IShopRepository _shopRepository;
+        private readonly IItineraryRepository _itineraryRepository;
 
-        public GetPagedHandler(IShopRepository shopRepository)
+        public GetPagedHandler(IItineraryRepository itineraryRepository)
         {
-            _shopRepository = shopRepository;
+            _itineraryRepository = itineraryRepository;
         }
 
         public async Task<GetPagedResponse> Handle(GetPagedRequest request, CancellationToken cancellationToken)
@@ -18,19 +18,17 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
             var pageNumber = request.PageNumber.GetValueOrDefault(1) < 1 ? 1 : request.PageNumber.GetValueOrDefault(1);
             var pageSize = request.PageSize.GetValueOrDefault(20) < 1 ? 20 : request.PageSize.GetValueOrDefault(20);
 
-            var (count, list) = await _shopRepository.GetPagedAsync(pageNumber, pageSize, request.SearchWord, request.CategoryId, request.RegionId);
+            var (count, list) = await _itineraryRepository.GetPagedAsync(pageNumber, pageSize, request.RegionId);
 
             var items = list
-                .Select(shop => new ShopListItem
+                .Select(itinerary => new ItineraryListDto
                 {
-                    Id = shop.Id,
-                    OwnerId = shop.OwnerId,
-                    Name = shop.Name,
-                    Description = shop.Description,
-                    Address = shop.Address,
-                    RegionId = shop.RegionId,
-                    CategoryId = shop.CategoryId,
-                    IsVerified = shop.IsVerified,
+                    Id = itinerary.Id,
+                    Title = itinerary.Title,
+                    CoverImageUrl = itinerary.CoverImageUrl,
+                    DurationHours = itinerary.DurationHours,
+                    RegionName = itinerary.Region?.Name ?? "Unknown",
+                    Difficulty = itinerary.Difficulty.ToString(),
                 })
                 .ToList();
 

@@ -9,7 +9,7 @@ namespace PaddleThroughLychnidos.Domain.Repositories
 {
     public interface IProductRepository : IRepository<Product>
     {
-        public Task<(int count, List<Product> list)> GetPagedAsync(int? pageNumber, int? pageSize, string? searchWord, string? tag);
+        public Task<(int count, List<Product> list)> GetPagedAsync(int? pageNumber, int? pageSize, string? searchWord, int? shopId, decimal? minPrice, decimal? maxPrice);
         public Task<int> GetTotalNumberAsync();
     }
 }

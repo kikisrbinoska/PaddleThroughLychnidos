@@ -19,5 +19,6 @@ namespace PaddleThroughLychnidos.Domain.Entities
         public DateTime CreatedAt { get; set; }
 
         public ICollection<Shop> Shops { get; set; } = new List<Shop>();
+        public ICollection<TravelPlanItem> TravelPlan { get; set; } = new List<TravelPlanItem>();
     }
 }

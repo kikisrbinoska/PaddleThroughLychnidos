@@ -37,5 +37,6 @@ namespace PaddleThroughLychnidos.Domain.Entities
         public ICollection<ShopImage> Images { get; set; } = new List<ShopImage>();
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<ItineraryStop> ItineraryStops { get; set; } = new List<ItineraryStop>();
     }
 }

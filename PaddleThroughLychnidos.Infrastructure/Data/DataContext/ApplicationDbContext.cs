@@ -15,6 +15,9 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
         public DbSet<Review> Reviews { get; set; } = null!;
         public DbSet<ShopImage> ShopImages { get; set; } = null!;
         public DbSet<ProductVideo> ProductVideos { get; set; } = null!;
+        public DbSet<Itinerary> Itineraries { get; set; } = null!;
+        public DbSet<ItineraryStop> ItineraryStops { get; set; } = null!;
+        public DbSet<TravelPlanItem> TravelPlanItems { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -94,6 +97,57 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
 
                 builder.HasIndex(r => r.ShopId);
                 builder.HasIndex(r => r.UserId);
+            });
+
+            modelBuilder.Entity<Itinerary>(builder =>
+            {
+                builder.Property(i => i.Difficulty).HasConversion<string>();
+
+                builder.HasOne(i => i.Region)
+                    .WithMany()
+                    .HasForeignKey(i => i.RegionId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasIndex(i => i.RegionId);
+            });
+
+            modelBuilder.Entity<ItineraryStop>(builder =>
+            {
+                builder.HasOne(s => s.Itinerary)
+                    .WithMany(i => i.Stops)
+                    .HasForeignKey(s => s.ItineraryId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasOne(s => s.Shop)
+                    .WithMany(sh => sh.ItineraryStops)
+                    .HasForeignKey(s => s.ShopId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasIndex(s => s.ItineraryId);
+                builder.HasIndex(s => s.ShopId);
+                builder.HasIndex(s => new { s.ItineraryId, s.Order }).IsUnique();
+            });
+
+            modelBuilder.Entity<TravelPlanItem>(builder =>
+            {
+                builder.HasOne(t => t.User)
+                    .WithMany(u => u.TravelPlan)
+                    .HasForeignKey(t => t.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasOne(t => t.Shop)
+                    .WithMany()
+                    .HasForeignKey(t => t.ShopId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasOne(t => t.Itinerary)
+                    .WithMany()
+                    .HasForeignKey(t => t.ItineraryId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasIndex(t => t.UserId);
+                builder.HasIndex(t => t.ShopId);
+                builder.HasIndex(t => t.ItineraryId);
             });
 
             base.OnModelCreating(modelBuilder);

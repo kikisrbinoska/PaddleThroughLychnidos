@@ -16,20 +16,31 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
         {
         }
 
-        public async Task<(int count, List<Product> list)> GetPagedAsync(int? pageNumber, int? pageSize, string? searchWord, string? tag)
+        public async Task<(int count, List<Product> list)> GetPagedAsync(int? pageNumber, int? pageSize, string? searchWord, int? shopId, decimal? minPrice, decimal? maxPrice)
         {
             var query = _context.Products.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchWord))
             {
+                var term = searchWord.Trim();
                 query = query.Where(p =>
-                    p.Name.Contains(searchWord) ||
-                    p.Description.Contains(searchWord));
+                    EF.Functions.ILike(p.Name, $"%{term}%") ||
+                    EF.Functions.ILike(p.Description, $"%{term}%"));
             }
 
-            if (!string.IsNullOrWhiteSpace(tag))
+            if (shopId.HasValue)
             {
-                query = query.Where(p => p.Shop.Category.Name == tag);
+                query = query.Where(p => p.ShopId == shopId.Value);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
             }
 
             var count = await query.CountAsync();

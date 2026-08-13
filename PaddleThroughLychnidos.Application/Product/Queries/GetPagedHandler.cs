@@ -15,7 +15,10 @@ namespace PaddleThroughLychnidos.Application.Product.Queries
 
         public async Task<GetPagedResponse> Handle(GetPagedRequest request, CancellationToken cancellationToken)
         {
-            var (count, list) = await _productRepository.GetPagedAsync(request.PageNumber, request.PageSize, request.SearchWord, request.Tag);
+            var pageNumber = request.PageNumber.GetValueOrDefault(1) < 1 ? 1 : request.PageNumber.GetValueOrDefault(1);
+            var pageSize = request.PageSize.GetValueOrDefault(20) < 1 ? 20 : request.PageSize.GetValueOrDefault(20);
+
+            var (count, list) = await _productRepository.GetPagedAsync(pageNumber, pageSize, request.SearchWord, request.ShopId, request.MinPrice, request.MaxPrice);
 
             var items = list
                 .Select(product => new ProductListItem
@@ -29,10 +32,7 @@ namespace PaddleThroughLychnidos.Application.Product.Queries
                 })
                 .ToList();
 
-            var pageSize = request.PageSize;
-            var totalPages = pageSize.HasValue && pageSize.Value > 0
-                ? (int)Math.Ceiling(count / (double)pageSize.Value)
-                : 1;
+            var totalPages = (int)Math.Ceiling(count / (double)pageSize);
 
             return new GetPagedResponse
             {
@@ -40,8 +40,8 @@ namespace PaddleThroughLychnidos.Application.Product.Queries
                 Metadata = new Metadata
                 {
                     TotalCount = count,
-                    PageNumber = request.PageNumber,
-                    PageSize = request.PageSize,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
                     TotalPages = totalPages,
                 },
             };
