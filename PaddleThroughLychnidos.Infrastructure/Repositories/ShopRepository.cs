@@ -18,7 +18,11 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
 
         public async Task<(int count, List<Shop> list)> GetPagedAsync(int? pageNumber, int? pageSize, string? searchWord, int? categoryId, int? regionId)
         {
-            var query = _context.Shops.AsQueryable();
+            var query = _context.Shops
+                .Include(s => s.Region)
+                .Include(s => s.Category)
+                .Include(s => s.Images)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchWord))
             {

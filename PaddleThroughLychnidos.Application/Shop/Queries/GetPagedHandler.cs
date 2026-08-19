@@ -27,10 +27,16 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                     OwnerId = shop.OwnerId,
                     Name = shop.Name,
                     Description = shop.Description,
+                    Latitude = shop.Latitude,
+                    Longitude = shop.Longitude,
                     Address = shop.Address,
                     RegionId = shop.RegionId,
+                    RegionName = shop.Region.Name,
                     CategoryId = shop.CategoryId,
+                    CategoryName = shop.Category.Name,
+                    ImageUrl = shop.Images.Select(i => i.Url).FirstOrDefault() ?? string.Empty,
                     IsVerified = shop.IsVerified,
+                    OpeningHours = shop.OpeningHours,
                 })
                 .ToList();
 

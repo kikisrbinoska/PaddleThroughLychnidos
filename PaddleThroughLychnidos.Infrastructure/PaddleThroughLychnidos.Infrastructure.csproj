@@ -7,7 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\bay.json" Link="Data\DataContext\SeedData\regions\bay.json" />
+    <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\carsija.json" Link="Data\DataContext\SeedData\regions\carsija.json" />
+    <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\krajbrezje.json" Link="Data\DataContext\SeedData\regions\krajbrezje.json" />
+    <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\plaosnik.json" Link="Data\DataContext\SeedData\regions\plaosnik.json" />
+    <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\sv naum.json" Link="Data\DataContext\SeedData\regions\sv naum.json" />
+    <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\varosh.json" Link="Data\DataContext\SeedData\regions\varosh.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Authentication\" />
+    <Folder Include="Data\DataContext\SeedData\regions\" />
     <Folder Include="Migrations\" />
     <Folder Include="DependencyInjection\" />
   </ItemGroup>

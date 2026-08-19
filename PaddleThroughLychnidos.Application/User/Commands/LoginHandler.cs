@@ -32,7 +32,10 @@ namespace PaddleThroughLychnidos.Application.User.Commands
             return new LoginResponse
             {
                 Id = user.Id,
+                Name = user.Name,
                 Username = user.Username,
+                Email = user.Email,
+                Role = user.Role.ToString(),
                 Token = token,
             };
         }
