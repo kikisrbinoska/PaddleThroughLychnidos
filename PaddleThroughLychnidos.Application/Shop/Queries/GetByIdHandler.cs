@@ -48,15 +48,19 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                 Longitude = shop.Longitude,
                 Address = shop.Address,
                 RegionId = shop.RegionId,
-                RegionName = region?.Name ?? "Unknown",
+                RegionName = region?.Name ?? "Unassigned",
                 CategoryId = shop.CategoryId,
                 CategoryName = category?.Name ?? "Unknown",
                 PhoneNumber = shop.PhoneNumber,
                 WhatsappNumber = shop.WhatsappNumber,
                 Email = shop.Email,
                 InstagramHandle = shop.InstagramHandle,
+                Website = shop.Website,
+                Rating = shop.Rating,
+                UserRatingCount = shop.UserRatingCount,
                 IsVerified = shop.IsVerified,
                 OpeningHours = shop.OpeningHours,
+                IsOpenNow = OpenNowCalculator.IsOpenAt(shop.StructuredHoursJson, DateTimeOffset.Now),
             };
         }
     }

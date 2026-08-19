@@ -9,3 +9,4 @@ export * from "./shop";
 export * from "./itineraryStop";
 export * from "./itinerary";
 export * from "./travelPlanItem";
+export * from "./travelPlan";

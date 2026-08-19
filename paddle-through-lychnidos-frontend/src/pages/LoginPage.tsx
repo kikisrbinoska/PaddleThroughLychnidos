@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, type Location } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { getErrorMessage } from "../services/errorMessage";
 import { Button } from "../components/Button";
@@ -15,6 +15,7 @@ interface FormErrors {
 export function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +40,10 @@ export function LoginPage() {
     setIsSubmitting(true);
     try {
       await login({ username: username.trim(), password });
-      navigate("/home");
+      const from = (location.state as { from?: Location })?.from;
+      navigate(from ? `${from.pathname}${from.search}` : "/home", {
+        replace: true,
+      });
     } catch (error) {
       setFormError(getErrorMessage(error, "Invalid username or password"));
     } finally {

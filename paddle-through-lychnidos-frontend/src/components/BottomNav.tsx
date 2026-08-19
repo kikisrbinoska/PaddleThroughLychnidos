@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Home, Map, Route, BookOpen, User } from "lucide-react";
+import { Home, Store, Map, Route, BookOpen, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface NavItem {
@@ -10,6 +10,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: "/home", label: "Home", icon: Home },
+  { to: "/shops", label: "Shops", icon: Store },
   { to: "/map", label: "Map", icon: Map },
   { to: "/itineraries", label: "Itineraries", icon: Route },
   { to: "/learn", label: "Learn", icon: BookOpen },

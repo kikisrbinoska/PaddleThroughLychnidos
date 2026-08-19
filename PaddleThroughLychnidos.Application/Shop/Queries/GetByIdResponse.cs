@@ -19,7 +19,11 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
         public string WhatsappNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string InstagramHandle { get; set; } = string.Empty;
+        public string? Website { get; set; }
+        public decimal? Rating { get; set; }
+        public int? UserRatingCount { get; set; }
         public bool IsVerified { get; set; }
         public string OpeningHours { get; set; } = string.Empty;
+        public bool? IsOpenNow { get; set; }
     }
 }

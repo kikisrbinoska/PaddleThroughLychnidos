@@ -29,6 +29,16 @@ namespace PaddleThroughLychnidos.API.Controllers
             return Ok(shops);
         }
 
+        // GET api/<ShopsController>/open-now
+        [HttpGet("open-now")]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<ShopListItem>>> GetOpenNow([FromQuery] GetOpenNowRequest request)
+        {
+            _logger.LogInformation("Fetching shops open now");
+            var shops = await _mediator.Send(request);
+            return Ok(shops);
+        }
+
         // GET api/<ShopsController>/5
         [HttpGet("{id:int}")]
         [AllowAnonymous]

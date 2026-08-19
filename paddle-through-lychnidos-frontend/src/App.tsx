@@ -4,6 +4,7 @@ import { BottomNav } from "./components/BottomNav";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { HomePage } from "./pages/HomePage";
 import { MapPage } from "./pages/MapPage";
+import { ShopsPage } from "./pages/ShopsPage";
 import { ItinerariesPage } from "./pages/ItinerariesPage";
 import { LearnPage } from "./pages/LearnPage";
 import { ProductsPage } from "./pages/ProductsPage";
@@ -38,6 +39,7 @@ function AppLayout() {
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/map" element={<MapPage />} />
+        <Route path="/shops" element={<ShopsPage />} />
         <Route path="/itineraries" element={<ItinerariesPage />} />
         <Route path="/learn" element={<LearnPage />} />
         <Route path="/products" element={<ProductsPage />} />

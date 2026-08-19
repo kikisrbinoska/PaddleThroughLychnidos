@@ -1,5 +1,5 @@
 import apiClient from "./apiClient";
-import type { ShopDetail, ShopListResponse } from "../types";
+import type { ShopDetail, ShopListItem, ShopListResponse } from "../types";
 
 export interface ShopListParams {
   searchWord?: string;
@@ -16,4 +16,10 @@ export const shopService = {
       .then((res) => res.data),
   getById: (id: number) =>
     apiClient.get<ShopDetail>(`/shops/${id}`).then((res) => res.data),
+  // Shops currently open, based on structured backend hours data. Returns
+  // an empty list until shops have structured hours - not an error.
+  getOpenNow: (limit?: number) =>
+    apiClient
+      .get<ShopListItem[]>("/shops/open-now", { params: { limit } })
+      .then((res) => res.data),
 };

@@ -8,7 +8,6 @@ import { HorizontalScrollRow } from "../components/HorizontalScrollRow";
 import { ShopCard } from "../components/ShopCard";
 import { RegionChip } from "../components/RegionChip";
 import { mockNews } from "../data/mockNews";
-import { mockOpenNowShops } from "../data/mockOpenNowShops";
 
 interface SectionHeaderProps {
   title: string;
@@ -41,16 +40,16 @@ export function HomePage() {
     let cancelled = false;
 
     Promise.all([
-      // No dedicated "featured" flag exists on the backend yet - using
-      // isVerified shops as a stand-in until one is added.
+      // No dedicated "featured" flag exists on the backend yet, and none
+      // of the ~80 imported shops are isVerified yet either - so this just
+      // shows the first page of real shops until a proper featured/highest
+      // rated selection exists.
       shopService.getAll({ pageSize: 10 }),
       regionService.getAll(),
     ])
       .then(([shopsResponse, regionsResponse]) => {
         if (cancelled) return;
-        setFeaturedShops(
-          shopsResponse.items.filter((shop) => shop.isVerified),
-        );
+        setFeaturedShops(shopsResponse.items);
         setRegions(regionsResponse);
       })
       .finally(() => {
@@ -83,13 +82,11 @@ export function HomePage() {
 
       <div className="mt-8 flex flex-col gap-8 px-6">
         <section>
-          <SectionHeader title="Featured Artisans" seeAllTo="/products" />
+          <SectionHeader title="Artisan Shops" seeAllTo="/shops" />
           {isLoading ? (
             <p className="text-sm text-text-secondary">Loading...</p>
           ) : featuredShops.length === 0 ? (
-            <p className="text-sm text-text-secondary">
-              No featured artisans yet.
-            </p>
+            <p className="text-sm text-text-secondary">No shops yet.</p>
           ) : (
             <HorizontalScrollRow>
               {featuredShops.map((shop) => (
@@ -114,21 +111,6 @@ export function HomePage() {
               ))}
             </HorizontalScrollRow>
           )}
-        </section>
-
-        <section>
-          <SectionHeader title="Open Now" />
-          {/*
-            Placeholder section: GET /api/shops has no "open now" filter and
-            Shop.OpeningHours is free-text, not structured data, so this
-            can't be computed reliably yet. Needs either a backend
-            isOpenNow flag or structured opening-hours fields.
-          */}
-          <HorizontalScrollRow>
-            {mockOpenNowShops.map((shop) => (
-              <ShopCard key={shop.id} shop={shop} />
-            ))}
-          </HorizontalScrollRow>
         </section>
 
         <section>

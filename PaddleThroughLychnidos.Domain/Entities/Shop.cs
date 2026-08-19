@@ -38,6 +38,12 @@ namespace PaddleThroughLychnidos.Domain.Entities
         public bool IsVerified { get; set; }
         public string OpeningHours { get; set; } = string.Empty;
 
+        // JSON-serialized List<Shared.WeeklyHoursEntry> - structured
+        // day/open/close data used to compute "open now". Null when no
+        // structured hours are known (e.g. shops imported from Google
+        // Places, which only provided free-text OpeningHours above).
+        public string? StructuredHoursJson { get; set; }
+
         public ICollection<ShopImage> Images { get; set; } = new List<ShopImage>();
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();

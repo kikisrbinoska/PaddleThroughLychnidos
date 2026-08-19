@@ -1,6 +1,7 @@
 using MediatR;
 using PaddleThroughLychnidos.Domain.DTOs;
 using PaddleThroughLychnidos.Domain.Repositories;
+using PaddleThroughLychnidos.Domain.Shared;
 
 namespace PaddleThroughLychnidos.Application.Shop.Queries
 {
@@ -35,8 +36,11 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                     CategoryId = shop.CategoryId,
                     CategoryName = shop.Category.Name,
                     ImageUrl = shop.Images.Select(i => i.Url).FirstOrDefault() ?? string.Empty,
+                    Rating = shop.Rating,
+                    UserRatingCount = shop.UserRatingCount,
                     IsVerified = shop.IsVerified,
                     OpeningHours = shop.OpeningHours,
+                    IsOpenNow = OpenNowCalculator.IsOpenAt(shop.StructuredHoursJson, DateTimeOffset.Now),
                 })
                 .ToList();
 

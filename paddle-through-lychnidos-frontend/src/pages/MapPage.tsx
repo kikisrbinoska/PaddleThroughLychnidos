@@ -11,12 +11,13 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import { SlidersHorizontal } from "lucide-react";
-import { renderToStaticMarkup } from "react-dom/server";
 import { regionService } from "../services/regionService";
 import { categoryService } from "../services/categoryService";
 import { shopService } from "../services/shopService";
 import type { Category, Region, ShopListItem } from "../types";
 import { FilterBottomSheet, type ShopFilters } from "../components/FilterBottomSheet";
+import { CategoryImage } from "../components/CategoryImage";
+import { createShopIcon } from "../utils/shopMarkerIcon";
 import "leaflet/dist/leaflet.css";
 
 // Ohrid town center.
@@ -56,28 +57,18 @@ function parseRegionPolygon(region: Region, colorIndex: number): ParsedRegion | 
   }
 }
 
-function createShopIcon(): L.DivIcon {
-  const html = renderToStaticMarkup(
-    <div
-      style={{
-        width: 28,
-        height: 28,
-        borderRadius: "50% 50% 50% 0",
-        background: "#1570EF",
-        transform: "rotate(-45deg)",
-        border: "2px solid white",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.35)",
-      }}
-    />,
+// Defensive: ShopListItem types latitude/longitude as non-nullable, but
+// that only holds if every backend row was populated correctly. A bad
+// import or manual edit could still produce NaN/undefined at runtime, and
+// Leaflet throws when constructing a Marker with an invalid LatLng -
+// crashing the whole map instead of just omitting one pin.
+function hasValidCoordinates(shop: ShopListItem): boolean {
+  return (
+    typeof shop.latitude === "number" &&
+    typeof shop.longitude === "number" &&
+    Number.isFinite(shop.latitude) &&
+    Number.isFinite(shop.longitude)
   );
-
-  return L.divIcon({
-    html,
-    className: "",
-    iconSize: [28, 28],
-    iconAnchor: [14, 28],
-    popupAnchor: [0, -28],
-  });
 }
 
 const EMPTY_FILTERS: ShopFilters = {
@@ -135,7 +126,15 @@ export function MapPage() {
         regionId: appliedFilters.regionId ?? undefined,
         pageSize: 100,
       })
-      .then((response) => setShops(response.items));
+      .then((response) => {
+        const valid = response.items.filter(hasValidCoordinates);
+        if (valid.length !== response.items.length) {
+          console.warn(
+            `Skipped ${response.items.length - valid.length} shop(s) with missing/invalid latitude or longitude.`,
+          );
+        }
+        setShops(valid);
+      });
   }, [appliedFilters]);
 
   const parsedRegions = useMemo(
@@ -224,13 +223,7 @@ export function MapPage() {
           >
             <Popup>
               <div className="flex w-40 flex-col gap-1">
-                {shop.imageUrl && (
-                  <img
-                    src={shop.imageUrl}
-                    alt={shop.name}
-                    className="h-20 w-full rounded object-cover"
-                  />
-                )}
+                <CategoryImage shop={shop} className="h-20 w-full rounded" />
                 <p className="text-sm font-bold text-text-primary">
                   {shop.name}
                 </p>
