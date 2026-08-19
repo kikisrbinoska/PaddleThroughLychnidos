@@ -81,16 +81,32 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
                 );
             });
 
+            modelBuilder.Entity<Category>(builder =>
+            {
+                builder.HasData(
+                    new Category { Id = 1, Name = "Jewelry", IconUrl = string.Empty },
+                    new Category { Id = 2, Name = "TraditionalCostume", IconUrl = string.Empty },
+                    new Category { Id = 3, Name = "WoodCarving", IconUrl = string.Empty },
+                    new Category { Id = 4, Name = "HandmadePaper", IconUrl = string.Empty },
+                    new Category { Id = 5, Name = "Iconography", IconUrl = string.Empty },
+                    new Category { Id = 6, Name = "ArtGallery", IconUrl = string.Empty },
+                    new Category { Id = 7, Name = "CraftWorkshopGeneral", IconUrl = string.Empty },
+                    new Category { Id = 8, Name = "SouvenirShop", IconUrl = string.Empty }
+                );
+            });
+
             modelBuilder.Entity<Shop>(builder =>
             {
                 builder.HasOne(s => s.Owner)
                     .WithMany(u => u.Shops)
                     .HasForeignKey(s => s.OwnerId)
+                    .IsRequired(false)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 builder.HasOne(s => s.Region)
                     .WithMany(r => r.Shops)
                     .HasForeignKey(s => s.RegionId)
+                    .IsRequired(false)
                     .OnDelete(DeleteBehavior.Restrict);
 
                 builder.HasOne(s => s.Category)

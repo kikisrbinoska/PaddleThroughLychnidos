@@ -31,7 +31,7 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                     Longitude = shop.Longitude,
                     Address = shop.Address,
                     RegionId = shop.RegionId,
-                    RegionName = shop.Region.Name,
+                    RegionName = shop.Region?.Name ?? "Unassigned",
                     CategoryId = shop.CategoryId,
                     CategoryName = shop.Category.Name,
                     ImageUrl = shop.Images.Select(i => i.Url).FirstOrDefault() ?? string.Empty,

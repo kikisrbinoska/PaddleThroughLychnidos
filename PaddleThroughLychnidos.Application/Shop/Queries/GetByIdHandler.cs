@@ -32,8 +32,8 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                 throw new PaddleThroughLychnidosException($"Shop with Id {request.Id} not found.", HttpStatusCode.NotFound);
             }
 
-            var owner = await _userRepository.GetByIdAsync(shop.OwnerId);
-            var region = await _regionRepository.GetByIdAsync(shop.RegionId);
+            var owner = shop.OwnerId.HasValue ? await _userRepository.GetByIdAsync(shop.OwnerId.Value) : null;
+            var region = shop.RegionId.HasValue ? await _regionRepository.GetByIdAsync(shop.RegionId.Value) : null;
             var category = await _categoryRepository.GetByIdAsync(shop.CategoryId);
 
             return new GetByIdResponse
