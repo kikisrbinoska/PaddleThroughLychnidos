@@ -1,3 +1,5 @@
+import type { ItineraryListItem } from "./itinerary";
+
 // Mirrors PaddleThroughLychnidos.Application.Shared.ShopSummaryDto.
 export interface TravelPlanShopSummary {
   id: number;
@@ -8,14 +10,13 @@ export interface TravelPlanShopSummary {
 }
 
 // Mirrors PaddleThroughLychnidos.Application.TravelPlan.Queries.TravelPlanItemDto,
-// returned inside GetByUserIdResponse.items by GET /api/travelplan.
+// returned inside GetByUserIdResponse.items by GET /api/travelplan. Exactly
+// one of shop/itinerary is non-null, matching AddValidator's XOR rule.
 export interface TravelPlanEntry {
   id: number;
   addedAt: string;
   shop: TravelPlanShopSummary | null;
-  // Itinerary summary shape isn't needed by the shop detail page's "add to
-  // plan" toggle - left untyped (unused) rather than guessed.
-  itinerary: unknown | null;
+  itinerary: ItineraryListItem | null;
 }
 
 // Mirrors PaddleThroughLychnidos.Application.TravelPlan.Queries.GetByUserIdResponse.

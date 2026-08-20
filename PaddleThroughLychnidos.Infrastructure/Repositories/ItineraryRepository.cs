@@ -26,15 +26,26 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
                 .FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public async Task<(int count, List<Itinerary> list)> GetPagedAsync(int? pageNumber, int? pageSize, int? regionId)
+        public async Task<(int count, List<Itinerary> list)> GetPagedAsync(int? pageNumber, int? pageSize, int? regionId, int? minDurationHours, int? maxDurationHours)
         {
             var query = _context.Itineraries
                 .Include(i => i.Region)
+                .Include(i => i.Stops)
                 .AsQueryable();
 
             if (regionId.HasValue)
             {
                 query = query.Where(i => i.RegionId == regionId.Value);
+            }
+
+            if (minDurationHours.HasValue)
+            {
+                query = query.Where(i => i.DurationHours >= minDurationHours.Value);
+            }
+
+            if (maxDurationHours.HasValue)
+            {
+                query = query.Where(i => i.DurationHours <= maxDurationHours.Value);
             }
 
             var count = await query.CountAsync();

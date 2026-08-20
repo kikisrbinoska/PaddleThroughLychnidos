@@ -10,6 +10,6 @@ namespace PaddleThroughLychnidos.Domain.Repositories
     public interface IItineraryRepository : IRepository<Itinerary>
     {
         public Task<Itinerary?> GetByIdWithStopsAsync(int id);
-        public Task<(int count, List<Itinerary> list)> GetPagedAsync(int? pageNumber, int? pageSize, int? regionId);
+        public Task<(int count, List<Itinerary> list)> GetPagedAsync(int? pageNumber, int? pageSize, int? regionId, int? minDurationHours, int? maxDurationHours);
     }
 }

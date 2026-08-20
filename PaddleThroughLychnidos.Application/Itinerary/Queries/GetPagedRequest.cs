@@ -12,5 +12,11 @@ namespace PaddleThroughLychnidos.Application.Itinerary.Queries
 
         /// <summary>Filters itineraries belonging to the given Region id.</summary>
         public int? RegionId { get; set; }
+
+        /// <summary>Filters itineraries with DurationHours &gt;= this value.</summary>
+        public int? MinDurationHours { get; set; }
+
+        /// <summary>Filters itineraries with DurationHours &lt;= this value.</summary>
+        public int? MaxDurationHours { get; set; }
     }
 }

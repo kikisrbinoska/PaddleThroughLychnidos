@@ -13,6 +13,10 @@ export const travelPlanService = {
     apiClient
       .post<TravelPlanAddResponse>("/travelplan", { shopId })
       .then((res) => res.data),
+  addItinerary: (itineraryId: number) =>
+    apiClient
+      .post<TravelPlanAddResponse>("/travelplan", { itineraryId })
+      .then((res) => res.data),
   remove: (id: number) =>
     apiClient.delete(`/travelplan/${id}`).then((res) => res.data),
 };

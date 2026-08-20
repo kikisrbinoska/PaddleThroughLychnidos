@@ -10,6 +10,8 @@ namespace PaddleThroughLychnidos.Application.Itinerary.Queries
         public int DurationHours { get; set; }
         public string RegionName { get; set; } = string.Empty;
         public string Difficulty { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public int StopCount { get; set; }
     }
 
     public class GetPagedResponse

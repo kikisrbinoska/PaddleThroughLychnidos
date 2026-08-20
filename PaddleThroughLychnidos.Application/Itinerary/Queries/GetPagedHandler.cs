@@ -18,7 +18,8 @@ namespace PaddleThroughLychnidos.Application.Itinerary.Queries
             var pageNumber = request.PageNumber.GetValueOrDefault(1) < 1 ? 1 : request.PageNumber.GetValueOrDefault(1);
             var pageSize = request.PageSize.GetValueOrDefault(20) < 1 ? 20 : request.PageSize.GetValueOrDefault(20);
 
-            var (count, list) = await _itineraryRepository.GetPagedAsync(pageNumber, pageSize, request.RegionId);
+            var (count, list) = await _itineraryRepository.GetPagedAsync(
+                pageNumber, pageSize, request.RegionId, request.MinDurationHours, request.MaxDurationHours);
 
             var items = list
                 .Select(itinerary => new ItineraryListDto
@@ -29,6 +30,8 @@ namespace PaddleThroughLychnidos.Application.Itinerary.Queries
                     DurationHours = itinerary.DurationHours,
                     RegionName = itinerary.Region?.Name ?? "Unknown",
                     Difficulty = itinerary.Difficulty.ToString(),
+                    Description = itinerary.Description,
+                    StopCount = itinerary.Stops.Count,
                 })
                 .ToList();
 

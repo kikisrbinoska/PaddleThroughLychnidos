@@ -23,6 +23,8 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
                     .ThenInclude(s => s!.Images)
                 .Include(t => t.Itinerary)
                     .ThenInclude(i => i!.Region)
+                .Include(t => t.Itinerary)
+                    .ThenInclude(i => i!.Stops)
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
         }

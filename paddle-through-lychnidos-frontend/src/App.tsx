@@ -6,6 +6,8 @@ import { HomePage } from "./pages/HomePage";
 import { MapPage } from "./pages/MapPage";
 import { ShopsPage } from "./pages/ShopsPage";
 import { ItinerariesPage } from "./pages/ItinerariesPage";
+import { ItineraryDetailPage } from "./pages/ItineraryDetailPage";
+import { TravelPlanPage } from "./pages/TravelPlanPage";
 import { LearnPage } from "./pages/LearnPage";
 import { ProductsPage } from "./pages/ProductsPage";
 import { PlannerPage } from "./pages/PlannerPage";
@@ -41,6 +43,8 @@ function AppLayout() {
         <Route path="/map" element={<MapPage />} />
         <Route path="/shops" element={<ShopsPage />} />
         <Route path="/itineraries" element={<ItinerariesPage />} />
+        <Route path="/itineraries/travel-plan" element={<TravelPlanPage />} />
+        <Route path="/itineraries/:id" element={<ItineraryDetailPage />} />
         <Route path="/learn" element={<LearnPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/planner" element={<PlannerPage />} />

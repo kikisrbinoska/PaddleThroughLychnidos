@@ -39,6 +39,8 @@ namespace PaddleThroughLychnidos.Application.TravelPlan.Queries
                         DurationHours = item.Itinerary.DurationHours,
                         RegionName = item.Itinerary.Region?.Name ?? "Unknown",
                         Difficulty = item.Itinerary.Difficulty.ToString(),
+                        Description = item.Itinerary.Description,
+                        StopCount = item.Itinerary.Stops.Count,
                     },
                 })
                 .ToList();
