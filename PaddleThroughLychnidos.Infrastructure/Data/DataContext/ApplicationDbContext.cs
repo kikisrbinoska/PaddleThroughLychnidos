@@ -18,6 +18,7 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
         public DbSet<Itinerary> Itineraries { get; set; } = null!;
         public DbSet<ItineraryStop> ItineraryStops { get; set; } = null!;
         public DbSet<TravelPlanItem> TravelPlanItems { get; set; } = null!;
+        public DbSet<LearnVideo> LearnVideos { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -214,6 +215,21 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
                 builder.HasIndex(t => t.UserId);
                 builder.HasIndex(t => t.ShopId);
                 builder.HasIndex(t => t.ItineraryId);
+            });
+
+            modelBuilder.Entity<LearnVideo>(builder =>
+            {
+                builder.Property(v => v.Category).HasConversion<string>();
+
+                builder.HasOne(v => v.RelatedCategory)
+                    .WithMany()
+                    .HasForeignKey(v => v.RelatedCategoryId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                builder.HasIndex(v => v.YoutubeVideoId).IsUnique();
+                builder.HasIndex(v => v.Category);
+                builder.HasIndex(v => v.RelatedCategoryId);
             });
 
             base.OnModelCreating(modelBuilder);

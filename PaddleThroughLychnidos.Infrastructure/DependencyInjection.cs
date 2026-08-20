@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PaddleThroughLychnidos.Application.Abstractions;
 using PaddleThroughLychnidos.Domain.Repositories;
 using PaddleThroughLychnidos.Infrastructure.Authentication;
 using PaddleThroughLychnidos.Infrastructure.Data.DataContext;
 using PaddleThroughLychnidos.Infrastructure.Repositories;
+using PaddleThroughLychnidos.Infrastructure.YouTube;
 
 namespace PaddleThroughLychnidos.Infrastructure
 {
@@ -29,9 +31,14 @@ namespace PaddleThroughLychnidos.Infrastructure
             services.AddScoped<IItineraryRepository, ItineraryRepository>();
             services.AddScoped<IItineraryStopRepository, ItineraryStopRepository>();
             services.AddScoped<ITravelPlanItemRepository, TravelPlanItemRepository>();
+            services.AddScoped<ILearnVideoRepository, LearnVideoRepository>();
 
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddScoped<IAuthService, AuthService>();
+
+            services.Configure<YouTubeSettings>(configuration.GetSection(YouTubeSettings.SectionName));
+            services.AddHttpClient<IYouTubeSearchService, YouTubeSearchService>();
+            services.AddHostedService<LearnVideoSyncJob>();
 
             return services;
         }

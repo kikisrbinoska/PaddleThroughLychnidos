@@ -14,6 +14,7 @@ import { PlannerPage } from "./pages/PlannerPage";
 import { MagazinePage } from "./pages/MagazinePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { ShopDetailPage } from "./pages/ShopDetailPage";
+import { VideoDetailPage } from "./pages/VideoDetailPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { SplashPage } from "./pages/SplashPage";
@@ -46,6 +47,7 @@ function AppLayout() {
         <Route path="/itineraries/travel-plan" element={<TravelPlanPage />} />
         <Route path="/itineraries/:id" element={<ItineraryDetailPage />} />
         <Route path="/learn" element={<LearnPage />} />
+        <Route path="/learn/video/:id" element={<VideoDetailPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/planner" element={<PlannerPage />} />
         <Route path="/magazine" element={<MagazinePage />} />
