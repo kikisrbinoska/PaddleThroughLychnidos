@@ -19,6 +19,7 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
         public DbSet<ItineraryStop> ItineraryStops { get; set; } = null!;
         public DbSet<TravelPlanItem> TravelPlanItems { get; set; } = null!;
         public DbSet<LearnVideo> LearnVideos { get; set; } = null!;
+        public DbSet<NewsItem> NewsItems { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -230,6 +231,14 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
                 builder.HasIndex(v => v.YoutubeVideoId).IsUnique();
                 builder.HasIndex(v => v.Category);
                 builder.HasIndex(v => v.RelatedCategoryId);
+            });
+
+            modelBuilder.Entity<NewsItem>(builder =>
+            {
+                builder.Property(n => n.Category).HasConversion<string>();
+
+                builder.HasIndex(n => n.SourceUrl).IsUnique();
+                builder.HasIndex(n => n.Category);
             });
 
             base.OnModelCreating(modelBuilder);

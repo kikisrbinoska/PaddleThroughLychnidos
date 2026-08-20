@@ -11,3 +11,4 @@ export * from "./itinerary";
 export * from "./travelPlanItem";
 export * from "./travelPlan";
 export * from "./learnVideo";
+export * from "./newsItem";

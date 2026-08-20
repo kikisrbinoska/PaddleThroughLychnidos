@@ -7,7 +7,9 @@ using PaddleThroughLychnidos.Domain.Repositories;
 using PaddleThroughLychnidos.Infrastructure.Authentication;
 using PaddleThroughLychnidos.Infrastructure.Data.DataContext;
 using PaddleThroughLychnidos.Infrastructure.Repositories;
+using PaddleThroughLychnidos.Infrastructure.Scraping;
 using PaddleThroughLychnidos.Infrastructure.YouTube;
+using System.Net.Http.Headers;
 
 namespace PaddleThroughLychnidos.Infrastructure
 {
@@ -32,6 +34,7 @@ namespace PaddleThroughLychnidos.Infrastructure
             services.AddScoped<IItineraryStopRepository, ItineraryStopRepository>();
             services.AddScoped<ITravelPlanItemRepository, TravelPlanItemRepository>();
             services.AddScoped<ILearnVideoRepository, LearnVideoRepository>();
+            services.AddScoped<INewsItemRepository, NewsItemRepository>();
 
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddScoped<IAuthService, AuthService>();
@@ -40,7 +43,25 @@ namespace PaddleThroughLychnidos.Infrastructure
             services.AddHttpClient<IYouTubeSearchService, YouTubeSearchService>();
             services.AddHostedService<LearnVideoSyncJob>();
 
+            services.AddHttpClient<Ohrid1ScraperSource>(ConfigureScraperClient);
+            services.AddHttpClient<OhridGovMkScraperSource>(ConfigureScraperClient);
+            services.AddScoped<IScraperSource>(sp => sp.GetRequiredService<Ohrid1ScraperSource>());
+            services.AddScoped<IScraperSource>(sp => sp.GetRequiredService<OhridGovMkScraperSource>());
+            services.AddHostedService<NewsScraperJob>();
+
             return services;
+        }
+
+        // Identifies the app to scraped sites (per the task's requirement to
+        // set a descriptive User-Agent) and applies a generous timeout since
+        // these are third-party sites outside our control.
+        private static void ConfigureScraperClient(HttpClient client)
+        {
+            client.DefaultRequestHeaders.UserAgent.Add(
+                new ProductInfoHeaderValue("PaddleThroughLychnidosNewsBot", "1.0"));
+            client.DefaultRequestHeaders.UserAgent.Add(
+                new ProductInfoHeaderValue("(+https://github.com/paddle-through-lychnidos; tourism news aggregator)"));
+            client.Timeout = TimeSpan.FromSeconds(20);
         }
     }
 }

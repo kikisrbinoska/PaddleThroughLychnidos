@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
+import { Newspaper, Search } from "lucide-react";
 import { shopService } from "../services/shopService";
 import { regionService } from "../services/regionService";
-import type { Region, ShopListItem } from "../types";
+import { newsService } from "../services/newsService";
+import type { NewsItemListEntry, Region, ShopListItem } from "../types";
 import { HorizontalScrollRow } from "../components/HorizontalScrollRow";
 import { ShopCard } from "../components/ShopCard";
 import { RegionChip } from "../components/RegionChip";
-import { mockNews } from "../data/mockNews";
 
 interface SectionHeaderProps {
   title: string;
@@ -34,7 +34,9 @@ export function HomePage() {
   const navigate = useNavigate();
   const [featuredShops, setFeaturedShops] = useState<ShopListItem[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
+  const [latestNews, setLatestNews] = useState<NewsItemListEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isNewsLoading, setIsNewsLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,6 +56,16 @@ export function HomePage() {
       })
       .finally(() => {
         if (!cancelled) setIsLoading(false);
+      });
+
+    newsService
+      .getAll({ pageSize: 6 })
+      .then((response) => {
+        if (cancelled) return;
+        setLatestNews(response.items);
+      })
+      .finally(() => {
+        if (!cancelled) setIsNewsLoading(false);
       });
 
     return () => {
@@ -115,28 +127,41 @@ export function HomePage() {
 
         <section>
           <SectionHeader title="Latest from the Magazine" seeAllTo="/magazine" />
-          {/* Placeholder data - no Magazine endpoint exists yet. */}
-          <HorizontalScrollRow>
-            {mockNews.map((news) => (
-              <Link
-                key={news.id}
-                to="/magazine"
-                className="w-48 flex-none snap-start overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm md:w-full"
-              >
-                <div className="flex h-24 w-full items-center justify-center bg-secondary-100 text-xs text-secondary-900">
-                  No image
-                </div>
-                <div className="flex flex-col gap-1 p-3">
-                  <h3 className="line-clamp-1 text-sm font-bold text-text-primary">
-                    {news.title}
-                  </h3>
-                  <p className="line-clamp-2 text-xs text-text-secondary">
-                    {news.excerpt}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </HorizontalScrollRow>
+          {isNewsLoading ? (
+            <p className="text-sm text-text-secondary">Loading...</p>
+          ) : latestNews.length === 0 ? (
+            <p className="text-sm text-text-secondary">No news yet.</p>
+          ) : (
+            <HorizontalScrollRow>
+              {latestNews.map((news) => (
+                <Link
+                  key={news.id}
+                  to={`/magazine/${news.id}`}
+                  className="w-48 flex-none snap-start overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm md:w-full"
+                >
+                  <div className="flex h-24 w-full items-center justify-center bg-brown-100 text-brown-500">
+                    {news.thumbnailUrl ? (
+                      <img
+                        src={news.thumbnailUrl}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <Newspaper size={24} />
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-1 p-3">
+                    <h3 className="line-clamp-1 text-sm font-bold text-text-primary">
+                      {news.title}
+                    </h3>
+                    <p className="line-clamp-2 text-xs text-text-secondary">
+                      {news.summary}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </HorizontalScrollRow>
+          )}
         </section>
       </div>
     </div>

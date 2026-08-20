@@ -11,7 +11,8 @@ import { TravelPlanPage } from "./pages/TravelPlanPage";
 import { LearnPage } from "./pages/LearnPage";
 import { ProductsPage } from "./pages/ProductsPage";
 import { PlannerPage } from "./pages/PlannerPage";
-import { MagazinePage } from "./pages/MagazinePage";
+import { NewsFeedPage } from "./pages/NewsFeedPage";
+import { NewsDetailPage } from "./pages/NewsDetailPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { ShopDetailPage } from "./pages/ShopDetailPage";
 import { VideoDetailPage } from "./pages/VideoDetailPage";
@@ -50,7 +51,8 @@ function AppLayout() {
         <Route path="/learn/video/:id" element={<VideoDetailPage />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/planner" element={<PlannerPage />} />
-        <Route path="/magazine" element={<MagazinePage />} />
+        <Route path="/magazine" element={<NewsFeedPage />} />
+        <Route path="/magazine/:id" element={<NewsDetailPage />} />
         <Route
           path="/profile"
           element={

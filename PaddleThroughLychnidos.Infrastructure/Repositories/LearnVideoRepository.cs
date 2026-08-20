@@ -18,9 +18,13 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
 
         public async Task<(int count, List<LearnVideo> list)> GetPagedAsync(int? pageNumber, int? pageSize, LearnCategory category)
         {
+            // PublishedAt alone isn't unique, so paging by it alone isn't
+            // stable across requests (see NewsItemRepository.GetPagedAsync
+            // for the full explanation) - Id as a tiebreaker fixes it.
             var query = _context.LearnVideos
                 .Where(v => v.Category == category)
                 .OrderByDescending(v => v.PublishedAt)
+                .ThenByDescending(v => v.Id)
                 .AsQueryable();
 
             var count = await query.CountAsync();

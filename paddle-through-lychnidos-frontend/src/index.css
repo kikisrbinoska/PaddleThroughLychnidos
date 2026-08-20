@@ -2,6 +2,9 @@
 
 @theme {
   --font-sans: "Manrope", system-ui, "Segoe UI", Roboto, sans-serif;
+  /* Used only on the News Detail screen's vintage-newspaper layout - a
+     deliberate style break from the app's default sans-serif elsewhere. */
+  --font-serif: "PT Serif", Georgia, "Times New Roman", serif;
 
   --color-primary-900: #1570ef;
   --color-primary-800: #1d8cf0;
