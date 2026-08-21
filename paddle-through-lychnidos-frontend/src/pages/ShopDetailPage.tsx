@@ -152,7 +152,7 @@ export function ShopDetailPage() {
 
   return (
     <div className="flex min-h-svh flex-col bg-gradient-to-br from-primary-900 via-primary-600 to-secondary-800">
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col pb-32">
         {/* 1. Header image */}
         <div className="relative h-64 w-full flex-none">
           <CategoryImage shop={shop} className="h-full w-full" />
@@ -277,7 +277,11 @@ export function ShopDetailPage() {
           )}
         </div>
 
-        {/* 4. Products */}
+        {/* 4. Reviews */}
+        <ReviewsSection shopId={shop.id} />
+
+        {/* 5. Products - last on the page, only rendered when the shop
+            actually has products (no empty-state placeholder). */}
         {products.length > 0 && (
           <div className="mx-4 mb-4 mt-3.5">
             <p className="text-sm font-medium text-white">Products</p>
@@ -292,9 +296,6 @@ export function ShopDetailPage() {
             </div>
           </div>
         )}
-
-        {/* 5. Reviews */}
-        <ReviewsSection shopId={shop.id} />
       </div>
 
       {/* 6. Sticky Add to plan bar - bottom-16 clears the fixed BottomNav
