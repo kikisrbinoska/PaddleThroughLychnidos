@@ -1,6 +1,6 @@
 import type { ShopImage } from "./shopImage";
 import type { Product } from "./product";
-import type { Review } from "./review";
+import type { ReviewListItem } from "./review";
 
 // Mirrors PaddleThroughLychnidos.Application.Shop.Queries.ShopListItem, as
 // returned inside GetPagedResponse.items by GET /api/shops. This is a
@@ -104,5 +104,5 @@ export interface Shop {
   isOpenNow: boolean | null;
   images: ShopImage[];
   products: Product[];
-  reviews: Review[];
+  reviews: ReviewListItem[];
 }

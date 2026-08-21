@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaddleThroughLychnidos.Application.Shop.Commands;
 using PaddleThroughLychnidos.Application.Shop.Queries;
+using ReviewQueries = PaddleThroughLychnidos.Application.Review.Queries;
 
 namespace PaddleThroughLychnidos.API.Controllers
 {
@@ -47,6 +48,16 @@ namespace PaddleThroughLychnidos.API.Controllers
             _logger.LogInformation("Fetching shop with ID: {id}", id);
             var shop = await _mediator.Send(new GetByIdRequest { Id = id });
             return Ok(shop);
+        }
+
+        // GET api/<ShopsController>/5/reviews?pageNumber=1&pageSize=20
+        [HttpGet("{shopId:int}/reviews")]
+        [AllowAnonymous]
+        public async Task<ActionResult<ReviewQueries.GetResponse>> GetReviews(int shopId, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
+        {
+            _logger.LogInformation("Fetching reviews for shop {shopId}", shopId);
+            var reviews = await _mediator.Send(new ReviewQueries.GetRequest { ShopId = shopId, PageNumber = pageNumber, PageSize = pageSize });
+            return Ok(reviews);
         }
 
         // POST api/<ShopsController>

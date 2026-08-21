@@ -1,6 +1,8 @@
+using PaddleThroughLychnidos.Domain.DTOs;
+
 namespace PaddleThroughLychnidos.Application.Review.Queries
 {
-    public class GetResponse
+    public class ReviewListItemDto
     {
         public int Id { get; set; }
         public int UserId { get; set; }
@@ -9,5 +11,11 @@ namespace PaddleThroughLychnidos.Application.Review.Queries
         public int Rating { get; set; }
         public string Comment { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
+    }
+
+    public class GetResponse
+    {
+        public List<ReviewListItemDto> Items { get; set; } = new();
+        public Metadata Metadata { get; set; } = new();
     }
 }

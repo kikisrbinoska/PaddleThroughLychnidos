@@ -94,6 +94,63 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.DayPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DayPlans", "public");
+                });
+
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.DayPlanStop", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DayPlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ShopId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DayPlanId");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("DayPlanId", "Order")
+                        .IsUnique();
+
+                    b.ToTable("DayPlanStops", "public");
+                });
+
             modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.Itinerary", b =>
                 {
                     b.Property<int>("Id")
@@ -264,6 +321,33 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                     b.ToTable("NewsItems", "public");
                 });
 
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.PassportStamp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ShopId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("VisitedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("UserId", "ShopId")
+                        .IsUnique();
+
+                    b.ToTable("PassportStamps", "public");
+                });
+
             modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -416,7 +500,8 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "ShopId")
+                        .IsUnique();
 
                     b.ToTable("Reviews", "public");
                 });
@@ -601,6 +686,36 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                     b.ToTable("Users", "public");
                 });
 
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.DayPlan", b =>
+                {
+                    b.HasOne("PaddleThroughLychnidos.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.DayPlanStop", b =>
+                {
+                    b.HasOne("PaddleThroughLychnidos.Domain.Entities.DayPlan", "DayPlan")
+                        .WithMany("Stops")
+                        .HasForeignKey("DayPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PaddleThroughLychnidos.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DayPlan");
+
+                    b.Navigation("Shop");
+                });
+
             modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.Itinerary", b =>
                 {
                     b.HasOne("PaddleThroughLychnidos.Domain.Entities.Region", "Region")
@@ -639,6 +754,25 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("RelatedCategory");
+                });
+
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.PassportStamp", b =>
+                {
+                    b.HasOne("PaddleThroughLychnidos.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PaddleThroughLychnidos.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Shop");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.Product", b =>
@@ -746,6 +880,11 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
             modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Shops");
+                });
+
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.DayPlan", b =>
+                {
+                    b.Navigation("Stops");
                 });
 
             modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.Itinerary", b =>

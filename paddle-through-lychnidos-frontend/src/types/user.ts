@@ -17,3 +17,24 @@ export interface User {
   role: UserRole;
   createdAt: string;
 }
+
+// Mirrors PaddleThroughLychnidos.Application.User.Queries.GetByIdResponse,
+// returned by GET /api/users/me.
+export interface UserProfile {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
+}
+
+// Mirrors PaddleThroughLychnidos.Application.User.Commands.EditResponse,
+// returned by PUT /api/users/me.
+export interface UserEditResponse {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  message: string;
+}

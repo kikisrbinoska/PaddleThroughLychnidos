@@ -7,13 +7,13 @@ import { MapPage } from "./pages/MapPage";
 import { ShopsPage } from "./pages/ShopsPage";
 import { ItinerariesPage } from "./pages/ItinerariesPage";
 import { ItineraryDetailPage } from "./pages/ItineraryDetailPage";
-import { TravelPlanPage } from "./pages/TravelPlanPage";
 import { LearnPage } from "./pages/LearnPage";
 import { ProductsPage } from "./pages/ProductsPage";
-import { PlannerPage } from "./pages/PlannerPage";
 import { NewsFeedPage } from "./pages/NewsFeedPage";
 import { NewsDetailPage } from "./pages/NewsDetailPage";
 import { ProfilePage } from "./pages/ProfilePage";
+import { PassportPage } from "./pages/PassportPage";
+import { SettingsPage } from "./pages/SettingsPage";
 import { ShopDetailPage } from "./pages/ShopDetailPage";
 import { VideoDetailPage } from "./pages/VideoDetailPage";
 import { LoginPage } from "./pages/LoginPage";
@@ -45,12 +45,10 @@ function AppLayout() {
         <Route path="/map" element={<MapPage />} />
         <Route path="/shops" element={<ShopsPage />} />
         <Route path="/itineraries" element={<ItinerariesPage />} />
-        <Route path="/itineraries/travel-plan" element={<TravelPlanPage />} />
         <Route path="/itineraries/:id" element={<ItineraryDetailPage />} />
         <Route path="/learn" element={<LearnPage />} />
         <Route path="/learn/video/:id" element={<VideoDetailPage />} />
         <Route path="/products" element={<ProductsPage />} />
-        <Route path="/planner" element={<PlannerPage />} />
         <Route path="/magazine" element={<NewsFeedPage />} />
         <Route path="/magazine/:id" element={<NewsDetailPage />} />
         <Route
@@ -58,6 +56,22 @@ function AppLayout() {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/passport"
+          element={
+            <ProtectedRoute>
+              <PassportPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage />
             </ProtectedRoute>
           }
         />

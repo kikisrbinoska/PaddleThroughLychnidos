@@ -11,5 +11,6 @@ namespace PaddleThroughLychnidos.Domain.Repositories
     {
         public Task<(int count, List<Shop> list)> GetPagedAsync(int? pageNumber, int? pageSize, string? searchWord, int? categoryId, int? regionId);
         public Task<int> GetTotalNumberAsync();
+        public Task<List<Shop>> GetByIdsAsync(IEnumerable<int> ids);
     }
 }

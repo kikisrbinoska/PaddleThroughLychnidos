@@ -19,6 +19,11 @@ namespace PaddleThroughLychnidos.Application.Review.Commands
             var review = await _reviewRepository.GetByIdAsync(request.Id)
                 ?? throw new PaddleThroughLychnidosException("Review not found", HttpStatusCode.NotFound);
 
+            if (review.UserId != request.UserId)
+            {
+                throw new PaddleThroughLychnidosException("You do not have permission to edit this review", HttpStatusCode.Forbidden);
+            }
+
             review.Rating = request.Rating;
             review.Comment = request.Comment;
 

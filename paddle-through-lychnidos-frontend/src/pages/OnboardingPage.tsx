@@ -31,7 +31,7 @@ const FEATURE_CARDS: FeatureCard[] = [
     accent: "primary",
     title: "Planner",
     description: "Save shops and routes to your personal travel plan.",
-    to: "/planner",
+    to: "/itineraries?view=plan",
   },
   {
     icon: GraduationCap,

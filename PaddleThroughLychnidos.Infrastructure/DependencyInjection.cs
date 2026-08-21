@@ -35,6 +35,8 @@ namespace PaddleThroughLychnidos.Infrastructure
             services.AddScoped<ITravelPlanItemRepository, TravelPlanItemRepository>();
             services.AddScoped<ILearnVideoRepository, LearnVideoRepository>();
             services.AddScoped<INewsItemRepository, NewsItemRepository>();
+            services.AddScoped<IPassportStampRepository, PassportStampRepository>();
+            services.AddScoped<IDayPlanRepository, DayPlanRepository>();
 
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddScoped<IAuthService, AuthService>();

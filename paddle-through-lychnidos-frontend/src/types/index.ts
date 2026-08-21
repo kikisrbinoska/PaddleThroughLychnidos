@@ -12,3 +12,5 @@ export * from "./travelPlanItem";
 export * from "./travelPlan";
 export * from "./learnVideo";
 export * from "./newsItem";
+export * from "./passport";
+export * from "./dayPlan";

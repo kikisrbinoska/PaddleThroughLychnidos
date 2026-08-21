@@ -60,5 +60,13 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
         {
             return await _context.Shops.CountAsync();
         }
+
+        public async Task<List<Shop>> GetByIdsAsync(IEnumerable<int> ids)
+        {
+            var idList = ids.ToList();
+            return await _context.Shops
+                .Where(s => idList.Contains(s.Id))
+                .ToListAsync();
+        }
     }
 }

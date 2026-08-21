@@ -12,7 +12,7 @@ const navItems: NavItem[] = [
   { to: "/home", label: "Home", icon: Home },
   { to: "/shops", label: "Shops", icon: Store },
   { to: "/map", label: "Map", icon: Map },
-  { to: "/itineraries", label: "Itineraries", icon: Route },
+  { to: "/itineraries", label: "Routes", icon: Route },
   { to: "/learn", label: "Learn", icon: BookOpen },
   { to: "/profile", label: "Profile", icon: User },
 ];

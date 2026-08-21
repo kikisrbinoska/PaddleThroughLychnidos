@@ -20,6 +20,9 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
         public DbSet<TravelPlanItem> TravelPlanItems { get; set; } = null!;
         public DbSet<LearnVideo> LearnVideos { get; set; } = null!;
         public DbSet<NewsItem> NewsItems { get; set; } = null!;
+        public DbSet<PassportStamp> PassportStamps { get; set; } = null!;
+        public DbSet<DayPlan> DayPlans { get; set; } = null!;
+        public DbSet<DayPlanStop> DayPlanStops { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -164,7 +167,10 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
                     .OnDelete(DeleteBehavior.Cascade);
 
                 builder.HasIndex(r => r.ShopId);
-                builder.HasIndex(r => r.UserId);
+                // One review per user per shop (editable, not duplicable) -
+                // see Review.Commands.AddHandler for the friendly error
+                // directing a repeat reviewer to edit instead.
+                builder.HasIndex(r => new { r.UserId, r.ShopId }).IsUnique();
             });
 
             modelBuilder.Entity<Itinerary>(builder =>
@@ -239,6 +245,50 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
 
                 builder.HasIndex(n => n.SourceUrl).IsUnique();
                 builder.HasIndex(n => n.Category);
+            });
+
+            modelBuilder.Entity<PassportStamp>(builder =>
+            {
+                builder.HasOne(s => s.User)
+                    .WithMany()
+                    .HasForeignKey(s => s.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasOne(s => s.Shop)
+                    .WithMany()
+                    .HasForeignKey(s => s.ShopId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // One stamp per user per shop - see Review.Commands.AddHandler,
+                // which is the only place stamps are created.
+                builder.HasIndex(s => new { s.UserId, s.ShopId }).IsUnique();
+            });
+
+            modelBuilder.Entity<DayPlan>(builder =>
+            {
+                builder.HasOne(p => p.User)
+                    .WithMany()
+                    .HasForeignKey(p => p.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasIndex(p => p.UserId);
+            });
+
+            modelBuilder.Entity<DayPlanStop>(builder =>
+            {
+                builder.HasOne(s => s.DayPlan)
+                    .WithMany(p => p.Stops)
+                    .HasForeignKey(s => s.DayPlanId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasOne(s => s.Shop)
+                    .WithMany()
+                    .HasForeignKey(s => s.ShopId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasIndex(s => s.DayPlanId);
+                builder.HasIndex(s => s.ShopId);
+                builder.HasIndex(s => new { s.DayPlanId, s.Order }).IsUnique();
             });
 
             base.OnModelCreating(modelBuilder);

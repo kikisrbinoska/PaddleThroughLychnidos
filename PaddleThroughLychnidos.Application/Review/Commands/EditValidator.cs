@@ -9,6 +9,9 @@ namespace PaddleThroughLychnidos.Application.Review.Commands
             RuleFor(x => x.Id)
                 .GreaterThan(0);
 
+            RuleFor(x => x.UserId)
+                .GreaterThan(0);
+
             RuleFor(x => x.Rating)
                 .InclusiveBetween(1, 5);
 

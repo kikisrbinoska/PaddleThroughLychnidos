@@ -6,10 +6,10 @@ import {
   Check,
   ChevronLeft,
   ExternalLink,
-  Heart,
   Mail,
   Phone,
   Star,
+  X,
 } from "lucide-react";
 import { shopService } from "../services/shopService";
 import { productService } from "../services/productService";
@@ -20,6 +20,7 @@ import type { ProductListItem, ShopDetail } from "../types";
 import { CategoryImage } from "../components/CategoryImage";
 import { ShopLocationMap } from "../components/ShopLocationMap";
 import { ProductCard } from "../components/ProductCard";
+import { ReviewsSection } from "../components/ReviewsSection";
 import { getCategoryAccent } from "../utils/categoryStyle";
 
 // wa.me needs a full international number with no leading "+" or local
@@ -46,9 +47,9 @@ export function ShopDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [isFavorited, setIsFavorited] = useState(false);
   const [travelPlanEntryId, setTravelPlanEntryId] = useState<number | null>(null);
   const [isTogglingPlan, setIsTogglingPlan] = useState(false);
+  const [showPlanToast, setShowPlanToast] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -94,6 +95,12 @@ export function ShopDetailPage() {
     };
   }, [id, isAuthenticated]);
 
+  useEffect(() => {
+    if (!showPlanToast) return;
+    const timer = setTimeout(() => setShowPlanToast(false), 5000);
+    return () => clearTimeout(timer);
+  }, [showPlanToast]);
+
   async function toggleTravelPlan() {
     if (!shop) return;
 
@@ -110,6 +117,7 @@ export function ShopDetailPage() {
       } else {
         const response = await travelPlanService.addShop(shop.id);
         setTravelPlanEntryId(response.id);
+        setShowPlanToast(true);
       }
     } catch {
       // Leave state unchanged - button label reflects the last known state.
@@ -157,16 +165,6 @@ export function ShopDetailPage() {
             className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/20 text-white backdrop-blur-md"
           >
             <ChevronLeft size={20} />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsFavorited((v) => !v)}
-            aria-label="Favorite"
-            aria-pressed={isFavorited}
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/20 text-white backdrop-blur-md"
-          >
-            <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
           </button>
 
           {shop.isVerified && (
@@ -294,10 +292,36 @@ export function ShopDetailPage() {
             </div>
           </div>
         )}
+
+        {/* 5. Reviews */}
+        <ReviewsSection shopId={shop.id} />
       </div>
 
-      {/* 6. Sticky Add to plan bar */}
-      <div className="sticky bottom-0 border-t border-white/50 bg-white/40 p-3.5 backdrop-blur-xl">
+      {/* 6. Sticky Add to plan bar - bottom-16 clears the fixed BottomNav
+          (h-~64px) which renders on this route and would otherwise sit on
+          top of (and intercept clicks on) a bottom-0 sticky bar. */}
+      <div className="sticky bottom-16 z-[1200] border-t border-white/50 bg-white/40 p-3.5 backdrop-blur-xl">
+        {showPlanToast && (
+          <div className="mx-auto mb-3 flex max-w-md items-center justify-between gap-3 rounded-xl bg-secondary-900/90 px-4 py-2.5 text-sm text-white">
+            <span>Added to your plan!</span>
+            <div className="flex items-center gap-3">
+              <Link
+                to="/itineraries?view=plan"
+                className="font-semibold underline"
+              >
+                View my plan
+              </Link>
+              <button
+                type="button"
+                onClick={() => setShowPlanToast(false)}
+                aria-label="Dismiss"
+                className="flex h-5 w-5 items-center justify-center"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          </div>
+        )}
         <div className="mx-auto max-w-md">
           <button
             type="button"
