@@ -9,5 +9,6 @@ namespace PaddleThroughLychnidos.Domain.Repositories
 {
     public interface ICategoryRepository : IRepository<Category>
     {
+        public Task<int> GetShopCountAsync(int categoryId);
     }
 }

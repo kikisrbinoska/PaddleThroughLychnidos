@@ -27,7 +27,6 @@ namespace PaddleThroughLychnidos.Domain.Entities
         public Category Category { get; set; } = null!;
 
         public string PhoneNumber { get; set; } = string.Empty;
-        public string WhatsappNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string InstagramHandle { get; set; } = string.Empty;
 
@@ -43,6 +42,30 @@ namespace PaddleThroughLychnidos.Domain.Entities
         // structured hours are known (e.g. shops imported from Google
         // Places, which only provided free-text OpeningHours above).
         public string? StructuredHoursJson { get; set; }
+
+        // Publication state for artisan-created shops - Pending until an
+        // admin approves it, at which point it becomes visible in
+        // public/tourist-facing queries (GET /api/shops, map, etc). Shops
+        // imported via the Google Places bulk import are backfilled to
+        // Approved (see AddShopApprovalAndAnalytics migration) since
+        // they're already live.
+        public ShopStatus Status { get; set; } = ShopStatus.Approved;
+
+        // Set by an admin's RejectShopCommand - shown to the artisan on
+        // their dashboard so they know what to fix before resubmitting.
+        // Cleared (set back to null) when the shop is resubmitted.
+        public string? RejectionReason { get; set; }
+
+        // Simple incrementing counter, bumped once per GET /api/shops/{id}
+        // call (see Shop.Queries.GetByIdHandler) - not a full analytics
+        // system, just enough for the Artisan Dashboard's stats row.
+        public int ViewCount { get; set; }
+
+        // Set on creation (Shop.Commands.AddHandler). Existing rows at the
+        // time this field was added are backfilled to that migration's
+        // apply time, since their real creation date isn't recoverable -
+        // see AddShopCreatedAt migration.
+        public DateTime CreatedAt { get; set; }
 
         public ICollection<ShopImage> Images { get; set; } = new List<ShopImage>();
         public ICollection<Product> Products { get; set; } = new List<Product>();

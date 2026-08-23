@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using PaddleThroughLychnidos.Domain.Entities;
 using PaddleThroughLychnidos.Domain.Repositories;
 using PaddleThroughLychnidos.Infrastructure.Data.DataContext;
@@ -13,6 +14,13 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
     {
         public ItineraryStopRepository(ApplicationDbContext context) : base(context, context.ItineraryStops)
         {
+        }
+
+        public async Task DeleteByItineraryIdAsync(int itineraryId)
+        {
+            await _context.ItineraryStops
+                .Where(s => s.ItineraryId == itineraryId)
+                .ExecuteDeleteAsync();
         }
     }
 }

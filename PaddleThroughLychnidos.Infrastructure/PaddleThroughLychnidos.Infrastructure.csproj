@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\bay.json" Link="Data\DataContext\SeedData\regions\bay.json" />
     <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\carsija.json" Link="Data\DataContext\SeedData\regions\carsija.json" />
     <Content Include="..\..\..\..\Downloads\drive-download-20260814T135735Z-1-001\krajbrezje.json" Link="Data\DataContext\SeedData\regions\krajbrezje.json" />

@@ -11,5 +11,6 @@ namespace PaddleThroughLychnidos.Domain.Repositories
     {
         public Task<Itinerary?> GetByIdWithStopsAsync(int id);
         public Task<(int count, List<Itinerary> list)> GetPagedAsync(int? pageNumber, int? pageSize, int? regionId, int? minDurationHours, int? maxDurationHours);
+        public Task<int> GetTotalCountAsync();
     }
 }

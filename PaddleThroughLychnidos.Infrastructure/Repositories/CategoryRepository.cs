@@ -16,5 +16,10 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
         {
 
         }
+
+        public async Task<int> GetShopCountAsync(int categoryId)
+        {
+            return await _context.Shops.CountAsync(s => s.CategoryId == categoryId);
+        }
     }
 }

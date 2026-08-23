@@ -39,11 +39,18 @@ export function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      await login({ username: username.trim(), password });
+      const user = await login({ username: username.trim(), password });
       const from = (location.state as { from?: Location })?.from;
-      navigate(from ? `${from.pathname}${from.search}` : "/home", {
-        replace: true,
-      });
+
+      if (from) {
+        navigate(`${from.pathname}${from.search}`, { replace: true });
+      } else if (user.role === "Administrator") {
+        navigate("/admin", { replace: true });
+      } else if (user.role === "Artisan") {
+        navigate("/artisan/dashboard", { replace: true });
+      } else {
+        navigate("/home", { replace: true });
+      }
     } catch (error) {
       setFormError(getErrorMessage(error, "Invalid username or password"));
     } finally {

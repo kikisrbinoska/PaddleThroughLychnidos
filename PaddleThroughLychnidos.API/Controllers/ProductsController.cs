@@ -2,8 +2,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 using PaddleThroughLychnidos.Application.Product.Commands;
 using PaddleThroughLychnidos.Application.Product.Queries;
+using PaddleThroughLychnidos.Domain.Shared;
+using System.Net;
+using System.Security.Claims;
 
 namespace PaddleThroughLychnidos.API.Controllers
 {
@@ -45,7 +49,9 @@ namespace PaddleThroughLychnidos.API.Controllers
         [Authorize]
         public async Task<ActionResult<AddResponse>> Add([FromBody] AddRequest request)
         {
-            _logger.LogInformation("Adding a new product");
+            var userId = GetCurrentUserId();
+            request.RequestingUserId = userId;
+            _logger.LogInformation("Adding a new product for user {userId}", userId);
             var product = await _mediator.Send(request);
 
             return Ok(product);
@@ -56,8 +62,10 @@ namespace PaddleThroughLychnidos.API.Controllers
         [Authorize]
         public async Task<ActionResult<EditResponse>> Put(int id, [FromBody] EditRequest request)
         {
-            _logger.LogInformation("Updating product with ID: {id}", id);
+            var userId = GetCurrentUserId();
             request.Id = id;
+            request.RequestingUserId = userId;
+            _logger.LogInformation("Updating product with ID: {id} for user {userId}", id, userId);
             var product = await _mediator.Send(request);
             return Ok(product);
         }
@@ -67,9 +75,23 @@ namespace PaddleThroughLychnidos.API.Controllers
         [Authorize]
         public async Task<ActionResult<DeleteResponse>> Delete(int id)
         {
-            _logger.LogInformation("Deleting product with ID: {id}", id);
-            var response = await _mediator.Send(new DeleteRequest { Id = id });
+            var userId = GetCurrentUserId();
+            _logger.LogInformation("Deleting product with ID: {id} for user {userId}", id, userId);
+            var response = await _mediator.Send(new DeleteRequest { Id = id, RequestingUserId = userId });
             return Ok(response);
+        }
+
+        private int GetCurrentUserId()
+        {
+            var value = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+                ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (value == null || !int.TryParse(value, out var userId))
+            {
+                throw new PaddleThroughLychnidosException("Invalid or missing user identity", HttpStatusCode.Unauthorized);
+            }
+
+            return userId;
         }
     }
 }

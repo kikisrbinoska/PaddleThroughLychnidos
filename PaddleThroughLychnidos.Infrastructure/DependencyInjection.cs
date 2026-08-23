@@ -6,6 +6,7 @@ using PaddleThroughLychnidos.Application.Abstractions;
 using PaddleThroughLychnidos.Domain.Repositories;
 using PaddleThroughLychnidos.Infrastructure.Authentication;
 using PaddleThroughLychnidos.Infrastructure.Data.DataContext;
+using PaddleThroughLychnidos.Infrastructure.Files;
 using PaddleThroughLychnidos.Infrastructure.Repositories;
 using PaddleThroughLychnidos.Infrastructure.Scraping;
 using PaddleThroughLychnidos.Infrastructure.YouTube;
@@ -37,6 +38,8 @@ namespace PaddleThroughLychnidos.Infrastructure
             services.AddScoped<INewsItemRepository, NewsItemRepository>();
             services.AddScoped<IPassportStampRepository, PassportStampRepository>();
             services.AddScoped<IDayPlanRepository, DayPlanRepository>();
+            services.AddScoped<IVerificationRequestRepository, VerificationRequestRepository>();
+            services.AddSingleton<IFileUploadService, LocalFileUploadService>();
 
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddScoped<IAuthService, AuthService>();

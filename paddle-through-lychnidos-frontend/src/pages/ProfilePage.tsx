@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Pencil, Settings, Stamp, Star, Store, Trash2 } from "lucide-react";
+import { Pencil, Settings, Stamp, Star, Store, Trash2, Wrench } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { userService } from "../services/userService";
 import { passportService } from "../services/passportService";
@@ -229,6 +229,20 @@ export function ProfilePage() {
                 </div>
               )}
             </section>
+
+            {user.role === "Artisan" && (
+              <section>
+                <Link
+                  to="/artisan/dashboard"
+                  className="flex items-center gap-2 rounded-2xl border border-primary-800 bg-primary-100 p-4"
+                >
+                  <Wrench size={18} className="text-primary-900" />
+                  <p className="text-sm font-bold text-primary-900">
+                    Artisan Dashboard
+                  </p>
+                </Link>
+              </section>
+            )}
 
             <section>
               <Link

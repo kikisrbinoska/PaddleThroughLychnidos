@@ -16,7 +16,6 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
         public int CategoryId { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public string WhatsappNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string InstagramHandle { get; set; } = string.Empty;
         public string? Website { get; set; }
@@ -25,5 +24,6 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
         public bool IsVerified { get; set; }
         public string OpeningHours { get; set; } = string.Empty;
         public bool? IsOpenNow { get; set; }
+        public string Status { get; set; } = string.Empty;
     }
 }

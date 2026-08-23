@@ -14,6 +14,17 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  // The client-wide default above forces application/json, which Axios
+  // does NOT override just because the body is FormData - it only
+  // auto-sets multipart/form-data (with the required boundary) when no
+  // Content-Type is already present. Without this, every multipart
+  // upload (shop images, product images, verification documents) gets
+  // sent as JSON and the API's [FromForm] parameters bind as empty.
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+  }
+
   return config;
 });
 

@@ -1,4 +1,5 @@
 using MediatR;
+using PaddleThroughLychnidos.Domain.Entities;
 using PaddleThroughLychnidos.Domain.Repositories;
 using PaddleThroughLychnidos.Domain.Shared;
 using System.Net;
@@ -26,14 +27,24 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
 
         public async Task<AddResponse> Handle(AddRequest request, CancellationToken cancellationToken)
         {
-            _ = await _userRepository.GetByIdAsync(request.OwnerId)
+            var owner = await _userRepository.GetByIdAsync(request.OwnerId)
                 ?? throw new PaddleThroughLychnidosException("Owner not found", HttpStatusCode.NotFound);
 
-            _ = await _regionRepository.GetByIdAsync(request.RegionId)
-                ?? throw new PaddleThroughLychnidosException("Region not found", HttpStatusCode.NotFound);
+            if (request.RegionId.HasValue)
+            {
+                _ = await _regionRepository.GetByIdAsync(request.RegionId.Value)
+                    ?? throw new PaddleThroughLychnidosException("Region not found", HttpStatusCode.NotFound);
+            }
 
             _ = await _categoryRepository.GetByIdAsync(request.CategoryId)
                 ?? throw new PaddleThroughLychnidosException("Category not found", HttpStatusCode.NotFound);
+
+            // Artisan-created shops start Pending and stay invisible in
+            // public listings until an admin approves them (see
+            // ShopRepository.GetPagedAsync). Shops created any other way
+            // (e.g. a future admin-created flow) default to Approved,
+            // matching how bulk-imported shops already behave.
+            var status = owner.Role == UserRole.Artisan ? ShopStatus.Pending : ShopStatus.Approved;
 
             var shop = new Domain.Entities.Shop
             {
@@ -47,11 +58,13 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
                 RegionId = request.RegionId,
                 CategoryId = request.CategoryId,
                 PhoneNumber = request.PhoneNumber,
-                WhatsappNumber = request.WhatsappNumber,
                 Email = request.Email,
                 InstagramHandle = request.InstagramHandle,
+                Website = request.Website,
                 IsVerified = false,
                 OpeningHours = request.OpeningHours,
+                Status = status,
+                CreatedAt = DateTime.UtcNow,
             };
 
             await _shopRepository.AddAsync(shop);
@@ -69,12 +82,15 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
                 RegionId = shop.RegionId,
                 CategoryId = shop.CategoryId,
                 PhoneNumber = shop.PhoneNumber,
-                WhatsappNumber = shop.WhatsappNumber,
                 Email = shop.Email,
                 InstagramHandle = shop.InstagramHandle,
+                Website = shop.Website,
                 IsVerified = shop.IsVerified,
                 OpeningHours = shop.OpeningHours,
-                Message = "Shop created successfully",
+                Status = shop.Status.ToString(),
+                Message = status == ShopStatus.Pending
+                    ? "Your shop has been submitted for review and will be visible to visitors once approved, usually within 2-3 business days."
+                    : "Shop created successfully",
             };
         }
     }

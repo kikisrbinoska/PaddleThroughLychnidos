@@ -18,8 +18,13 @@ namespace PaddleThroughLychnidos.Application.Product.Commands
 
         public async Task<AddResponse> Handle(AddRequest request, CancellationToken cancellationToken)
         {
-            _ = await _shopRepository.GetByIdAsync(request.ShopId)
+            var shop = await _shopRepository.GetByIdAsync(request.ShopId)
                 ?? throw new PaddleThroughLychnidosException("Shop not found", HttpStatusCode.NotFound);
+
+            if (shop.OwnerId != request.RequestingUserId)
+            {
+                throw new PaddleThroughLychnidosException("You do not have permission to add products to this shop", HttpStatusCode.Forbidden);
+            }
 
             var product = new Domain.Entities.Product
             {

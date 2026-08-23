@@ -12,5 +12,10 @@ namespace PaddleThroughLychnidos.Domain.Repositories
         public Task<(int count, List<Shop> list)> GetPagedAsync(int? pageNumber, int? pageSize, string? searchWord, int? categoryId, int? regionId);
         public Task<int> GetTotalNumberAsync();
         public Task<List<Shop>> GetByIdsAsync(IEnumerable<int> ids);
+        public Task<Shop?> GetByOwnerIdAsync(int ownerId);
+        public Task<List<Shop>> GetPendingAsync();
+        public Task<int> GetSavedCountAsync(int shopId);
+        public Task<int> GetCountByStatusAsync(ShopStatus status);
+        public Task<int> GetVerifiedCountAsync();
     }
 }

@@ -1,8 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 using PaddleThroughLychnidos.Application.Shop.Commands;
 using PaddleThroughLychnidos.Application.Shop.Queries;
+using System.Security.Claims;
 using ReviewQueries = PaddleThroughLychnidos.Application.Review.Queries;
 
 namespace PaddleThroughLychnidos.API.Controllers
@@ -46,7 +48,11 @@ namespace PaddleThroughLychnidos.API.Controllers
         public async Task<ActionResult<GetByIdResponse>> Get(int id)
         {
             _logger.LogInformation("Fetching shop with ID: {id}", id);
-            var shop = await _mediator.Send(new GetByIdRequest { Id = id });
+            // Optional - lets a logged-in owner/admin preview a Pending or
+            // Rejected shop that would otherwise 404 for the public (see
+            // Shop.Queries.GetByIdHandler). Anonymous requests just get null.
+            var requestingUserId = TryGetCurrentUserId();
+            var shop = await _mediator.Send(new GetByIdRequest { Id = id, RequestingUserId = requestingUserId });
             return Ok(shop);
         }
 
@@ -60,35 +66,56 @@ namespace PaddleThroughLychnidos.API.Controllers
             return Ok(reviews);
         }
 
-        // POST api/<ShopsController>
+        // POST api/<ShopsController> - Administrator-only direct creation
+        // (e.g. tooling/import flows). Artisans create shops via
+        // POST /api/artisan/shop instead, which enforces the Pending
+        // approval workflow.
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<AddResponse>> Add([FromBody] AddRequest request)
         {
+            var userId = GetCurrentUserId();
+            request.OwnerId = request.OwnerId > 0 ? request.OwnerId : userId;
             _logger.LogInformation("Adding a new shop");
             var shop = await _mediator.Send(request);
             return Ok(shop);
         }
 
-        // PUT api/<ShopsController>/5
+        // PUT api/<ShopsController>/5 - Administrator-only direct edit.
+        // Artisans edit their own shop via PUT /api/artisan/shop/{id}.
         [HttpPut("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<EditResponse>> Put(int id, [FromBody] EditRequest request)
         {
-            _logger.LogInformation("Updating shop with ID: {id}", id);
+            var userId = GetCurrentUserId();
             request.Id = id;
+            request.RequestingUserId = userId;
+            _logger.LogInformation("Updating shop with ID: {id}", id);
             var shop = await _mediator.Send(request);
             return Ok(shop);
         }
 
         // DELETE api/<ShopsController>/5
         [HttpDelete("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<DeleteResponse>> Delete(int id)
         {
             _logger.LogInformation("Deleting shop with ID: {id}", id);
             var response = await _mediator.Send(new DeleteRequest { Id = id });
             return Ok(response);
+        }
+
+        private int? TryGetCurrentUserId()
+        {
+            var value = User.FindFirstValue(JwtRegisteredClaimNames.Sub)
+                ?? User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return value is not null && int.TryParse(value, out var userId) ? userId : null;
+        }
+
+        private int GetCurrentUserId()
+        {
+            return TryGetCurrentUserId() ?? 0;
         }
     }
 }

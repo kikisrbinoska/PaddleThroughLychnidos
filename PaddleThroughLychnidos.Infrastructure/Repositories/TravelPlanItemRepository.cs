@@ -28,5 +28,12 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
         }
+
+        public async Task DeleteByItineraryIdAsync(int itineraryId)
+        {
+            await _context.TravelPlanItems
+                .Where(t => t.ItineraryId == itineraryId)
+                .ExecuteDeleteAsync();
+        }
     }
 }

@@ -39,9 +39,20 @@ namespace PaddleThroughLychnidos.API.Controllers
             return Ok(category);
         }
 
+        // GET api/categories/admin - includes ShopCount per category, for
+        // the Manage Categories admin screen.
+        [HttpGet("admin")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<List<GetForAdminResponse>>> GetForAdmin()
+        {
+            _logger.LogInformation("Fetching categories for admin management");
+            var categories = await _mediator.Send(new GetForAdminRequest());
+            return Ok(categories);
+        }
+
         // POST api/<CategoriesController>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<AddResponse>> Add([FromBody] AddRequest request)
         {
             _logger.LogInformation("Adding a new category");
@@ -51,7 +62,7 @@ namespace PaddleThroughLychnidos.API.Controllers
 
         // PUT api/<CategoriesController>/5
         [HttpPut("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<EditResponse>> Put(int id, [FromBody] EditRequest request)
         {
             _logger.LogInformation("Updating category with ID: {id}", id);
@@ -62,7 +73,7 @@ namespace PaddleThroughLychnidos.API.Controllers
 
         // DELETE api/<CategoriesController>/5
         [HttpDelete("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<DeleteResponse>> Delete(int id)
         {
             _logger.LogInformation("Deleting category with ID: {id}", id);

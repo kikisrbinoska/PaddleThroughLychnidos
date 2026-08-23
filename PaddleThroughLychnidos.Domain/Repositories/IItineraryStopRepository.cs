@@ -9,5 +9,6 @@ namespace PaddleThroughLychnidos.Domain.Repositories
 {
     public interface IItineraryStopRepository : IRepository<ItineraryStop>
     {
+        public Task DeleteByItineraryIdAsync(int itineraryId);
     }
 }

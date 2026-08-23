@@ -16,5 +16,22 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
         {
 
         }
+
+        public async Task<int> GetShopCountAsync(int regionId)
+        {
+            return await _context.Shops.CountAsync(s => s.RegionId == regionId);
+        }
+
+        public async Task<int> GetItineraryCountAsync(int regionId)
+        {
+            return await _context.Itineraries.CountAsync(i => i.RegionId == regionId);
+        }
+
+        public async Task UnassignShopsAsync(int regionId)
+        {
+            await _context.Shops
+                .Where(s => s.RegionId == regionId)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.RegionId, (int?)null));
+        }
     }
 }

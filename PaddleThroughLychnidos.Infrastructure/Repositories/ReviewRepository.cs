@@ -54,5 +54,10 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
 
             return (count, list);
         }
+
+        public async Task<int> GetTotalCountAsync()
+        {
+            return await _context.Reviews.CountAsync();
+        }
     }
 }

@@ -27,19 +27,16 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
                 .InclusiveBetween(-180, 180);
 
             RuleFor(x => x.Address)
-                .NotEmpty()
                 .MaximumLength(300);
 
             RuleFor(x => x.RegionId)
-                .GreaterThan(0);
+                .GreaterThan(0)
+                .When(x => x.RegionId.HasValue);
 
             RuleFor(x => x.CategoryId)
                 .GreaterThan(0);
 
             RuleFor(x => x.PhoneNumber)
-                .MaximumLength(30);
-
-            RuleFor(x => x.WhatsappNumber)
                 .MaximumLength(30);
 
             RuleFor(x => x.Email)

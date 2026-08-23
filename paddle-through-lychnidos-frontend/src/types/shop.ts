@@ -63,7 +63,6 @@ export interface ShopDetail {
   categoryId: number;
   categoryName: string;
   phoneNumber: string;
-  whatsappNumber: string;
   email: string;
   instagramHandle: string;
   // Populated for shops imported from Google Places; null otherwise.
@@ -93,7 +92,6 @@ export interface Shop {
   regionId: number | null;
   categoryId: number;
   phoneNumber: string;
-  whatsappNumber: string;
   email: string;
   instagramHandle: string;
   website: string | null;

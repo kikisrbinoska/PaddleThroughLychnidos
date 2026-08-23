@@ -39,9 +39,20 @@ namespace PaddleThroughLychnidos.API.Controllers
             return Ok(region);
         }
 
+        // GET api/regions/admin - includes ShopCount/ItineraryCount per
+        // region, for the Manage Regions admin screen.
+        [HttpGet("admin")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<List<GetForAdminResponse>>> GetForAdmin()
+        {
+            _logger.LogInformation("Fetching regions for admin management");
+            var regions = await _mediator.Send(new GetForAdminRequest());
+            return Ok(regions);
+        }
+
         // POST api/<RegionsController>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<AddResponse>> Add([FromBody] AddRequest request)
         {
             _logger.LogInformation("Adding a new region");
@@ -51,7 +62,7 @@ namespace PaddleThroughLychnidos.API.Controllers
 
         // PUT api/<RegionsController>/5
         [HttpPut("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<EditResponse>> Put(int id, [FromBody] EditRequest request)
         {
             _logger.LogInformation("Updating region with ID: {id}", id);
@@ -62,7 +73,7 @@ namespace PaddleThroughLychnidos.API.Controllers
 
         // DELETE api/<RegionsController>/5
         [HttpDelete("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<DeleteResponse>> Delete(int id)
         {
             _logger.LogInformation("Deleting region with ID: {id}", id);

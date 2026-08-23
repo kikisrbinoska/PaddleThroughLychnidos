@@ -22,6 +22,18 @@ import { SplashPage } from "./pages/SplashPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { ForgotPasswordConfirmationPage } from "./pages/ForgotPasswordConfirmationPage";
+import { ArtisanDashboardPage } from "./pages/ArtisanDashboardPage";
+import { EditShopPage } from "./pages/EditShopPage";
+import { ManageProductsPage } from "./pages/ManageProductsPage";
+import { EditProductPage } from "./pages/EditProductPage";
+import { VerificationRequestPage } from "./pages/VerificationRequestPage";
+import { AdminDashboardPage } from "./pages/admin/AdminDashboardPage";
+import { PendingShopsPage } from "./pages/admin/PendingShopsPage";
+import { VerificationRequestsPage } from "./pages/admin/VerificationRequestsPage";
+import { ManageCategoriesPage } from "./pages/admin/ManageCategoriesPage";
+import { ManageRegionsPage } from "./pages/admin/ManageRegionsPage";
+import { ManageItinerariesPage } from "./pages/admin/ManageItinerariesPage";
+import { EditItineraryPage } from "./pages/admin/EditItineraryPage";
 
 const ROUTES_WITHOUT_BOTTOM_NAV = [
   "/",
@@ -34,7 +46,12 @@ const ROUTES_WITHOUT_BOTTOM_NAV = [
 
 function AppLayout() {
   const location = useLocation();
-  const showBottomNav = !ROUTES_WITHOUT_BOTTOM_NAV.includes(location.pathname);
+  // Admin pages bring their own AdminLayout sidebar nav (desktop-first,
+  // deliberately distinct from the rest of the mobile-first app) - the
+  // tourist-facing BottomNav would just overlap it.
+  const showBottomNav =
+    !ROUTES_WITHOUT_BOTTOM_NAV.includes(location.pathname) &&
+    !location.pathname.startsWith("/admin");
 
   return (
     <>
@@ -72,6 +89,126 @@ function AppLayout() {
           element={
             <ProtectedRoute>
               <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artisan/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["Artisan"]}>
+              <ArtisanDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artisan/shop/create"
+          element={
+            <ProtectedRoute allowedRoles={["Artisan"]}>
+              <EditShopPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artisan/shop/edit"
+          element={
+            <ProtectedRoute allowedRoles={["Artisan"]}>
+              <EditShopPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artisan/products"
+          element={
+            <ProtectedRoute allowedRoles={["Artisan"]}>
+              <ManageProductsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artisan/products/new"
+          element={
+            <ProtectedRoute allowedRoles={["Artisan"]}>
+              <EditProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artisan/products/:id/edit"
+          element={
+            <ProtectedRoute allowedRoles={["Artisan"]}>
+              <EditProductPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artisan/verification"
+          element={
+            <ProtectedRoute allowedRoles={["Artisan"]}>
+              <VerificationRequestPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <AdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/shops/pending"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <PendingShopsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/verifications"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <VerificationRequestsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/categories"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <ManageCategoriesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/regions"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <ManageRegionsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/itineraries"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <ManageItinerariesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/itineraries/new"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <EditItineraryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/itineraries/:id/edit"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <EditItineraryPage />
             </ProtectedRoute>
           }
         />

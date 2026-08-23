@@ -17,7 +17,7 @@ export interface AuthContextValue {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (credentials: LoginRequest) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<AuthUser>;
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => void;
 }
@@ -77,13 +77,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await authService.login(credentials);
     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, response.token);
     setToken(response.token);
-    setUser({
+    const loggedInUser: AuthUser = {
       id: response.id,
       name: response.name,
       username: response.username,
       email: response.email,
       role: response.role,
-    });
+    };
+    setUser(loggedInUser);
+    return loggedInUser;
   }
 
   async function register(data: RegisterRequest) {

@@ -521,6 +521,9 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -563,6 +566,13 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                     b.Property<int?>("RegionId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Story")
                         .IsRequired()
                         .HasColumnType("text");
@@ -573,11 +583,10 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                     b.Property<int?>("UserRatingCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Website")
-                        .HasColumnType("text");
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("WhatsappNumber")
-                        .IsRequired()
+                    b.Property<string>("Website")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -587,6 +596,8 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("RegionId");
+
+                    b.HasIndex("Status");
 
                     b.ToTable("Shops", "public");
                 });
@@ -684,6 +695,52 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", "public");
+                });
+
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.VerificationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DocumentUrlsJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RejectionReason")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ReviewedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ReviewedByAdminId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ShopId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewedByAdminId");
+
+                    b.HasIndex("ShopId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("VerificationRequests", "public");
                 });
 
             modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.DayPlan", b =>
@@ -875,6 +932,24 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                     b.Navigation("Shop");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.VerificationRequest", b =>
+                {
+                    b.HasOne("PaddleThroughLychnidos.Domain.Entities.User", "ReviewedByAdmin")
+                        .WithMany()
+                        .HasForeignKey("ReviewedByAdminId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PaddleThroughLychnidos.Domain.Entities.Shop", "Shop")
+                        .WithMany()
+                        .HasForeignKey("ShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReviewedByAdmin");
+
+                    b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("PaddleThroughLychnidos.Domain.Entities.Category", b =>

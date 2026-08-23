@@ -102,6 +102,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Serves files saved under wwwroot/uploads by LocalFileUploadService
+// (shop gallery images, verification documents) at /uploads/....
+app.UseStaticFiles();
+
 app.UseCors("AllowFrontend");
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();

@@ -23,6 +23,7 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
         public DbSet<PassportStamp> PassportStamps { get; set; } = null!;
         public DbSet<DayPlan> DayPlans { get; set; } = null!;
         public DbSet<DayPlanStop> DayPlanStops { get; set; } = null!;
+        public DbSet<VerificationRequest> VerificationRequests { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -119,9 +120,12 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
                     .HasForeignKey(s => s.CategoryId)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                builder.Property(s => s.Status).HasConversion<string>();
+
                 builder.HasIndex(s => s.OwnerId);
                 builder.HasIndex(s => s.RegionId);
                 builder.HasIndex(s => s.CategoryId);
+                builder.HasIndex(s => s.Status);
             });
 
             modelBuilder.Entity<ShopImage>(builder =>
@@ -289,6 +293,25 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
                 builder.HasIndex(s => s.DayPlanId);
                 builder.HasIndex(s => s.ShopId);
                 builder.HasIndex(s => new { s.DayPlanId, s.Order }).IsUnique();
+            });
+
+            modelBuilder.Entity<VerificationRequest>(builder =>
+            {
+                builder.Property(r => r.Status).HasConversion<string>();
+
+                builder.HasOne(r => r.Shop)
+                    .WithMany()
+                    .HasForeignKey(r => r.ShopId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                builder.HasOne(r => r.ReviewedByAdmin)
+                    .WithMany()
+                    .HasForeignKey(r => r.ReviewedByAdminId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                builder.HasIndex(r => r.ShopId);
+                builder.HasIndex(r => r.Status);
             });
 
             base.OnModelCreating(modelBuilder);

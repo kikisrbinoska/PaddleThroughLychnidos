@@ -47,3 +47,36 @@ export interface ItineraryDetail {
   difficulty: ItineraryDifficulty;
   stops: ItineraryStop[];
 }
+
+// Mirrors PaddleThroughLychnidos.Application.Itinerary.Commands.CreateStopRequest /
+// EditStopRequest - the admin form sends this shape for both create and edit.
+export interface ItineraryStopInput {
+  shopId: number;
+  notes: string;
+  // "hh:mm:ss" string - TimeSpan's default System.Text.Json wire format.
+  suggestedTime: string;
+}
+
+export interface ItinerarySaveFields {
+  title: string;
+  description: string;
+  coverImageUrl: string;
+  durationHours: number;
+  regionId: number;
+  difficulty: ItineraryDifficulty;
+  stops: ItineraryStopInput[];
+}
+
+// Mirrors PaddleThroughLychnidos.Application.Itinerary.Commands.CreateResponse /
+// EditResponse (the fields the admin form actually uses).
+export interface ItinerarySaveResponse {
+  id: number;
+  title: string;
+  message: string;
+}
+
+// Mirrors PaddleThroughLychnidos.Application.Itinerary.Commands.DeleteResponse.
+export interface ItineraryDeleteResponse {
+  id: number;
+  message: string;
+}

@@ -1,4 +1,5 @@
 using MediatR;
+using PaddleThroughLychnidos.Domain.Entities;
 using PaddleThroughLychnidos.Domain.Repositories;
 using PaddleThroughLychnidos.Domain.Shared;
 using System.Net;
@@ -32,6 +33,31 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                 throw new PaddleThroughLychnidosException($"Shop with Id {request.Id} not found.", HttpStatusCode.NotFound);
             }
 
+            if (shop.Status != ShopStatus.Approved)
+            {
+                var isOwner = request.RequestingUserId.HasValue && shop.OwnerId == request.RequestingUserId.Value;
+                var requestingUser = request.RequestingUserId.HasValue
+                    ? await _userRepository.GetByIdAsync(request.RequestingUserId.Value)
+                    : null;
+                var isAdmin = requestingUser?.Role == UserRole.Administrator;
+
+                if (!isOwner && !isAdmin)
+                {
+                    // Not-yet-approved shops don't exist as far as the
+                    // public is concerned - a 404 (not 403) avoids leaking
+                    // that a shop with this id exists at all.
+                    throw new PaddleThroughLychnidosException($"Shop with Id {request.Id} not found.", HttpStatusCode.NotFound);
+                }
+            }
+            else
+            {
+                // Simple view counter, per task scope - only counts views
+                // of live/Approved shops, not the owner previewing their
+                // own Pending listing.
+                shop.ViewCount += 1;
+                await _shopRepository.UpdateAsync(shop);
+            }
+
             var owner = shop.OwnerId.HasValue ? await _userRepository.GetByIdAsync(shop.OwnerId.Value) : null;
             var region = shop.RegionId.HasValue ? await _regionRepository.GetByIdAsync(shop.RegionId.Value) : null;
             var category = await _categoryRepository.GetByIdAsync(shop.CategoryId);
@@ -52,7 +78,6 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                 CategoryId = shop.CategoryId,
                 CategoryName = category?.Name ?? "Unknown",
                 PhoneNumber = shop.PhoneNumber,
-                WhatsappNumber = shop.WhatsappNumber,
                 Email = shop.Email,
                 InstagramHandle = shop.InstagramHandle,
                 Website = shop.Website,
@@ -61,6 +86,7 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                 IsVerified = shop.IsVerified,
                 OpeningHours = shop.OpeningHours,
                 IsOpenNow = OpenNowCalculator.IsOpenAt(shop.StructuredHoursJson, DateTimeOffset.Now),
+                Status = shop.Status.ToString(),
             };
         }
     }

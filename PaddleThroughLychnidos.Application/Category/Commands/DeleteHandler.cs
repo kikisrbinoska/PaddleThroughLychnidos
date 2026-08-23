@@ -19,6 +19,14 @@ namespace PaddleThroughLychnidos.Application.Category.Commands
             var category = await _categoryRepository.GetByIdAsync(request.Id)
                 ?? throw new PaddleThroughLychnidosException("Category not found", HttpStatusCode.NotFound);
 
+            var shopCount = await _categoryRepository.GetShopCountAsync(request.Id);
+            if (shopCount > 0)
+            {
+                throw new PaddleThroughLychnidosException(
+                    $"Cannot delete this category - {shopCount} shop(s) still use it. Reassign those shops to a different category first.",
+                    HttpStatusCode.Conflict);
+            }
+
             await _categoryRepository.DeleteAsync(category);
 
             return new DeleteResponse

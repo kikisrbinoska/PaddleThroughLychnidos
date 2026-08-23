@@ -33,5 +33,15 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
                 .Where(u => ids.Contains(u.Id))
                 .ToListAsync();
         }
+
+        public async Task<int> GetTotalCountAsync()
+        {
+            return await _context.Users.CountAsync();
+        }
+
+        public async Task<int> GetCountByRoleAsync(UserRole role)
+        {
+            return await _context.Users.CountAsync(u => u.Role == role);
+        }
     }
 }

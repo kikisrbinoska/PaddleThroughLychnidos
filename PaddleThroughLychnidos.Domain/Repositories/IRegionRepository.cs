@@ -9,5 +9,8 @@ namespace PaddleThroughLychnidos.Domain.Repositories
 {
     public interface IRegionRepository : IRepository<Region>
     {
+        public Task<int> GetShopCountAsync(int regionId);
+        public Task<int> GetItineraryCountAsync(int regionId);
+        public Task UnassignShopsAsync(int regionId);
     }
 }

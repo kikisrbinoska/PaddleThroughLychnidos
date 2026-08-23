@@ -9,6 +9,9 @@ namespace PaddleThroughLychnidos.Application.Product.Commands
             RuleFor(x => x.ShopId)
                 .GreaterThan(0);
 
+            RuleFor(x => x.RequestingUserId)
+                .GreaterThan(0);
+
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .MaximumLength(150);

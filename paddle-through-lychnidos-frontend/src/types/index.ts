@@ -14,3 +14,6 @@ export * from "./learnVideo";
 export * from "./newsItem";
 export * from "./passport";
 export * from "./dayPlan";
+export * from "./artisanShop";
+export * from "./verification";
+export * from "./admin";

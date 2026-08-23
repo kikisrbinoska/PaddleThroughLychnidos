@@ -48,5 +48,26 @@ namespace PaddleThroughLychnidos.API.Controllers
             var itinerary = await _mediator.Send(request);
             return Ok(itinerary);
         }
+
+        // PUT api/<ItinerariesController>/5
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<EditResponse>> Put(int id, [FromBody] EditRequest request)
+        {
+            _logger.LogInformation("Updating itinerary with ID: {id}", id);
+            request.Id = id;
+            var itinerary = await _mediator.Send(request);
+            return Ok(itinerary);
+        }
+
+        // DELETE api/<ItinerariesController>/5
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<DeleteResponse>> Delete(int id)
+        {
+            _logger.LogInformation("Deleting itinerary with ID: {id}", id);
+            var response = await _mediator.Send(new DeleteRequest { Id = id });
+            return Ok(response);
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace PaddleThroughLychnidos.Domain.Repositories
     public interface ITravelPlanItemRepository : IRepository<TravelPlanItem>
     {
         public Task<List<TravelPlanItem>> GetByUserIdAsync(int userId);
+        public Task DeleteByItineraryIdAsync(int itineraryId);
     }
 }

@@ -1,5 +1,11 @@
 import apiClient from "./apiClient";
-import type { ItineraryDetail, ItineraryListResponse } from "../types";
+import type {
+  ItineraryDeleteResponse,
+  ItineraryDetail,
+  ItineraryListResponse,
+  ItinerarySaveFields,
+  ItinerarySaveResponse,
+} from "../types";
 
 export interface ItineraryListParams {
   regionId?: number;
@@ -22,4 +28,19 @@ export const itineraryService = {
     apiClient
       .get<ItineraryDetailResponse>(`/itineraries/${id}`)
       .then((res) => res.data.itinerary),
+
+  // Admin-only below - apiClient's interceptor attaches the bearer token,
+  // and the API requires the Administrator role. See ItinerariesController.
+  create: (fields: ItinerarySaveFields) =>
+    apiClient
+      .post<ItinerarySaveResponse>("/itineraries", fields)
+      .then((res) => res.data),
+  update: (id: number, fields: ItinerarySaveFields) =>
+    apiClient
+      .put<ItinerarySaveResponse>(`/itineraries/${id}`, fields)
+      .then((res) => res.data),
+  remove: (id: number) =>
+    apiClient
+      .delete<ItineraryDeleteResponse>(`/itineraries/${id}`)
+      .then((res) => res.data),
 };

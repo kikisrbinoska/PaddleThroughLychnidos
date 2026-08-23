@@ -22,6 +22,11 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
                 .Include(s => s.Region)
                 .Include(s => s.Category)
                 .Include(s => s.Images)
+                // Public/tourist-facing listing - Pending and Rejected
+                // artisan shops stay invisible here until an admin
+                // approves them. Artisans see their own shop regardless of
+                // status via GET /api/artisan/my-shop instead.
+                .Where(s => s.Status == ShopStatus.Approved)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchWord))
@@ -67,6 +72,47 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
             return await _context.Shops
                 .Where(s => idList.Contains(s.Id))
                 .ToListAsync();
+        }
+
+        public async Task<Shop?> GetByOwnerIdAsync(int ownerId)
+        {
+            return await _context.Shops
+                .Include(s => s.Region)
+                .Include(s => s.Category)
+                .Include(s => s.Images)
+                // The UI currently designs for one shop per artisan (see
+                // task notes) - if an owner ever has more than one, this
+                // deterministically picks the most recently created.
+                .Where(s => s.OwnerId == ownerId)
+                .OrderByDescending(s => s.Id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Shop>> GetPendingAsync()
+        {
+            return await _context.Shops
+                .Include(s => s.Region)
+                .Include(s => s.Category)
+                .Include(s => s.Owner)
+                .Where(s => s.Status == ShopStatus.Pending)
+                .OrderByDescending(s => s.CreatedAt)
+                .ThenByDescending(s => s.Id)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetSavedCountAsync(int shopId)
+        {
+            return await _context.TravelPlanItems.CountAsync(t => t.ShopId == shopId);
+        }
+
+        public async Task<int> GetCountByStatusAsync(ShopStatus status)
+        {
+            return await _context.Shops.CountAsync(s => s.Status == status);
+        }
+
+        public async Task<int> GetVerifiedCountAsync()
+        {
+            return await _context.Shops.CountAsync(s => s.IsVerified);
         }
     }
 }

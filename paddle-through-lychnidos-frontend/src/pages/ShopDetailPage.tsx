@@ -166,18 +166,22 @@ export function ShopDetailPage() {
           >
             <ChevronLeft size={20} />
           </button>
-
-          {shop.isVerified && (
-            <span className="absolute bottom-4 left-4 flex items-center gap-1.5 rounded-full border border-white/50 bg-secondary-900/35 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-lg">
-              <Check size={14} />
-              Verified artisan
-            </span>
-          )}
         </div>
 
         {/* 2. Info card */}
         <div className="relative z-10 -mt-10 mx-4 rounded-2xl border border-white/60 bg-white/55 p-4 shadow-lg shadow-primary-900/10 backdrop-blur-xl">
-          <h1 className="text-lg font-medium text-primary-800">{shop.name}</h1>
+          <div className="flex items-center gap-1.5">
+            <h1 className="text-lg font-medium text-primary-800">{shop.name}</h1>
+            {shop.isVerified && (
+              <span
+                title="Verified artisan"
+                aria-label="Verified artisan"
+                className="flex h-5 w-5 flex-none items-center justify-center rounded-full bg-secondary-700 text-white"
+              >
+                <Check size={12} strokeWidth={3} />
+              </span>
+            )}
+          </div>
 
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             <span
@@ -239,11 +243,11 @@ export function ShopDetailPage() {
             </p>
           )}
 
-          {(shop.phoneNumber || shop.whatsappNumber || shop.email) && (
+          {(shop.phoneNumber || shop.email) && (
             <div className="mt-3 flex gap-2">
-              {(shop.whatsappNumber || shop.phoneNumber) && (
+              {shop.phoneNumber && (
                 <a
-                  href={`https://wa.me/${toWhatsAppNumber(shop.whatsappNumber || shop.phoneNumber)}`}
+                  href={`https://wa.me/${toWhatsAppNumber(shop.phoneNumber)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-secondary-900/90 py-2.5 text-xs font-semibold text-white"

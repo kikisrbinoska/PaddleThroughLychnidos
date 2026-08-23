@@ -1,0 +1,354 @@
+import { useEffect, useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChevronLeft, ImagePlus } from "lucide-react";
+import { artisanService } from "../services/artisanService";
+import { categoryService } from "../services/categoryService";
+import { regionService } from "../services/regionService";
+import { getErrorMessage } from "../services/errorMessage";
+import type { Category, OwnedShop, Region, ShopFormFields } from "../types";
+import { Button } from "../components/Button";
+import { TextField } from "../components/TextField";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const EMPTY_FIELDS: ShopFormFields = {
+  name: "",
+  description: "",
+  story: "",
+  categoryId: 0,
+  regionId: null,
+  phoneNumber: "",
+  email: "",
+  instagramHandle: "",
+  website: "",
+  openingHours: "",
+};
+
+export function EditShopPage() {
+  const navigate = useNavigate();
+
+  const [existingShop, setExistingShop] = useState<OwnedShop | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [regions, setRegions] = useState<Region[]>([]);
+
+  const [fields, setFields] = useState<ShopFormFields>(EMPTY_FIELDS);
+  const [images, setImages] = useState<string[]>([]);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedMessage, setSubmittedMessage] = useState<string | null>(null);
+
+  const isEditing = existingShop !== null;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    Promise.all([
+      artisanService.getMyShop(),
+      categoryService.getAll(),
+      regionService.getAll(),
+    ])
+      .then(([myShop, categoryList, regionList]) => {
+        if (cancelled) return;
+        setCategories(categoryList);
+        setRegions(regionList);
+
+        if (myShop.shop) {
+          setExistingShop(myShop.shop);
+          setImages(myShop.shop.imageUrls);
+          setFields({
+            name: myShop.shop.name,
+            description: myShop.shop.description,
+            story: myShop.shop.story,
+            categoryId: myShop.shop.categoryId,
+            regionId: myShop.shop.regionId,
+            phoneNumber: myShop.shop.phoneNumber,
+            email: myShop.shop.email,
+            instagramHandle: myShop.shop.instagramHandle,
+            website: myShop.shop.website ?? "",
+            openingHours: myShop.shop.openingHours,
+          });
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setFormError(getErrorMessage(err, "Could not load shop data."));
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function update<K extends keyof ShopFormFields>(key: K, value: ShopFormFields[K]) {
+    setFields((current) => ({ ...current, [key]: value }));
+  }
+
+  function validate(): boolean {
+    const nextErrors: Record<string, string> = {};
+    if (!fields.name.trim()) nextErrors.name = "Shop name is required";
+    if (!fields.description.trim()) nextErrors.description = "Description is required";
+    if (!fields.categoryId) nextErrors.categoryId = "Choose a category";
+    if (fields.email && !EMAIL_PATTERN.test(fields.email.trim())) {
+      nextErrors.email = "Enter a valid email address";
+    }
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  }
+
+  async function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !existingShop) return;
+
+    setIsUploadingImage(true);
+    try {
+      const response = await artisanService.uploadShopImage(existingShop.id, file);
+      setImages((current) => [...current, response.url]);
+    } catch (err) {
+      setFormError(getErrorMessage(err, "Could not upload image."));
+    } finally {
+      setIsUploadingImage(false);
+    }
+  }
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    setFormError("");
+    setSubmittedMessage(null);
+
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    try {
+      if (isEditing) {
+        await artisanService.updateShop(existingShop.id, fields);
+        setSubmittedMessage("Your shop has been updated.");
+        setTimeout(() => navigate("/artisan/dashboard"), 1200);
+      } else {
+        const response = await artisanService.createShop(fields);
+        setSubmittedMessage(
+          response.message ||
+            "Your shop has been submitted for review and will be visible to visitors once approved, usually within 2-3 business days.",
+        );
+        setTimeout(() => navigate("/artisan/dashboard"), 2000);
+      }
+    } catch (err) {
+      setFormError(getErrorMessage(err, "Could not save your shop."));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="min-h-svh bg-surface-bg pb-24">
+      <header className="flex items-center gap-3 px-6 pt-8">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          aria-label="Back"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+        >
+          <ChevronLeft size={20} />
+        </button>
+        <h1 className="text-lg font-extrabold text-primary-900">
+          {isEditing ? "Edit Shop Profile" : "Create Your Shop"}
+        </h1>
+      </header>
+
+      <div className="mx-auto mt-6 flex w-full max-w-sm flex-col gap-4 px-6">
+        {isLoading ? (
+          <p className="text-sm text-text-secondary">Loading...</p>
+        ) : (
+          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+            {!isEditing && (
+              <p className="rounded-lg bg-secondary-100 px-3 py-2 text-xs text-secondary-900">
+                New shops are reviewed by our team before they go live -
+                usually within 2-3 business days.
+              </p>
+            )}
+
+            <TextField
+              id="name"
+              label="Shop name"
+              value={fields.name}
+              onChange={(e) => update("name", e.target.value)}
+              error={errors.name}
+            />
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="description" className="text-sm font-medium text-text-primary">
+                Description
+              </label>
+              <textarea
+                id="description"
+                value={fields.description}
+                onChange={(e) => update("description", e.target.value)}
+                rows={3}
+                className="rounded-xl border border-border-default bg-surface-card px-4 py-2.5 text-sm text-text-primary outline-none focus:border-primary-700"
+              />
+              {errors.description && (
+                <p className="text-xs text-nosija-red-700">{errors.description}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="story" className="text-sm font-medium text-text-primary">
+                Story
+              </label>
+              <textarea
+                id="story"
+                value={fields.story}
+                onChange={(e) => update("story", e.target.value)}
+                rows={4}
+                placeholder="Tell visitors about your craft and its history"
+                className="rounded-xl border border-border-default bg-surface-card px-4 py-2.5 text-sm text-text-primary outline-none focus:border-primary-700"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="categoryId" className="text-sm font-medium text-text-primary">
+                Category
+              </label>
+              <select
+                id="categoryId"
+                value={fields.categoryId || ""}
+                onChange={(e) => update("categoryId", Number(e.target.value))}
+                className="rounded-xl border border-border-default bg-surface-card px-4 py-2.5 text-sm text-text-primary outline-none focus:border-primary-700"
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              {errors.categoryId && (
+                <p className="text-xs text-nosija-red-700">{errors.categoryId}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="regionId" className="text-sm font-medium text-text-primary">
+                Region (optional)
+              </label>
+              <select
+                id="regionId"
+                value={fields.regionId ?? ""}
+                onChange={(e) =>
+                  update("regionId", e.target.value ? Number(e.target.value) : null)
+                }
+                className="rounded-xl border border-border-default bg-surface-card px-4 py-2.5 text-sm text-text-primary outline-none focus:border-primary-700"
+              >
+                <option value="">Not set</option>
+                {regions.map((region) => (
+                  <option key={region.id} value={region.id}>
+                    {region.name.split(" - ")[0]}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <TextField
+              id="phoneNumber"
+              label="Phone"
+              value={fields.phoneNumber}
+              onChange={(e) => update("phoneNumber", e.target.value)}
+            />
+            <TextField
+              id="email"
+              label="Email"
+              type="email"
+              value={fields.email}
+              onChange={(e) => update("email", e.target.value)}
+              error={errors.email}
+            />
+            <TextField
+              id="website"
+              label="Website"
+              value={fields.website}
+              onChange={(e) => update("website", e.target.value)}
+            />
+            <TextField
+              id="instagramHandle"
+              label="Instagram handle"
+              value={fields.instagramHandle}
+              onChange={(e) => update("instagramHandle", e.target.value)}
+            />
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="openingHours" className="text-sm font-medium text-text-primary">
+                Opening hours
+              </label>
+              <input
+                id="openingHours"
+                value={fields.openingHours}
+                onChange={(e) => update("openingHours", e.target.value)}
+                placeholder="e.g. Mon-Sat 9:00-18:00"
+                className="rounded-xl border border-border-default bg-surface-card px-4 py-2.5 text-sm text-text-primary outline-none focus:border-primary-700"
+              />
+            </div>
+
+            {isEditing && (
+              <div>
+                <p className="mb-2 text-sm font-medium text-text-primary">Photos</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {images.map((url) => (
+                    <div
+                      key={url}
+                      className="h-16 w-16 overflow-hidden rounded-xl bg-primary-100"
+                    >
+                      <img src={url} alt="" className="h-full w-full object-cover" />
+                    </div>
+                  ))}
+                  <label className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-xl border border-dashed border-border-default text-text-secondary">
+                    {isUploadingImage ? (
+                      "..."
+                    ) : (
+                      <>
+                        <ImagePlus size={18} />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                      </>
+                    )}
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {formError && (
+              <p className="rounded-lg bg-nosija-red-100 px-3 py-2 text-sm text-nosija-red-900">
+                {formError}
+              </p>
+            )}
+            {submittedMessage && (
+              <p className="rounded-lg bg-secondary-100 px-3 py-2 text-sm text-secondary-900">
+                {submittedMessage}
+              </p>
+            )}
+
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting
+                ? "Saving..."
+                : isEditing
+                  ? "Save changes"
+                  : "Submit for review"}
+            </Button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
