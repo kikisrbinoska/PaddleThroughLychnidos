@@ -9,11 +9,10 @@ import { Button } from "../components/Button";
 import { TextField } from "../components/TextField";
 
 export function EditProductPage() {
-  const { id } = useParams<{ id: string }>();
+  const { shopId, id } = useParams<{ shopId: string; id: string }>();
   const navigate = useNavigate();
   const isEditing = id !== undefined && id !== "new";
 
-  const [shopId, setShopId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [name, setName] = useState("");
@@ -28,16 +27,8 @@ export function EditProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if (!shopId) return;
     let cancelled = false;
-
-    const shopPromise = artisanService.getMyShop().then((response) => {
-      if (cancelled) return;
-      if (!response.shop) {
-        navigate("/artisan/dashboard");
-        return;
-      }
-      setShopId(response.shop.id);
-    });
 
     const productPromise = isEditing
       ? productService.getById(Number(id)).then((product) => {
@@ -46,11 +37,13 @@ export function EditProductPage() {
           setDescription(product.description);
           setPrice(String(product.price));
           setImageUrl(product.imageUrl);
-          setVideoUrl(product.videos[0]?.videoUrl ?? "");
+          // GET /api/products/{id} doesn't return existing ProductVideo
+          // records, so there's no way to pre-fill this from the product
+          // response - videoUrl starts empty on edit, same as create.
         })
       : Promise.resolve();
 
-    Promise.all([shopPromise, productPromise])
+    productPromise
       .catch((err) => {
         if (!cancelled) {
           setFormError(getErrorMessage(err, "Could not load product data."));
@@ -63,7 +56,7 @@ export function EditProductPage() {
     return () => {
       cancelled = true;
     };
-  }, [id, isEditing, navigate]);
+  }, [shopId, id, isEditing]);
 
   async function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -113,7 +106,7 @@ export function EditProductPage() {
         });
       } else {
         const created = await productService.create({
-          shopId,
+          shopId: Number(shopId),
           name: name.trim(),
           description: description.trim(),
           price: Number(price),
@@ -126,7 +119,7 @@ export function EditProductPage() {
         await productVideoService.create(productId, videoUrl.trim());
       }
 
-      navigate("/artisan/products");
+      navigate(`/artisan/shops/${shopId}/products`);
     } catch (err) {
       setFormError(getErrorMessage(err, "Could not save this product."));
     } finally {

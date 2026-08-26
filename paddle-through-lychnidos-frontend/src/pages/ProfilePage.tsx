@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Pencil, Settings, Stamp, Star, Store, Trash2, Wrench } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Crown, Pencil, Settings, ShoppingBag, Stamp, Star, Store, Trash2, Wrench } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { useCart } from "../hooks/useCart";
 import { userService } from "../services/userService";
 import { passportService } from "../services/passportService";
 import { reviewService } from "../services/reviewService";
 import { travelPlanService } from "../services/travelPlanService";
+import { artisanService } from "../services/artisanService";
 import { getErrorMessage } from "../services/errorMessage";
 import type { PassportStamp, ReviewListItem, UserProfile } from "../types";
 import { Card } from "../components/Card";
+import { Badge } from "../components/Badge";
 import { getCategoryAccent } from "../utils/categoryStyle";
 
 function MetricCard({ value, label }: { value: number; label: string }) {
@@ -52,12 +55,25 @@ function StampPreviewBadge({ stamp }: { stamp: PassportStamp }) {
 
 export function ProfilePage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
+  const { itemCount } = useCart();
+
+  const [toast, setToast] = useState(
+    (location.state as { message?: string } | null)?.message ?? null,
+  );
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(null), 4000);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [stamps, setStamps] = useState<PassportStamp[]>([]);
   const [reviews, setReviews] = useState<ReviewListItem[]>([]);
   const [savedCount, setSavedCount] = useState(0);
+  const [isPremiumArtisan, setIsPremiumArtisan] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [removingReviewId, setRemovingReviewId] = useState<number | null>(null);
@@ -73,13 +89,17 @@ export function ProfilePage() {
       passportService.getMine(),
       reviewService.getAll({ userId: user.id, pageSize: 50 }),
       travelPlanService.getAll(),
+      user.role === "Artisan" ? artisanService.getMyShops() : Promise.resolve(null),
     ])
-      .then(([profileData, passportData, reviewsData, planData]) => {
+      .then(([profileData, passportData, reviewsData, planData, myShops]) => {
         if (cancelled) return;
         setProfile(profileData);
         setStamps(passportData.stamps);
         setReviews(reviewsData.items);
         setSavedCount(planData.items.length);
+        setIsPremiumArtisan(
+          myShops?.shops.some((shop) => shop.membershipTier === "Premium") ?? false,
+        );
       })
       .catch((err) => {
         if (!cancelled) {
@@ -126,9 +146,17 @@ export function ProfilePage() {
             {initials}
           </div>
           <div>
-            <h1 className="text-lg font-extrabold text-nosija-red-900">
-              {profile?.name ?? user.name}
-            </h1>
+            <div className="flex items-center gap-1.5">
+              <h1 className="text-lg font-extrabold text-nosija-red-900">
+                {profile?.name ?? user.name}
+              </h1>
+              {isPremiumArtisan && (
+                <Badge variant="nosijaGold" className="flex items-center gap-1">
+                  <Crown size={11} />
+                  Premium
+                </Badge>
+              )}
+            </div>
             <p className="text-xs text-text-secondary">@{profile?.username ?? user.username}</p>
           </div>
         </div>
@@ -143,6 +171,11 @@ export function ProfilePage() {
       </header>
 
       <div className="mt-6 flex flex-col gap-8 px-6">
+        {toast && (
+          <p className="rounded-lg bg-nosija-gold-100 px-3 py-2 text-sm font-semibold text-nosija-gold-900">
+            {toast}
+          </p>
+        )}
         {isLoading ? (
           <p className="text-sm text-text-secondary">Loading your profile...</p>
         ) : error ? (
@@ -223,6 +256,12 @@ export function ProfilePage() {
                           </button>
                         </div>
                       </div>
+                      <Link
+                        to={`/shop/${review.shopId}`}
+                        className="text-xs font-semibold text-primary-800"
+                      >
+                        {review.shopName}
+                      </Link>
                       <p className="text-sm text-text-secondary">{review.comment}</p>
                     </Card>
                   ))}
@@ -257,6 +296,23 @@ export function ProfilePage() {
                 </div>
                 <span className="text-xs font-semibold text-secondary-900">
                   {savedCount} saved
+                </span>
+              </Link>
+            </section>
+
+            <section>
+              <Link
+                to="/cart"
+                className="flex items-center justify-between rounded-2xl border border-border-default bg-surface-card p-4"
+              >
+                <div className="flex items-center gap-2">
+                  <ShoppingBag size={18} className="text-primary-900" />
+                  <p className="text-sm font-bold text-text-primary">
+                    My List
+                  </p>
+                </div>
+                <span className="text-xs font-semibold text-secondary-900">
+                  {itemCount} item{itemCount === 1 ? "" : "s"}
                 </span>
               </Link>
             </section>

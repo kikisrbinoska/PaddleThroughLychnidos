@@ -17,7 +17,17 @@ namespace PaddleThroughLychnidos.Infrastructure.Authentication
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, username),
-                new Claim(ClaimTypes.Role, role),
+                // Claim(ClaimTypes.Role, ...) would write the long
+                // "http://schemas.../role" URI into the actual JWT payload
+                // (JwtSecurityTokenHandler only remaps short<->long claim
+                // names for its own outbound/inbound handling, not when
+                // writing the raw token). ASP.NET Core's JWT bearer
+                // validation still maps this short "role" claim back to
+                // ClaimTypes.Role on the way in, so [Authorize(Roles = ...)]
+                // is unaffected - but the frontend decodes the raw payload
+                // with jwt-decode and needs the short claim name to read
+                // decoded.role after a page refresh.
+                new Claim("role", role),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));

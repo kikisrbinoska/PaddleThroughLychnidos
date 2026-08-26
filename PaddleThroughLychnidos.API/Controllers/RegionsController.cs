@@ -80,5 +80,17 @@ namespace PaddleThroughLychnidos.API.Controllers
             var response = await _mediator.Send(new DeleteRequest { Id = id });
             return Ok(response);
         }
+
+        // POST api/regions/backfill-shops - one-time fix-up for shops
+        // (mainly bulk-imported ones) that have coordinates but were never
+        // matched to a region. Safe to run repeatedly.
+        [HttpPost("backfill-shops")]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult<BackfillShopRegionsResponse>> BackfillShops()
+        {
+            _logger.LogInformation("Backfilling RegionId for shops missing one");
+            var response = await _mediator.Send(new BackfillShopRegionsRequest());
+            return Ok(response);
+        }
     }
 }

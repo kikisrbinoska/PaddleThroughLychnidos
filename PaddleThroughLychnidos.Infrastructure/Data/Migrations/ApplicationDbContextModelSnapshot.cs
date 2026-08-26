@@ -545,6 +545,13 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("double precision");
 
+                    b.Property<DateTime?>("MembershipActivatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MembershipTier")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");

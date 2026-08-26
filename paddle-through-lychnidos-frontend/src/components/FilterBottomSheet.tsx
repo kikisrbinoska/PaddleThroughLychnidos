@@ -1,4 +1,4 @@
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import type { Category, Region } from "../types";
 import { Button } from "./Button";
 
@@ -50,7 +50,7 @@ export function FilterBottomSheet({
   }
 
   function clearAll() {
-    onChange({ searchWord: "", categoryId: null, regionId: null });
+    onChange({ ...filters, categoryId: null, regionId: null });
   }
 
   return (
@@ -68,22 +68,6 @@ export function FilterBottomSheet({
           >
             <X size={18} />
           </button>
-        </div>
-
-        <div className="relative mb-6">
-          <Search
-            size={16}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary"
-          />
-          <input
-            type="text"
-            value={filters.searchWord}
-            onChange={(e) =>
-              onChange({ ...filters, searchWord: e.target.value })
-            }
-            placeholder="Search shops..."
-            className="w-full rounded-xl border border-border-default bg-surface-card py-2.5 pl-9 pr-3 text-sm text-text-primary outline-none focus:border-primary-500"
-          />
         </div>
 
         <div className="mb-6">

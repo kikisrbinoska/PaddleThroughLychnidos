@@ -28,12 +28,14 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
         public int ReviewCount { get; set; }
         public List<string> ImageUrls { get; set; } = new();
         public bool HasPendingVerificationRequest { get; set; }
+        public string MembershipTier { get; set; } = string.Empty;
+        public DateTime? MembershipActivatedAt { get; set; }
     }
 
     public class GetByOwnerIdResponse
     {
-        // Null when the artisan has no shop yet - the Dashboard shows a
-        // "Create your shop" CTA in that case.
-        public OwnedShopDto? Shop { get; set; }
+        // An artisan may own more than one shop - empty when they have none
+        // yet (the Dashboard shows a "Create your shop" CTA in that case).
+        public List<OwnedShopDto> Shops { get; set; } = new();
     }
 }

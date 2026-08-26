@@ -1,8 +1,23 @@
 // Mirrors PaddleThroughLychnidos.Domain.Entities.ShopStatus.
 export type ShopStatusName = "Pending" | "Approved" | "Rejected";
 
+// Mirrors PaddleThroughLychnidos.Domain.Entities.MembershipTier. The API
+// returns this as a string (Shop.MembershipTier.ToString() in
+// OwnedShopDto), but expects the raw int back in request bodies (no
+// JsonStringEnumConverter is registered - see types/user.ts's UserRole for
+// the same pattern).
+export type MembershipTierName = "Free" | "Premium";
+
+export const MembershipTier = {
+  Free: 0,
+  Premium: 1,
+} as const;
+
+export type MembershipTier = (typeof MembershipTier)[keyof typeof MembershipTier];
+
 // Mirrors PaddleThroughLychnidos.Application.Shop.Queries.OwnedShopDto,
-// returned inside GetByOwnerIdResponse.shop by GET /api/artisan/my-shop.
+// returned inside GetByOwnerIdResponse.shops (GET /api/artisan/shops) and
+// directly by GET /api/artisan/shops/{id}.
 export interface OwnedShop {
   id: number;
   name: string;
@@ -30,11 +45,14 @@ export interface OwnedShop {
   reviewCount: number;
   imageUrls: string[];
   hasPendingVerificationRequest: boolean;
+  membershipTier: MembershipTierName;
+  membershipActivatedAt: string | null;
 }
 
 // Mirrors PaddleThroughLychnidos.Application.Shop.Queries.GetByOwnerIdResponse.
-export interface MyShopResponse {
-  shop: OwnedShop | null;
+// An artisan may own more than one shop - empty when they have none yet.
+export interface MyShopsResponse {
+  shops: OwnedShop[];
 }
 
 export interface ShopFormFields {
@@ -70,5 +88,13 @@ export interface ShopImageUploadResponse {
   id: number;
   shopId: number;
   url: string;
+  message: string;
+}
+
+// Mirrors PaddleThroughLychnidos.Application.Shop.Commands.SelectMembershipResponse.
+export interface SelectMembershipResponse {
+  shopId: number;
+  membershipTier: MembershipTierName;
+  membershipActivatedAt: string | null;
   message: string;
 }

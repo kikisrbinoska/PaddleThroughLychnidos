@@ -67,6 +67,15 @@ namespace PaddleThroughLychnidos.Domain.Entities
         // see AddShopCreatedAt migration.
         public DateTime CreatedAt { get; set; }
 
+        // Simulated membership tier - set directly by the shop's owner via
+        // Shop.Commands.SelectMembershipCommand. No payment gateway or
+        // transaction record involved; this literally is the "purchase".
+        public MembershipTier MembershipTier { get; set; } = MembershipTier.Free;
+
+        // Set to now when the owner selects Premium; cleared back to null
+        // when they downgrade to Free.
+        public DateTime? MembershipActivatedAt { get; set; }
+
         public ICollection<ShopImage> Images { get; set; } = new List<ShopImage>();
         public ICollection<Product> Products { get; set; } = new List<Product>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();

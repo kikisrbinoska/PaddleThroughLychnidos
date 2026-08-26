@@ -74,18 +74,24 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Shop?> GetByOwnerIdAsync(int ownerId)
+        public async Task<List<Shop>> GetByOwnerIdAsync(int ownerId)
         {
             return await _context.Shops
                 .Include(s => s.Region)
                 .Include(s => s.Category)
                 .Include(s => s.Images)
-                // The UI currently designs for one shop per artisan (see
-                // task notes) - if an owner ever has more than one, this
-                // deterministically picks the most recently created.
                 .Where(s => s.OwnerId == ownerId)
                 .OrderByDescending(s => s.Id)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
+        }
+
+        public async Task<Shop?> GetByIdWithDetailsAsync(int id)
+        {
+            return await _context.Shops
+                .Include(s => s.Region)
+                .Include(s => s.Category)
+                .Include(s => s.Images)
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<List<Shop>> GetPendingAsync()
@@ -113,6 +119,13 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
         public async Task<int> GetVerifiedCountAsync()
         {
             return await _context.Shops.CountAsync(s => s.IsVerified);
+        }
+
+        public async Task<List<Shop>> GetWithoutRegionAsync()
+        {
+            return await _context.Shops
+                .Where(s => s.RegionId == null)
+                .ToListAsync();
         }
     }
 }

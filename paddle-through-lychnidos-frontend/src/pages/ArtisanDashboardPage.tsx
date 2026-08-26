@@ -4,9 +4,11 @@ import {
   AlertTriangle,
   BadgeCheck,
   Clock,
+  Crown,
   Eye,
   Package,
   Pencil,
+  Plus,
   Star,
   Store,
   Bookmark,
@@ -41,7 +43,7 @@ function PendingBanner() {
       <Clock size={20} className="mt-0.5 flex-none text-nosija-gold-900" />
       <div>
         <p className="text-sm font-bold text-nosija-gold-900">
-          Your shop is under review
+          This shop is under review
         </p>
         <p className="mt-1 text-xs text-nosija-gold-900/80">
           We'll notify you once it's approved. This usually takes 2-3
@@ -87,7 +89,7 @@ function RejectedBanner({ shop }: { shop: OwnedShop }) {
         <AlertTriangle size={20} className="mt-0.5 flex-none text-nosija-red-900" />
         <div>
           <p className="text-sm font-bold text-nosija-red-900">
-            Your shop was not approved
+            This shop was not approved
           </p>
           {shop.rejectionReason && (
             <p className="mt-1 text-xs text-nosija-red-900/80">
@@ -97,7 +99,7 @@ function RejectedBanner({ shop }: { shop: OwnedShop }) {
         </div>
       </div>
       <div className="flex gap-2">
-        <Link to="/artisan/shop/edit" className="flex-1">
+        <Link to={`/artisan/shops/${shop.id}/edit`} className="flex-1">
           <Button variant="outline" className="w-full">
             Edit shop
           </Button>
@@ -114,23 +116,6 @@ function RejectedBanner({ shop }: { shop: OwnedShop }) {
 function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
   return (
     <>
-      <Card className="flex items-center gap-3">
-        <div className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100">
-          {shop.imageUrls[0] && (
-            <img src={shop.imageUrls[0]} alt="" className="h-full w-full object-cover" />
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
-            <p className="truncate text-sm font-bold text-text-primary">{shop.name}</p>
-            {shop.isVerified && (
-              <BadgeCheck size={14} className="flex-none text-secondary-700" />
-            )}
-          </div>
-          <p className="text-xs text-text-secondary">{shop.categoryName}</p>
-        </div>
-      </Card>
-
       <div className="grid grid-cols-4 gap-2.5">
         <MetricCard icon={Eye} value={shop.viewCount} label="Views" />
         <MetricCard icon={Bookmark} value={shop.savedCount} label="Saved" />
@@ -144,7 +129,7 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
 
       <div className="flex flex-col gap-2.5">
         <Link
-          to="/artisan/shop/edit"
+          to={`/artisan/shops/${shop.id}/edit`}
           className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5"
         >
           <Pencil size={18} className="text-primary-900" />
@@ -154,12 +139,25 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
         </Link>
 
         <Link
-          to="/artisan/products"
+          to={`/artisan/shops/${shop.id}/products`}
           className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5"
         >
           <Package size={18} className="text-primary-900" />
           <span className="text-sm font-semibold text-text-primary">
             Manage Products
+          </span>
+        </Link>
+
+        <Link
+          to={`/artisan/shops/${shop.id}/membership`}
+          className="flex items-center justify-between gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5"
+        >
+          <span className="flex items-center gap-3">
+            <Crown size={18} className="text-primary-900" />
+            <span className="text-sm font-semibold text-text-primary">Membership</span>
+          </span>
+          <span className="text-xs font-semibold text-secondary-900">
+            {shop.membershipTier === "Premium" ? "Premium" : "Free"}
           </span>
         </Link>
 
@@ -172,7 +170,7 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
           </div>
         ) : (
           <Link
-            to="/artisan/verification"
+            to={`/artisan/shops/${shop.id}/verification`}
             className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5"
           >
             <BadgeCheck size={18} className="text-primary-900" />
@@ -186,8 +184,42 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
   );
 }
 
+function ShopCard({ shop }: { shop: OwnedShop }) {
+  return (
+    <Card className="flex flex-col gap-4">
+      <div className="flex items-center gap-3">
+        <div className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100">
+          {shop.imageUrls[0] && (
+            <img src={shop.imageUrls[0]} alt="" className="h-full w-full object-cover" />
+          )}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <p className="truncate text-sm font-bold text-text-primary">{shop.name}</p>
+            {shop.isVerified && (
+              <BadgeCheck size={14} className="flex-none text-secondary-700" />
+            )}
+            {shop.membershipTier === "Premium" && (
+              <Crown size={14} className="flex-none text-nosija-gold-700" />
+            )}
+          </div>
+          <p className="text-xs text-text-secondary">{shop.categoryName}</p>
+        </div>
+      </div>
+
+      {shop.status === "Pending" ? (
+        <PendingBanner />
+      ) : shop.status === "Rejected" ? (
+        <RejectedBanner shop={shop} />
+      ) : (
+        <ApprovedDashboard shop={shop} />
+      )}
+    </Card>
+  );
+}
+
 export function ArtisanDashboardPage() {
-  const [shop, setShop] = useState<OwnedShop | null>(null);
+  const [shops, setShops] = useState<OwnedShop[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -197,13 +229,13 @@ export function ArtisanDashboardPage() {
     setError(null);
 
     artisanService
-      .getMyShop()
+      .getMyShops()
       .then((response) => {
-        if (!cancelled) setShop(response.shop);
+        if (!cancelled) setShops(response.shops);
       })
       .catch((err) => {
         if (!cancelled) {
-          setError(getErrorMessage(err, "Could not load your shop."));
+          setError(getErrorMessage(err, "Could not load your shops."));
         }
       })
       .finally(() => {
@@ -217,31 +249,44 @@ export function ArtisanDashboardPage() {
 
   return (
     <div className="min-h-svh bg-surface-bg pb-24">
-      <header className="px-6 pt-8">
+      <header className="flex items-center justify-between px-6 pt-8">
         <h1 className="text-lg font-extrabold text-primary-900">Artisan Dashboard</h1>
+        {shops.length > 0 && (
+          <Link to="/artisan/shop/create">
+            <Button className="flex items-center gap-1.5 !px-3 !py-2">
+              <Plus size={16} />
+            </Button>
+          </Link>
+        )}
       </header>
 
       <div className="mt-6 flex flex-col gap-5 px-6">
         {isLoading ? (
-          <p className="text-sm text-text-secondary">Loading your shop...</p>
+          <p className="text-sm text-text-secondary">Loading your shops...</p>
         ) : error ? (
           <p className="text-sm text-text-secondary">{error}</p>
-        ) : !shop ? (
+        ) : shops.length === 0 ? (
           <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
             <Store size={28} className="text-text-secondary" />
             <p className="text-sm text-text-secondary">
-              You haven't set up your shop yet.
+              You haven't set up a shop yet.
             </p>
             <Link to="/artisan/shop/create">
               <Button>Create your shop</Button>
             </Link>
           </div>
-        ) : shop.status === "Pending" ? (
-          <PendingBanner />
-        ) : shop.status === "Rejected" ? (
-          <RejectedBanner shop={shop} />
         ) : (
-          <ApprovedDashboard shop={shop} />
+          <>
+            {shops.map((shop) => (
+              <ShopCard key={shop.id} shop={shop} />
+            ))}
+            <Link to="/artisan/shop/create">
+              <Button variant="outline" className="flex w-full items-center justify-center gap-1.5">
+                <Plus size={16} />
+                Add another shop
+              </Button>
+            </Link>
+          </>
         )}
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
 import { BottomNav } from "./components/BottomNav";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { HomePage } from "./pages/HomePage";
@@ -8,7 +9,9 @@ import { ShopsPage } from "./pages/ShopsPage";
 import { ItinerariesPage } from "./pages/ItinerariesPage";
 import { ItineraryDetailPage } from "./pages/ItineraryDetailPage";
 import { LearnPage } from "./pages/LearnPage";
-import { ProductsPage } from "./pages/ProductsPage";
+import { MarketplacePage } from "./pages/MarketplacePage";
+import { ProductDetailPage } from "./pages/ProductDetailPage";
+import { CartPage } from "./pages/CartPage";
 import { NewsFeedPage } from "./pages/NewsFeedPage";
 import { NewsDetailPage } from "./pages/NewsDetailPage";
 import { ProfilePage } from "./pages/ProfilePage";
@@ -23,11 +26,13 @@ import { OnboardingPage } from "./pages/OnboardingPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { ForgotPasswordConfirmationPage } from "./pages/ForgotPasswordConfirmationPage";
 import { ArtisanDashboardPage } from "./pages/ArtisanDashboardPage";
+import { MembershipPage } from "./pages/artisan/MembershipPage";
 import { EditShopPage } from "./pages/EditShopPage";
 import { ManageProductsPage } from "./pages/ManageProductsPage";
 import { EditProductPage } from "./pages/EditProductPage";
 import { VerificationRequestPage } from "./pages/VerificationRequestPage";
 import { AdminDashboardPage } from "./pages/admin/AdminDashboardPage";
+import { ManageUsersPage } from "./pages/admin/ManageUsersPage";
 import { PendingShopsPage } from "./pages/admin/PendingShopsPage";
 import { VerificationRequestsPage } from "./pages/admin/VerificationRequestsPage";
 import { ManageCategoriesPage } from "./pages/admin/ManageCategoriesPage";
@@ -65,7 +70,9 @@ function AppLayout() {
         <Route path="/itineraries/:id" element={<ItineraryDetailPage />} />
         <Route path="/learn" element={<LearnPage />} />
         <Route path="/learn/video/:id" element={<VideoDetailPage />} />
-        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products" element={<MarketplacePage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route path="/magazine" element={<NewsFeedPage />} />
         <Route path="/magazine/:id" element={<NewsDetailPage />} />
         <Route
@@ -109,7 +116,7 @@ function AppLayout() {
           }
         />
         <Route
-          path="/artisan/shop/edit"
+          path="/artisan/shops/:shopId/edit"
           element={
             <ProtectedRoute allowedRoles={["Artisan"]}>
               <EditShopPage />
@@ -117,7 +124,7 @@ function AppLayout() {
           }
         />
         <Route
-          path="/artisan/products"
+          path="/artisan/shops/:shopId/products"
           element={
             <ProtectedRoute allowedRoles={["Artisan"]}>
               <ManageProductsPage />
@@ -125,7 +132,7 @@ function AppLayout() {
           }
         />
         <Route
-          path="/artisan/products/new"
+          path="/artisan/shops/:shopId/products/new"
           element={
             <ProtectedRoute allowedRoles={["Artisan"]}>
               <EditProductPage />
@@ -133,7 +140,7 @@ function AppLayout() {
           }
         />
         <Route
-          path="/artisan/products/:id/edit"
+          path="/artisan/shops/:shopId/products/:id/edit"
           element={
             <ProtectedRoute allowedRoles={["Artisan"]}>
               <EditProductPage />
@@ -141,10 +148,18 @@ function AppLayout() {
           }
         />
         <Route
-          path="/artisan/verification"
+          path="/artisan/shops/:shopId/verification"
           element={
             <ProtectedRoute allowedRoles={["Artisan"]}>
               <VerificationRequestPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artisan/shops/:shopId/membership"
+          element={
+            <ProtectedRoute allowedRoles={["Artisan"]}>
+              <MembershipPage />
             </ProtectedRoute>
           }
         />
@@ -153,6 +168,14 @@ function AppLayout() {
           element={
             <ProtectedRoute allowedRoles={["Administrator"]}>
               <AdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute allowedRoles={["Administrator"]}>
+              <ManageUsersPage />
             </ProtectedRoute>
           }
         />
@@ -230,7 +253,9 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppLayout />
+        <CartProvider>
+          <AppLayout />
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   );

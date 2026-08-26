@@ -6,6 +6,7 @@ export interface ReviewListItem {
   userId: number;
   userName: string;
   shopId: number;
+  shopName: string;
   rating: number;
   comment: string;
   createdAt: string;

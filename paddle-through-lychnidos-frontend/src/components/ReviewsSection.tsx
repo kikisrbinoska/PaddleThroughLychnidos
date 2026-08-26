@@ -155,6 +155,9 @@ export function ReviewsSection({ shopId }: ReviewsSectionProps) {
             userId: created.userId,
             userName: user?.username ?? "You",
             shopId: created.shopId,
+            // Not rendered by this component (the whole page is already
+            // scoped to one shop) - left empty rather than an extra fetch.
+            shopName: "",
             rating: created.rating,
             comment: created.comment,
             createdAt: created.createdAt,

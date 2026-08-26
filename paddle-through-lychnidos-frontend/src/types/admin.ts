@@ -1,3 +1,6 @@
+import type { UserRole } from "./user";
+import type { ShopStatusName } from "./artisanShop";
+
 // Mirrors PaddleThroughLychnidos.Application.Admin.Queries.GetDashboardStatsResponse.
 export interface AdminDashboardStats {
   totalShops: number;
@@ -70,4 +73,31 @@ export interface AdminRegion {
   polygonGeoJson: string;
   shopCount: number;
   itineraryCount: number;
+}
+
+// Mirrors PaddleThroughLychnidos.Application.User.Queries.AdminUserListItem,
+// returned inside GetAllResponse.items by GET /api/admin/users.
+export interface AdminUser {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
+  shopId: number | null;
+  shopName: string | null;
+  shopStatus: ShopStatusName | null;
+}
+
+export interface AdminUserListMetadata {
+  totalCount: number;
+  pageSize: number | null;
+  pageNumber: number | null;
+  totalPages: number;
+}
+
+// Mirrors PaddleThroughLychnidos.Application.User.Queries.GetAllResponse.
+export interface AdminUserListResponse {
+  items: AdminUser[];
+  metadata: AdminUserListMetadata;
 }

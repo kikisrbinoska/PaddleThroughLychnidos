@@ -31,6 +31,7 @@ namespace PaddleThroughLychnidos.Application.Product.Queries
                 Id = product.Id,
                 ShopId = product.ShopId,
                 ShopName = shop?.Name ?? "Unknown",
+                ShopIsVerified = shop?.IsVerified ?? false,
                 Name = product.Name,
                 Description = product.Description,
                 Price = product.Price,

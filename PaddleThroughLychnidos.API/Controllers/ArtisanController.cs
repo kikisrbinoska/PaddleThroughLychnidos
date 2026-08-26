@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 using PaddleThroughLychnidos.Application.Abstractions;
+using PaddleThroughLychnidos.Domain.Entities;
 using PaddleThroughLychnidos.Domain.Shared;
 using System.Net;
 using System.Security.Claims;
@@ -33,13 +34,24 @@ namespace PaddleThroughLychnidos.API.Controllers
             _logger = logger;
         }
 
-        // GET api/artisan/my-shop
-        [HttpGet("my-shop")]
-        public async Task<ActionResult<ShopQueries.GetByOwnerIdResponse>> GetMyShop()
+        // GET api/artisan/shops - every shop this artisan owns (an artisan
+        // may own more than one).
+        [HttpGet("shops")]
+        public async Task<ActionResult<ShopQueries.GetByOwnerIdResponse>> GetMyShops()
         {
             var userId = GetCurrentUserId();
-            _logger.LogInformation("Fetching shop for artisan {userId}", userId);
+            _logger.LogInformation("Fetching shops for artisan {userId}", userId);
             var response = await _mediator.Send(new ShopQueries.GetByOwnerIdRequest { OwnerId = userId });
+            return Ok(response);
+        }
+
+        // GET api/artisan/shops/5 - a single owned shop, by id.
+        [HttpGet("shops/{id:int}")]
+        public async Task<ActionResult<ShopQueries.OwnedShopDto>> GetShop(int id)
+        {
+            var userId = GetCurrentUserId();
+            _logger.LogInformation("Fetching shop {id} for artisan {userId}", id, userId);
+            var response = await _mediator.Send(new ShopQueries.GetOwnedByIdRequest { ShopId = id, OwnerId = userId });
             return Ok(response);
         }
 
@@ -66,6 +78,21 @@ namespace PaddleThroughLychnidos.API.Controllers
             return Ok(response);
         }
 
+        // POST api/artisan/shop/5/membership
+        [HttpPost("shop/{id:int}/membership")]
+        public async Task<ActionResult<ShopCommands.SelectMembershipResponse>> SelectMembership(int id, [FromBody] SelectMembershipBody body)
+        {
+            var userId = GetCurrentUserId();
+            _logger.LogInformation("Artisan {userId} selecting membership {tier} for shop {id}", userId, body.Tier, id);
+            var response = await _mediator.Send(new ShopCommands.SelectMembershipRequest
+            {
+                ShopId = id,
+                OwnerId = userId,
+                Tier = body.Tier,
+            });
+            return Ok(response);
+        }
+
         // POST api/artisan/shop/5/resubmit
         [HttpPost("shop/{id:int}/resubmit")]
         public async Task<ActionResult<ShopCommands.ResubmitResponse>> ResubmitShop(int id)
@@ -83,11 +110,10 @@ namespace PaddleThroughLychnidos.API.Controllers
         {
             var userId = GetCurrentUserId();
 
-            var myShop = await _mediator.Send(new ShopQueries.GetByOwnerIdRequest { OwnerId = userId });
-            if (myShop.Shop is null || myShop.Shop.Id != id)
-            {
-                throw new PaddleThroughLychnidosException("You do not have permission to upload images to this shop", HttpStatusCode.Forbidden);
-            }
+            // Ownership check scoped directly to shop id (not "my shop" -
+            // an artisan may own more than one). ShopImage.Commands.AddHandler
+            // itself doesn't check ownership, so this is the only guard.
+            await _mediator.Send(new ShopQueries.GetOwnedByIdRequest { ShopId = id, OwnerId = userId });
 
             var url = await _fileUploadService.SaveAsync(file, "shops", cancellationToken);
             _logger.LogInformation("Uploaded image for shop {id}", id);
@@ -156,5 +182,10 @@ namespace PaddleThroughLychnidos.API.Controllers
     public class UploadedFileResponse
     {
         public string Url { get; set; } = string.Empty;
+    }
+
+    public class SelectMembershipBody
+    {
+        public MembershipTier Tier { get; set; }
     }
 }

@@ -21,47 +21,61 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
 
         public async Task<GetByOwnerIdResponse> Handle(GetByOwnerIdRequest request, CancellationToken cancellationToken)
         {
-            var shop = await _shopRepository.GetByOwnerIdAsync(request.OwnerId);
-            if (shop is null)
+            var shops = await _shopRepository.GetByOwnerIdAsync(request.OwnerId);
+
+            var dtos = new List<OwnedShopDto>();
+            foreach (var shop in shops)
             {
-                return new GetByOwnerIdResponse { Shop = null };
+                dtos.Add(await OwnedShopMapper.ToDto(shop, _shopRepository, _reviewRepository, _verificationRequestRepository));
             }
 
-            var savedCount = await _shopRepository.GetSavedCountAsync(shop.Id);
-            var (reviewCount, _) = await _reviewRepository.GetPagedAsync(pageNumber: null, pageSize: null, shopId: shop.Id, userId: null);
-            var pendingVerification = await _verificationRequestRepository.GetPendingByShopIdAsync(shop.Id);
+            return new GetByOwnerIdResponse { Shops = dtos };
+        }
+    }
 
-            return new GetByOwnerIdResponse
+    /// <summary>Shared OwnedShopDto builder used by both GetByOwnerIdHandler (list) and GetOwnedByIdHandler (single, id-scoped).</summary>
+    internal static class OwnedShopMapper
+    {
+        public static async Task<OwnedShopDto> ToDto(
+            Domain.Entities.Shop shop,
+            IShopRepository shopRepository,
+            IReviewRepository reviewRepository,
+            IVerificationRequestRepository verificationRequestRepository)
+        {
+            var savedCount = await shopRepository.GetSavedCountAsync(shop.Id);
+            var (reviewCount, _) = await reviewRepository.GetPagedAsync(pageNumber: null, pageSize: null, shopId: shop.Id, userId: null);
+            var pendingVerification = await verificationRequestRepository.GetPendingByShopIdAsync(shop.Id);
+
+            return new OwnedShopDto
             {
-                Shop = new OwnedShopDto
-                {
-                    Id = shop.Id,
-                    Name = shop.Name,
-                    Description = shop.Description,
-                    Story = shop.Story,
-                    Latitude = shop.Latitude,
-                    Longitude = shop.Longitude,
-                    Address = shop.Address,
-                    RegionId = shop.RegionId,
-                    RegionName = shop.Region?.Name ?? "Unassigned",
-                    CategoryId = shop.CategoryId,
-                    CategoryName = shop.Category.Name,
-                    PhoneNumber = shop.PhoneNumber,
-                    Email = shop.Email,
-                    InstagramHandle = shop.InstagramHandle,
-                    Website = shop.Website,
-                    Rating = shop.Rating,
-                    UserRatingCount = shop.UserRatingCount,
-                    IsVerified = shop.IsVerified,
-                    OpeningHours = shop.OpeningHours,
-                    Status = shop.Status.ToString(),
-                    RejectionReason = shop.RejectionReason,
-                    ViewCount = shop.ViewCount,
-                    SavedCount = savedCount,
-                    ReviewCount = reviewCount,
-                    ImageUrls = shop.Images.Select(i => i.Url).ToList(),
-                    HasPendingVerificationRequest = pendingVerification is not null,
-                },
+                Id = shop.Id,
+                Name = shop.Name,
+                Description = shop.Description,
+                Story = shop.Story,
+                Latitude = shop.Latitude,
+                Longitude = shop.Longitude,
+                Address = shop.Address,
+                RegionId = shop.RegionId,
+                RegionName = shop.Region?.Name ?? "Unassigned",
+                CategoryId = shop.CategoryId,
+                CategoryName = shop.Category.Name,
+                PhoneNumber = shop.PhoneNumber,
+                Email = shop.Email,
+                InstagramHandle = shop.InstagramHandle,
+                Website = shop.Website,
+                Rating = shop.Rating,
+                UserRatingCount = shop.UserRatingCount,
+                IsVerified = shop.IsVerified,
+                OpeningHours = shop.OpeningHours,
+                Status = shop.Status.ToString(),
+                RejectionReason = shop.RejectionReason,
+                ViewCount = shop.ViewCount,
+                SavedCount = savedCount,
+                ReviewCount = reviewCount,
+                ImageUrls = shop.Images.Select(i => i.Url).ToList(),
+                HasPendingVerificationRequest = pendingVerification is not null,
+                MembershipTier = shop.MembershipTier.ToString(),
+                MembershipActivatedAt = shop.MembershipActivatedAt,
             };
         }
     }

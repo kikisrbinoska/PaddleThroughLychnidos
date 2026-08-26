@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Pencil, Plus, Trash2, X } from "lucide-react";
+import { MapPinned, Pencil, Plus, Trash2, X } from "lucide-react";
 import { regionService } from "../../services/regionService";
 import { getErrorMessage } from "../../services/errorMessage";
 import type { AdminRegion } from "../../types";
@@ -100,6 +100,9 @@ export function ManageRegionsPage() {
   const [confirmingDeleteId, setConfirmingDeleteId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const [isBackfilling, setIsBackfilling] = useState(false);
+  const [backfillMessage, setBackfillMessage] = useState<string | null>(null);
+
   function load() {
     setIsLoading(true);
     setError(null);
@@ -170,9 +173,39 @@ export function ManageRegionsPage() {
     }
   }
 
+  async function handleBackfill() {
+    setIsBackfilling(true);
+    setBackfillMessage(null);
+    try {
+      const result = await regionService.backfillShopRegions();
+      setBackfillMessage(result.message);
+      load();
+    } catch (err) {
+      setBackfillMessage(getErrorMessage(err, "Could not backfill shop regions."));
+    } finally {
+      setIsBackfilling(false);
+    }
+  }
+
   return (
     <AdminLayout>
-      <h2 className="text-xl font-extrabold text-primary-900">Regions</h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-extrabold text-primary-900">Regions</h2>
+        <div className="flex items-center gap-3">
+          {backfillMessage && (
+            <span className="text-xs font-semibold text-secondary-900">{backfillMessage}</span>
+          )}
+          <Button
+            variant="outline"
+            onClick={handleBackfill}
+            disabled={isBackfilling}
+            className="flex items-center gap-1.5"
+          >
+            <MapPinned size={14} />
+            {isBackfilling ? "Matching shops..." : "Backfill shop regions"}
+          </Button>
+        </div>
+      </div>
 
       <Card className="mt-6">
         <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-text-primary">

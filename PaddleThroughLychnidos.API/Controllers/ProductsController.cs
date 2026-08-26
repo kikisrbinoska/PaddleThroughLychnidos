@@ -34,9 +34,19 @@ namespace PaddleThroughLychnidos.API.Controllers
             return Ok(products);
         }
 
+        // GET api/<ProductsController>/marketplace?categoryId=&regionId=&search=&minPrice=&maxPrice=
+        [HttpGet("marketplace")]
+        [AllowAnonymous]
+        public async Task<ActionResult<GetMarketplaceResponse>> GetMarketplace([FromQuery] GetMarketplaceRequest request)
+        {
+            _logger.LogInformation("Fetching marketplace products");
+            var products = await _mediator.Send(request);
+            return Ok(products);
+        }
+
         // GET api/<ProductsController>/5
         [HttpGet("{id:int}")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<ActionResult<GetByIdResponse>> Get(int id)
         {
             _logger.LogInformation("Fetching product with ID: {id}", id);

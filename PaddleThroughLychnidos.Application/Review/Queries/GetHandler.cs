@@ -8,11 +8,13 @@ namespace PaddleThroughLychnidos.Application.Review.Queries
     {
         private readonly IReviewRepository _reviewRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IShopRepository _shopRepository;
 
-        public GetHandler(IReviewRepository reviewRepository, IUserRepository userRepository)
+        public GetHandler(IReviewRepository reviewRepository, IUserRepository userRepository, IShopRepository shopRepository)
         {
             _reviewRepository = reviewRepository;
             _userRepository = userRepository;
+            _shopRepository = shopRepository;
         }
 
         public async Task<GetResponse> Handle(GetRequest request, CancellationToken cancellationToken)
@@ -25,6 +27,9 @@ namespace PaddleThroughLychnidos.Application.Review.Queries
             var users = await _userRepository.GetUsersByIdsAsync(list.Select(r => r.UserId).Distinct());
             var usernamesById = users.ToDictionary(u => u.Id, u => u.Username);
 
+            var shops = await _shopRepository.GetByIdsAsync(list.Select(r => r.ShopId).Distinct());
+            var shopNamesById = shops.ToDictionary(s => s.Id, s => s.Name);
+
             var items = list
                 .Select(review => new ReviewListItemDto
                 {
@@ -32,6 +37,7 @@ namespace PaddleThroughLychnidos.Application.Review.Queries
                     UserId = review.UserId,
                     UserName = usernamesById.GetValueOrDefault(review.UserId, "Unknown"),
                     ShopId = review.ShopId,
+                    ShopName = shopNamesById.GetValueOrDefault(review.ShopId, "Unknown shop"),
                     Rating = review.Rating,
                     Comment = review.Comment,
                     CreatedAt = review.CreatedAt,

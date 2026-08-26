@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BadgeCheck, ChevronLeft, FileText, X } from "lucide-react";
 import { artisanService } from "../services/artisanService";
 import { getErrorMessage } from "../services/errorMessage";
@@ -7,6 +7,7 @@ import type { OwnedShop } from "../types";
 import { Button } from "../components/Button";
 
 export function VerificationRequestPage() {
+  const { shopId } = useParams<{ shopId: string }>();
   const navigate = useNavigate();
 
   const [shop, setShop] = useState<OwnedShop | null>(null);
@@ -18,16 +19,15 @@ export function VerificationRequestPage() {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
+    if (!shopId) return;
     let cancelled = false;
 
     artisanService
-      .getMyShop()
-      .then((response) => {
+      .getShop(Number(shopId))
+      .then((currentShop) => {
         if (cancelled) return;
 
-        const currentShop = response.shop;
         const isEligible =
-          currentShop &&
           currentShop.status === "Approved" &&
           !currentShop.isVerified &&
           !currentShop.hasPendingVerificationRequest;
@@ -49,7 +49,7 @@ export function VerificationRequestPage() {
     return () => {
       cancelled = true;
     };
-  }, [navigate]);
+  }, [shopId, navigate]);
 
   function addFiles(event: React.ChangeEvent<HTMLInputElement>) {
     const selected = Array.from(event.target.files ?? []);

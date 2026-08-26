@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { shopService } from "../services/shopService";
 import { regionService } from "../services/regionService";
 import { categoryService } from "../services/categoryService";
@@ -27,11 +27,20 @@ export function ShopsPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [draftFilters, setDraftFilters] = useState<ShopFilters>(EMPTY_FILTERS);
   const [appliedFilters, setAppliedFilters] = useState<ShopFilters>(EMPTY_FILTERS);
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     regionService.getAll().then(setRegions);
     categoryService.getAll().then(setCategories);
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAppliedFilters((current) => ({ ...current, searchWord: searchInput }));
+      setPageNumber(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,10 +75,9 @@ export function ShopsPage() {
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   const activeFilterCount = [
-    appliedFilters.searchWord,
     appliedFilters.categoryId,
     appliedFilters.regionId,
-  ].filter((value) => value !== null && value !== "").length;
+  ].filter((value) => value !== null).length;
 
   function openFilters() {
     setDraftFilters(appliedFilters);
@@ -99,6 +107,22 @@ export function ShopsPage() {
           )}
         </button>
       </header>
+
+      <div className="mt-4 px-6">
+        <div className="relative">
+          <Search
+            size={16}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary"
+          />
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search shops..."
+            className="w-full rounded-xl border border-border-default bg-surface-card py-2.5 pl-9 pr-3 text-sm text-text-primary outline-none focus:border-primary-500"
+          />
+        </div>
+      </div>
 
       <div className="mt-6 px-6">
         {isLoading ? (

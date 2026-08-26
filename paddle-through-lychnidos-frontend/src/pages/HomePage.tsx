@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Newspaper, Search } from "lucide-react";
+import { Newspaper, ShoppingBag } from "lucide-react";
 import { shopService } from "../services/shopService";
 import { regionService } from "../services/regionService";
 import { newsService } from "../services/newsService";
+import { useCart } from "../hooks/useCart";
 import type { NewsItemListEntry, Region, ShopListItem } from "../types";
 import { HorizontalScrollRow } from "../components/HorizontalScrollRow";
 import { ShopCard } from "../components/ShopCard";
@@ -32,6 +33,7 @@ function SectionHeader({ title, seeAllTo }: SectionHeaderProps) {
 
 export function HomePage() {
   const navigate = useNavigate();
+  const { itemCount } = useCart();
   const [featuredShops, setFeaturedShops] = useState<ShopListItem[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
   const [latestNews, setLatestNews] = useState<NewsItemListEntry[]>([]);
@@ -82,14 +84,21 @@ export function HomePage() {
             Paddle through Lychnidos
           </h1>
         </div>
-        <button
-          type="button"
-          onClick={() => navigate("/map")}
-          aria-label="Search"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
-        >
-          <Search size={18} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => navigate("/cart")}
+            aria-label="My list"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          >
+            <ShoppingBag size={18} />
+            {itemCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-nosija-red-700 text-[10px] font-bold text-white">
+                {itemCount}
+              </span>
+            )}
+          </button>
+        </div>
       </header>
 
       <div className="mt-8 flex flex-col gap-8 px-6">

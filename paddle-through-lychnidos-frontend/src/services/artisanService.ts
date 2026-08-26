@@ -1,6 +1,9 @@
 import apiClient from "./apiClient";
 import type {
-  MyShopResponse,
+  MembershipTier,
+  MyShopsResponse,
+  OwnedShop,
+  SelectMembershipResponse,
   ShopFormFields,
   ShopImageUploadResponse,
   ShopResubmitResponse,
@@ -10,10 +13,15 @@ import type {
 
 // All endpoints require auth as an Artisan - apiClient's interceptor
 // attaches the bearer token, and the API derives the current user (and
-// checks shop ownership) from it. See ArtisanController.
+// checks shop ownership) from it. See ArtisanController. An artisan may own
+// more than one shop - getMyShops lists all of them, getShop fetches one by
+// id (owner-checked server-side).
 export const artisanService = {
-  getMyShop: () =>
-    apiClient.get<MyShopResponse>("/artisan/my-shop").then((res) => res.data),
+  getMyShops: () =>
+    apiClient.get<MyShopsResponse>("/artisan/shops").then((res) => res.data),
+
+  getShop: (shopId: number) =>
+    apiClient.get<OwnedShop>(`/artisan/shops/${shopId}`).then((res) => res.data),
 
   createShop: (fields: ShopFormFields) =>
     apiClient
@@ -28,6 +36,14 @@ export const artisanService = {
   resubmitShop: (shopId: number) =>
     apiClient
       .post<ShopResubmitResponse>(`/artisan/shop/${shopId}/resubmit`)
+      .then((res) => res.data),
+
+  // Simulated membership selection - no payment gateway involved, this
+  // literally just flips Shop.MembershipTier on click. See
+  // Shop.Commands.SelectMembershipCommand.
+  selectMembership: (shopId: number, tier: MembershipTier) =>
+    apiClient
+      .post<SelectMembershipResponse>(`/artisan/shop/${shopId}/membership`, { tier })
       .then((res) => res.data),
 
   uploadShopImage: (shopId: number, file: File) => {

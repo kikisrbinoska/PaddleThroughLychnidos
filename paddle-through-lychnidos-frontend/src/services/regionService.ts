@@ -28,4 +28,14 @@ export const regionService = {
     apiClient
       .delete<{ id: number; message: string }>(`/regions/${id}`)
       .then((res) => res.data),
+
+  // One-time fix-up for shops (mainly bulk-imported ones) that have
+  // coordinates but were never matched to a region - safe to run
+  // repeatedly, only touches shops currently unassigned.
+  backfillShopRegions: () =>
+    apiClient
+      .post<{ totalUnassignedChecked: number; totalMatched: number; message: string }>(
+        "/regions/backfill-shops",
+      )
+      .then((res) => res.data),
 };

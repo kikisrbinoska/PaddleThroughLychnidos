@@ -43,5 +43,41 @@ namespace PaddleThroughLychnidos.Infrastructure.Repositories
         {
             return await _context.Users.CountAsync(u => u.Role == role);
         }
+
+        public async Task<(int count, List<User> list)> GetPagedAsync(int? pageNumber, int? pageSize, string? searchWord, UserRole? roleFilter)
+        {
+            var query = _context.Users
+                .Include(u => u.Shops)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchWord))
+            {
+                var term = searchWord.Trim();
+                query = query.Where(u =>
+                    EF.Functions.ILike(u.Name, $"%{term}%") ||
+                    EF.Functions.ILike(u.Username, $"%{term}%") ||
+                    EF.Functions.ILike(u.Email, $"%{term}%"));
+            }
+
+            if (roleFilter.HasValue)
+            {
+                query = query.Where(u => u.Role == roleFilter.Value);
+            }
+
+            query = query.OrderByDescending(u => u.CreatedAt);
+
+            var count = await query.CountAsync();
+
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                query = query
+                    .Skip((pageNumber.Value - 1) * pageSize.Value)
+                    .Take(pageSize.Value);
+            }
+
+            var list = await query.ToListAsync();
+
+            return (count, list);
+        }
     }
 }

@@ -1,5 +1,9 @@
 import apiClient from "./apiClient";
-import type { Product, ProductListResponse } from "../types";
+import type {
+  MarketplaceProductListResponse,
+  ProductDetail,
+  ProductListResponse,
+} from "../types";
 
 export interface ProductFormFields {
   shopId: number;
@@ -19,13 +23,27 @@ export interface ProductSaveResponse {
   message: string;
 }
 
+export interface MarketplaceParams {
+  search?: string;
+  categoryId?: number;
+  regionId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
 export const productService = {
   getByShopId: (shopId: number, pageSize = 50) =>
     apiClient
       .get<ProductListResponse>("/products", { params: { shopId, pageSize } })
       .then((res) => res.data.items),
   getById: (id: number) =>
-    apiClient.get<Product>(`/products/${id}`).then((res) => res.data),
+    apiClient.get<ProductDetail>(`/products/${id}`).then((res) => res.data),
+  getMarketplace: (params: MarketplaceParams = {}) =>
+    apiClient
+      .get<MarketplaceProductListResponse>("/products/marketplace", { params })
+      .then((res) => res.data),
   create: (fields: ProductFormFields) =>
     apiClient
       .post<ProductSaveResponse>("/products", fields)

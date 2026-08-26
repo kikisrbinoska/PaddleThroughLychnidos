@@ -34,3 +34,35 @@ export interface ProductListResponse {
   items: ProductListItem[];
   metadata: ProductListMetadata;
 }
+
+// Mirrors PaddleThroughLychnidos.Application.Product.Queries.GetByIdResponse,
+// returned by GET /api/products/{id}.
+export interface ProductDetail {
+  id: number;
+  shopId: number;
+  shopName: string;
+  shopIsVerified: boolean;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+}
+
+// Mirrors PaddleThroughLychnidos.Application.Product.Queries.MarketplaceProductListItem,
+// as returned inside GetMarketplaceResponse.items by GET /api/products/marketplace.
+export interface MarketplaceProduct {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  shopId: number;
+  shopName: string;
+  shopIsVerified: boolean;
+}
+
+// Mirrors PaddleThroughLychnidos.Application.Product.Queries.GetMarketplaceResponse.
+export interface MarketplaceProductListResponse {
+  items: MarketplaceProduct[];
+  metadata: ProductListMetadata;
+}

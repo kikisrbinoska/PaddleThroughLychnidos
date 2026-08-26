@@ -42,12 +42,22 @@ export function LoginPage() {
       const user = await login({ username: username.trim(), password });
       const from = (location.state as { from?: Location })?.from;
 
-      if (from) {
-        navigate(`${from.pathname}${from.search}`, { replace: true });
-      } else if (user.role === "Administrator") {
+      // "from" can be left over from a previous, different account's
+      // session (e.g. this /login tab was already open with a stale
+      // redirect target when a different user signs in here) - only trust
+      // it for regular users landing back on a tourist-facing page.
+      // Administrator/Artisan always land on their own dashboard so a
+      // stale "from" can never strand them on a page meant for someone
+      // else's role.
+      const fromIsRoleAppropriate =
+        from && !from.pathname.startsWith("/admin") && !from.pathname.startsWith("/artisan");
+
+      if (user.role === "Administrator") {
         navigate("/admin", { replace: true });
       } else if (user.role === "Artisan") {
         navigate("/artisan/dashboard", { replace: true });
+      } else if (from && fromIsRoleAppropriate) {
+        navigate(`${from.pathname}${from.search}`, { replace: true });
       } else {
         navigate("/home", { replace: true });
       }

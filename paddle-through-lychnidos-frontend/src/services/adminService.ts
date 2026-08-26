@@ -2,9 +2,19 @@ import apiClient from "./apiClient";
 import type {
   AdminDashboardStats,
   AdminPendingShopsResponse,
+  AdminUserListResponse,
   AdminVerificationRequestsResponse,
+  UserRole,
   VerificationRequestStatus,
 } from "../types";
+
+export interface AdminCreateUserFields {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+  role: UserRole;
+}
 
 // All endpoints require auth as an Administrator - apiClient's interceptor
 // attaches the bearer token. See AdminDashboardController, AdminShopsController,
@@ -53,5 +63,35 @@ export const adminService = {
         `/admin/verification/${requestId}/reject`,
         { reason },
       )
+      .then((res) => res.data),
+
+  getUsers: (params: {
+    pageNumber?: number;
+    pageSize?: number;
+    search?: string;
+    roleFilter?: UserRole;
+  }) =>
+    apiClient
+      .get<AdminUserListResponse>("/admin/users", { params })
+      .then((res) => res.data),
+
+  createUser: (fields: AdminCreateUserFields) =>
+    apiClient
+      .post<{ id: number; name: string; username: string; email: string; role: UserRole; message: string }>(
+        "/admin/users",
+        fields,
+      )
+      .then((res) => res.data),
+
+  updateUserRole: (userId: number, newRole: UserRole) =>
+    apiClient
+      .put<{ id: number; role: UserRole; message: string }>(`/admin/users/${userId}/role`, {
+        newRole,
+      })
+      .then((res) => res.data),
+
+  deleteUser: (userId: number) =>
+    apiClient
+      .delete<{ id: number; message: string }>(`/admin/users/${userId}`)
       .then((res) => res.data),
 };

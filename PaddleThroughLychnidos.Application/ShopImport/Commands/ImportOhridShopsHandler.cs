@@ -12,11 +12,13 @@ namespace PaddleThroughLychnidos.Application.ShopImport.Commands
 
         private readonly IShopRepository _shopRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IRegionRepository _regionRepository;
 
-        public ImportOhridShopsHandler(IShopRepository shopRepository, ICategoryRepository categoryRepository)
+        public ImportOhridShopsHandler(IShopRepository shopRepository, ICategoryRepository categoryRepository, IRegionRepository regionRepository)
         {
             _shopRepository = shopRepository;
             _categoryRepository = categoryRepository;
+            _regionRepository = regionRepository;
         }
 
         public async Task<ImportOhridShopsResponse> Handle(ImportOhridShopsRequest request, CancellationToken cancellationToken)
@@ -34,6 +36,8 @@ namespace PaddleThroughLychnidos.Application.ShopImport.Commands
 
             var categories = (await _categoryRepository.GetAllAsync()).ToList();
             var categoryByName = categories.ToDictionary(c => c.Name, c => c.Id, StringComparer.OrdinalIgnoreCase);
+
+            var regions = (await _regionRepository.GetAllAsync()).ToList();
 
             var existingShops = (await _shopRepository.GetAllAsync()).ToList();
 
@@ -87,10 +91,13 @@ namespace PaddleThroughLychnidos.Application.ShopImport.Commands
                     continue;
                 }
 
+                var matchedRegion = regions.FirstOrDefault(r =>
+                    PointInPolygonHelper.Contains(r.PolygonGeoJson, record.Lat, record.Lng));
+
                 var shop = new Domain.Entities.Shop
                 {
                     OwnerId = null,
-                    RegionId = null,
+                    RegionId = matchedRegion?.Id,
                     CategoryId = categoryId,
                     Name = record.Name,
                     Address = record.FormattedAddress,

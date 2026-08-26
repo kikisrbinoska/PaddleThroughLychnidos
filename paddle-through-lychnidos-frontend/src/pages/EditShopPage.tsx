@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft, ImagePlus } from "lucide-react";
 import { artisanService } from "../services/artisanService";
 import { categoryService } from "../services/categoryService";
@@ -25,7 +25,9 @@ const EMPTY_FIELDS: ShopFormFields = {
 };
 
 export function EditShopPage() {
+  const { shopId } = useParams<{ shopId: string }>();
   const navigate = useNavigate();
+  const isEditing = shopId !== undefined;
 
   const [existingShop, setExistingShop] = useState<OwnedShop | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,35 +42,31 @@ export function EditShopPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedMessage, setSubmittedMessage] = useState<string | null>(null);
 
-  const isEditing = existingShop !== null;
-
   useEffect(() => {
     let cancelled = false;
 
-    Promise.all([
-      artisanService.getMyShop(),
-      categoryService.getAll(),
-      regionService.getAll(),
-    ])
-      .then(([myShop, categoryList, regionList]) => {
+    const shopPromise = isEditing ? artisanService.getShop(Number(shopId)) : Promise.resolve(null);
+
+    Promise.all([shopPromise, categoryService.getAll(), regionService.getAll()])
+      .then(([shop, categoryList, regionList]) => {
         if (cancelled) return;
         setCategories(categoryList);
         setRegions(regionList);
 
-        if (myShop.shop) {
-          setExistingShop(myShop.shop);
-          setImages(myShop.shop.imageUrls);
+        if (shop) {
+          setExistingShop(shop);
+          setImages(shop.imageUrls);
           setFields({
-            name: myShop.shop.name,
-            description: myShop.shop.description,
-            story: myShop.shop.story,
-            categoryId: myShop.shop.categoryId,
-            regionId: myShop.shop.regionId,
-            phoneNumber: myShop.shop.phoneNumber,
-            email: myShop.shop.email,
-            instagramHandle: myShop.shop.instagramHandle,
-            website: myShop.shop.website ?? "",
-            openingHours: myShop.shop.openingHours,
+            name: shop.name,
+            description: shop.description,
+            story: shop.story,
+            categoryId: shop.categoryId,
+            regionId: shop.regionId,
+            phoneNumber: shop.phoneNumber,
+            email: shop.email,
+            instagramHandle: shop.instagramHandle,
+            website: shop.website ?? "",
+            openingHours: shop.openingHours,
           });
         }
       })
@@ -84,7 +82,7 @@ export function EditShopPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [shopId, isEditing]);
 
   function update<K extends keyof ShopFormFields>(key: K, value: ShopFormFields[K]) {
     setFields((current) => ({ ...current, [key]: value }));
@@ -127,7 +125,7 @@ export function EditShopPage() {
 
     setIsSubmitting(true);
     try {
-      if (isEditing) {
+      if (isEditing && existingShop) {
         await artisanService.updateShop(existingShop.id, fields);
         setSubmittedMessage("Your shop has been updated.");
         setTimeout(() => navigate("/artisan/dashboard"), 1200);
@@ -137,7 +135,13 @@ export function EditShopPage() {
           response.message ||
             "Your shop has been submitted for review and will be visible to visitors once approved, usually within 2-3 business days.",
         );
-        setTimeout(() => navigate("/artisan/dashboard"), 2000);
+        setTimeout(
+          () =>
+            navigate(`/artisan/shops/${response.id}/membership`, {
+              state: { note: "Choose your plan to get started" },
+            }),
+          2000,
+        );
       }
     } catch (err) {
       setFormError(getErrorMessage(err, "Could not save your shop."));

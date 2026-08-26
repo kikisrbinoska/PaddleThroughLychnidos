@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChevronLeft, Package, Pencil, Plus, Trash2 } from "lucide-react";
-import { artisanService } from "../services/artisanService";
 import { productService } from "../services/productService";
 import { getErrorMessage } from "../services/errorMessage";
 import type { ProductListItem } from "../types";
@@ -9,9 +8,11 @@ import { Button } from "../components/Button";
 
 function ProductRow({
   product,
+  shopId,
   onDelete,
 }: {
   product: ProductListItem;
+  shopId: number;
   onDelete: () => void;
 }) {
   const [isConfirming, setIsConfirming] = useState(false);
@@ -61,7 +62,7 @@ function ProductRow({
       ) : (
         <div className="flex flex-none items-center gap-1">
           <Link
-            to={`/artisan/products/${product.id}/edit`}
+            to={`/artisan/shops/${shopId}/products/${product.id}/edit`}
             aria-label={`Edit ${product.name}`}
             className="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary hover:bg-primary-100"
           >
@@ -82,31 +83,23 @@ function ProductRow({
 }
 
 export function ManageProductsPage() {
+  const { shopId } = useParams<{ shopId: string }>();
   const navigate = useNavigate();
 
-  const [shopId, setShopId] = useState<number | null>(null);
   const [products, setProducts] = useState<ProductListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!shopId) return;
     let cancelled = false;
     setIsLoading(true);
     setError(null);
 
-    artisanService
-      .getMyShop()
-      .then((response) => {
-        if (cancelled) return;
-        if (!response.shop) {
-          navigate("/artisan/dashboard");
-          return;
-        }
-        setShopId(response.shop.id);
-        return productService.getByShopId(response.shop.id);
-      })
+    productService
+      .getByShopId(Number(shopId))
       .then((items) => {
-        if (!cancelled && items) setProducts(items);
+        if (!cancelled) setProducts(items);
       })
       .catch((err) => {
         if (!cancelled) {
@@ -120,7 +113,7 @@ export function ManageProductsPage() {
     return () => {
       cancelled = true;
     };
-  }, [navigate]);
+  }, [shopId]);
 
   return (
     <div className="min-h-svh bg-surface-bg pb-24">
@@ -136,13 +129,11 @@ export function ManageProductsPage() {
           </button>
           <h1 className="text-lg font-extrabold text-primary-900">Manage Products</h1>
         </div>
-        {shopId && (
-          <Link to="/artisan/products/new">
-            <Button className="!px-3 !py-2">
-              <Plus size={16} />
-            </Button>
-          </Link>
-        )}
+        <Link to={`/artisan/shops/${shopId}/products/new`}>
+          <Button className="!px-3 !py-2">
+            <Plus size={16} />
+          </Button>
+        </Link>
       </header>
 
       <div className="mt-6 flex flex-col gap-2.5 px-6">
@@ -156,7 +147,7 @@ export function ManageProductsPage() {
             <p className="text-sm text-text-secondary">
               You haven't added any products yet.
             </p>
-            <Link to="/artisan/products/new">
+            <Link to={`/artisan/shops/${shopId}/products/new`}>
               <Button>Add Product</Button>
             </Link>
           </div>
@@ -165,6 +156,7 @@ export function ManageProductsPage() {
             <ProductRow
               key={product.id}
               product={product}
+              shopId={Number(shopId)}
               onDelete={() =>
                 setProducts((current) => current.filter((p) => p.id !== product.id))
               }

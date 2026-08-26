@@ -7,6 +7,7 @@ import {
   MapPin,
   Tag,
   Route,
+  Users,
   LogOut,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -20,6 +21,7 @@ interface AdminNavItem {
 
 const navItems: AdminNavItem[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/admin/users", label: "Users", icon: Users },
   { to: "/admin/shops/pending", label: "Shop Approvals", icon: Store },
   { to: "/admin/verifications", label: "Verify Artisans", icon: BadgeCheck },
   { to: "/admin/regions", label: "Regions", icon: MapPin },

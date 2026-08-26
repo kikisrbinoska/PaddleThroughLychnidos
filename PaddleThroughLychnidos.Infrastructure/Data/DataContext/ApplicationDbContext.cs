@@ -121,6 +121,7 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.DataContext
                     .OnDelete(DeleteBehavior.Restrict);
 
                 builder.Property(s => s.Status).HasConversion<string>();
+                builder.Property(s => s.MembershipTier).HasConversion<string>();
 
                 builder.HasIndex(s => s.OwnerId);
                 builder.HasIndex(s => s.RegionId);

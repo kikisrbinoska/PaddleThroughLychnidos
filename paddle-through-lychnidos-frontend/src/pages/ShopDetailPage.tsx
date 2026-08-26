@@ -22,19 +22,7 @@ import { ShopLocationMap } from "../components/ShopLocationMap";
 import { ProductCard } from "../components/ProductCard";
 import { ReviewsSection } from "../components/ReviewsSection";
 import { getCategoryAccent } from "../utils/categoryStyle";
-
-// wa.me needs a full international number with no leading "+" or local
-// trunk prefix. Numbers in this dataset are North Macedonian local format
-// (e.g. "070 212 046", no country code) - convert 0XXXXXXXX to 389XXXXXXXX.
-// Numbers that already include a country code (start with 3 digits other
-// than a local trunk "0") are passed through digit-stripped as-is.
-function toWhatsAppNumber(value: string): string {
-  const digits = value.replace(/[^\d]/g, "");
-  if (digits.startsWith("0")) {
-    return `389${digits.slice(1)}`;
-  }
-  return digits;
-}
+import { toWhatsAppNumber } from "../utils/whatsapp";
 
 export function ShopDetailPage() {
   const { id } = useParams<{ id: string }>();
