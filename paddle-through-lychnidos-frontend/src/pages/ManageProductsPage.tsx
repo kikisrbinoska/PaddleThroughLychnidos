@@ -29,7 +29,7 @@ function ProductRow({
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3">
+    <div className="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg">
       <div className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100">
         {product.imageUrl && (
           <img src={product.imageUrl} alt="" className="h-full w-full object-cover" />
@@ -116,14 +116,14 @@ export function ManageProductsPage() {
   }, [shopId]);
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center justify-between px-6 pt-8">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate(-1)}
             aria-label="Back"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-white/70 text-primary-900 backdrop-blur-lg"
           >
             <ChevronLeft size={20} />
           </button>
@@ -142,7 +142,7 @@ export function ManageProductsPage() {
         ) : error ? (
           <p className="text-sm text-text-secondary">{error}</p>
         ) : products.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default bg-white/60 p-8 text-center backdrop-blur-lg">
             <Package size={24} className="text-text-secondary" />
             <p className="text-sm text-text-secondary">
               You haven't added any products yet.

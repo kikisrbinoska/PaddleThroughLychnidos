@@ -74,7 +74,7 @@ export function DayPlanBuilder({ savedShops, onClose, onCreated }: DayPlanBuilde
 
   return (
     <div className="fixed inset-0 z-[1300] flex items-end justify-center bg-black/40 md:items-center">
-      <div className="flex max-h-[90vh] w-full flex-col overflow-y-auto rounded-t-3xl border border-border-default bg-surface-card p-6 md:max-w-md md:rounded-3xl">
+      <div className="flex max-h-[90vh] w-full flex-col overflow-y-auto rounded-t-3xl border border-white/70 bg-white/80 p-6 backdrop-blur-lg md:max-w-md md:rounded-3xl">
         <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-border-default md:hidden" />
 
         <div className="mb-4 flex items-center justify-between">
@@ -128,7 +128,7 @@ export function DayPlanBuilder({ savedShops, onClose, onCreated }: DayPlanBuilde
                       className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left ${
                         isSelected
                           ? "border-primary-900 bg-primary-100"
-                          : "border-border-default bg-surface-card"
+                          : "border-border-default bg-white/80"
                       }`}
                     >
                       <div className="h-10 w-10 flex-none overflow-hidden rounded-lg bg-primary-100">
@@ -159,7 +159,7 @@ export function DayPlanBuilder({ savedShops, onClose, onCreated }: DayPlanBuilde
                 {orderedSelection.map((shop, index) => (
                   <div
                     key={shop.id}
-                    className="flex items-center gap-3 rounded-xl border border-border-default bg-surface-card px-3 py-2"
+                    className="flex items-center gap-3 rounded-xl border border-border-default bg-white/80 px-3 py-2"
                   >
                     <span className="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-primary-900 text-xs font-bold text-white">
                       {index + 1}

@@ -207,7 +207,7 @@ export function ManageRegionsPage() {
         </div>
       </div>
 
-      <Card className="mt-6">
+      <Card variant="strong" className="mt-6">
         <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-text-primary">
           <Plus size={16} />
           Add region
@@ -230,7 +230,7 @@ export function ManageRegionsPage() {
           <p className="text-sm text-text-secondary">No regions yet.</p>
         ) : (
           regions.map((region) => (
-            <Card key={region.id} className="flex flex-col gap-2">
+            <Card key={region.id} variant="strong" className="flex flex-col gap-2">
               {editingId === region.id ? (
                 <RegionForm
                   draft={editDraft}

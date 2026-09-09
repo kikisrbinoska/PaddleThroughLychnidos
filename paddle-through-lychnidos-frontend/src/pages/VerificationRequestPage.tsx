@@ -88,13 +88,13 @@ export function VerificationRequestPage() {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center gap-3 px-6 pt-8">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="Back"
-          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/70 bg-white/70 text-primary-900 backdrop-blur-lg"
         >
           <ChevronLeft size={20} />
         </button>
@@ -107,7 +107,7 @@ export function VerificationRequestPage() {
         {isLoading ? (
           <p className="text-sm text-text-secondary">Loading...</p>
         ) : submitted ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-secondary-500 bg-secondary-100 p-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-secondary-200/50 bg-secondary-100/50 p-8 text-center backdrop-blur-lg">
             <BadgeCheck size={28} className="text-secondary-900" />
             <p className="text-sm font-bold text-secondary-900">
               Your verification request has been submitted.
@@ -117,7 +117,11 @@ export function VerificationRequestPage() {
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className="flex flex-col gap-4 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg"
+          >
             <p className="text-sm text-text-secondary">
               Tell us about your craft - how long has your family practiced
               this tradition? Do you have a physical workshop visitors can
@@ -140,7 +144,7 @@ export function VerificationRequestPage() {
                 {files.map((file, index) => (
                   <div
                     key={`${file.name}-${index}`}
-                    className="flex items-center gap-2 rounded-xl border border-border-default bg-surface-card px-3 py-2"
+                    className="flex items-center gap-2 rounded-xl border border-border-default bg-white/80 px-3 py-2"
                   >
                     <FileText size={16} className="flex-none text-text-secondary" />
                     <span className="min-w-0 flex-1 truncate text-xs text-text-primary">

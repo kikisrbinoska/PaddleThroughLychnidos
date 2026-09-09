@@ -97,7 +97,7 @@ function PendingShopCard({
   }
 
   return (
-    <Card className="flex flex-col gap-3">
+    <Card variant="strong" className="flex flex-col gap-3">
       <button
         type="button"
         onClick={() => setIsExpanded((v) => !v)}
@@ -120,7 +120,7 @@ function PendingShopCard({
       </button>
 
       {isExpanded && (
-        <div className="flex flex-col gap-2 rounded-xl bg-surface-bg p-3 text-sm text-text-secondary">
+        <div className="flex flex-col gap-2 rounded-xl bg-primary-100/40 p-3 text-sm text-text-secondary">
           <p className="flex items-center gap-1.5">
             <Mail size={12} className="flex-none" />
             {shop.ownerEmail || "No email on file"}
@@ -227,7 +227,7 @@ export function PendingShopsPage() {
         ) : error ? (
           <p className="text-sm text-text-secondary">{error}</p>
         ) : shops.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default bg-white/60 p-8 text-center backdrop-blur-lg">
             <Store size={28} className="text-text-secondary" />
             <p className="text-sm text-text-secondary">
               No shops are waiting for approval right now.

@@ -21,6 +21,7 @@ import { CategoryImage } from "../components/CategoryImage";
 import { ShopLocationMap } from "../components/ShopLocationMap";
 import { ProductCard } from "../components/ProductCard";
 import { ReviewsSection } from "../components/ReviewsSection";
+import { Card } from "../components/Card";
 import { getCategoryAccent } from "../utils/categoryStyle";
 import { toWhatsAppNumber } from "../utils/whatsapp";
 
@@ -157,7 +158,7 @@ export function ShopDetailPage() {
         </div>
 
         {/* 2. Info card */}
-        <div className="relative z-10 -mt-10 mx-4 rounded-2xl border border-white/60 bg-white/55 p-4 shadow-lg shadow-primary-900/10 backdrop-blur-xl">
+        <Card variant="light" className="relative z-10 -mt-10 mx-4">
           <div className="flex items-center gap-1.5">
             <h1 className="text-lg font-medium text-primary-800">{shop.name}</h1>
             {shop.isVerified && (
@@ -200,14 +201,14 @@ export function ShopDetailPage() {
           )}
 
           {shop.description && (
-            <p className="mt-3 text-sm text-text-secondary">
+            <p className="mt-3 text-base leading-relaxed text-text-primary">
               {shop.description}
             </p>
           )}
-        </div>
+        </Card>
 
         {/* 3. Map + contact card */}
-        <div className="mx-4 mt-3 rounded-2xl border border-white/55 bg-white/50 p-3.5 backdrop-blur-lg">
+        <Card variant="light" className="mx-4 mt-3">
           <ShopLocationMap
             latitude={shop.latitude}
             longitude={shop.longitude}
@@ -267,7 +268,7 @@ export function ShopDetailPage() {
               Visit website
             </a>
           )}
-        </div>
+        </Card>
 
         {/* 4. Reviews */}
         <ReviewsSection shopId={shop.id} />

@@ -29,7 +29,7 @@ function MetricCard({
   label: string;
 }) {
   return (
-    <Card className="flex flex-1 flex-col items-center gap-1 p-3 text-center">
+    <Card variant="strong" className="flex flex-1 flex-col items-center gap-1 p-4 text-center">
       <Icon size={16} className="text-primary-700" />
       <p className="text-lg font-extrabold text-primary-900">{value}</p>
       <p className="text-xs text-text-secondary">{label}</p>
@@ -130,7 +130,7 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
       <div className="flex flex-col gap-2.5">
         <Link
           to={`/artisan/shops/${shop.id}/edit`}
-          className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5"
+          className="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg"
         >
           <Pencil size={18} className="text-primary-900" />
           <span className="text-sm font-semibold text-text-primary">
@@ -140,7 +140,7 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
 
         <Link
           to={`/artisan/shops/${shop.id}/products`}
-          className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5"
+          className="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg"
         >
           <Package size={18} className="text-primary-900" />
           <span className="text-sm font-semibold text-text-primary">
@@ -150,7 +150,7 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
 
         <Link
           to={`/artisan/shops/${shop.id}/membership`}
-          className="flex items-center justify-between gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5"
+          className="flex items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg"
         >
           <span className="flex items-center gap-3">
             <Crown size={18} className="text-primary-900" />
@@ -162,7 +162,7 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
         </Link>
 
         {shop.isVerified ? null : shop.hasPendingVerificationRequest ? (
-          <div className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5 opacity-70">
+          <div className="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg opacity-70">
             <Clock size={18} className="text-text-secondary" />
             <span className="text-sm font-semibold text-text-secondary">
               Verification under review
@@ -171,7 +171,7 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
         ) : (
           <Link
             to={`/artisan/shops/${shop.id}/verification`}
-            className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3.5"
+            className="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg"
           >
             <BadgeCheck size={18} className="text-primary-900" />
             <span className="text-sm font-semibold text-text-primary">
@@ -186,7 +186,7 @@ function ApprovedDashboard({ shop }: { shop: OwnedShop }) {
 
 function ShopCard({ shop }: { shop: OwnedShop }) {
   return (
-    <Card className="flex flex-col gap-4">
+    <Card variant="strong" className="flex flex-col gap-4">
       <div className="flex items-center gap-3">
         <div className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100">
           {shop.imageUrls[0] && (
@@ -248,7 +248,7 @@ export function ArtisanDashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center justify-between px-6 pt-8">
         <h1 className="text-lg font-extrabold text-primary-900">Artisan Dashboard</h1>
         {shops.length > 0 && (
@@ -266,7 +266,7 @@ export function ArtisanDashboardPage() {
         ) : error ? (
           <p className="text-sm text-text-secondary">{error}</p>
         ) : shops.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default bg-white/60 p-8 text-center backdrop-blur-lg">
             <Store size={28} className="text-text-secondary" />
             <p className="text-sm text-text-secondary">
               You haven't set up a shop yet.

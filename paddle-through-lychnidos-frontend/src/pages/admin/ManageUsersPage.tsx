@@ -80,7 +80,7 @@ function CreateUserModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <Card className="w-full max-w-md">
+      <Card variant="strong" className="w-full max-w-md">
         <div className="mb-4 flex items-center justify-between">
           <p className="flex items-center gap-1.5 text-sm font-bold text-text-primary">
             <UserPlus size={16} />
@@ -197,7 +197,7 @@ function UserRow({
   }
 
   return (
-    <Card className="flex flex-col gap-3">
+    <Card variant="strong" className="flex flex-col gap-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-bold text-text-primary">{user.name}</p>
@@ -385,7 +385,7 @@ export function ManageUsersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, username or email"
-            className="w-full rounded-xl border border-border-default bg-surface-card py-2.5 pl-10 pr-4 text-sm text-text-primary outline-none focus:border-primary-700"
+            className="w-full rounded-xl border border-white/70 bg-white/70 py-2.5 pl-10 pr-4 text-sm text-text-primary outline-none backdrop-blur-lg focus:border-primary-700"
           />
         </div>
         <select
@@ -393,7 +393,7 @@ export function ManageUsersPage() {
           onChange={(e) =>
             setRoleFilter(e.target.value === "" ? "" : (Number(e.target.value) as UserRole))
           }
-          className="rounded-xl border border-border-default bg-surface-card px-4 py-2.5 text-sm text-text-primary outline-none focus:border-primary-700"
+          className="rounded-xl border border-white/70 bg-white/70 px-4 py-2.5 text-sm text-text-primary outline-none backdrop-blur-lg focus:border-primary-700"
         >
           <option value="">All roles</option>
           {ROLE_OPTIONS.map((option) => (

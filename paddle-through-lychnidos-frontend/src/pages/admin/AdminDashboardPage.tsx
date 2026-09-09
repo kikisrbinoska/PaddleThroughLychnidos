@@ -27,7 +27,7 @@ function MetricCard({
   breakdown?: string;
 }) {
   return (
-    <Card className="flex flex-col gap-2">
+    <Card variant="strong" className="flex flex-col gap-2">
       <div className="flex items-center gap-2 text-text-secondary">
         <Icon size={16} />
         <p className="text-xs font-semibold">{label}</p>
@@ -52,7 +52,7 @@ function ActionNeededCard({
   return (
     <Link
       to={to}
-      className="flex items-center justify-between gap-3 rounded-2xl border border-nosija-gold-500 bg-nosija-gold-100 p-4"
+      className="flex items-center justify-between gap-3 rounded-2xl border border-nosija-gold-500/60 bg-nosija-gold-100/80 p-4 backdrop-blur-lg"
     >
       <div className="flex items-center gap-3">
         <AlertTriangle size={20} className="flex-none text-nosija-gold-900" />

@@ -24,8 +24,8 @@ function PlanCard({ title, price, perks, isCurrent, isPremium, isSubmitting, onS
     <div
       className={`flex flex-1 flex-col gap-4 rounded-2xl border p-5 ${
         isPremium
-          ? "border-nosija-gold-500 bg-nosija-gold-100"
-          : "border-border-default bg-surface-card"
+          ? "border-nosija-gold-500/60 bg-nosija-gold-100/70 backdrop-blur-lg"
+          : "border-white/70 bg-white/70 backdrop-blur-lg"
       }`}
     >
       <div className="flex items-center justify-between">
@@ -108,7 +108,7 @@ function DemoPaymentModal({ onCancel, onSubmit, isSubmitting, error }: DemoPayme
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-sm rounded-2xl border border-border-default bg-surface-card p-5 shadow-lg">
+      <div className="w-full max-w-sm rounded-2xl border border-white/70 bg-white/85 p-5 shadow-lg backdrop-blur-lg">
         <p className="mb-4 flex items-center gap-1.5 text-sm font-bold text-text-primary">
           <CreditCard size={16} />
           Upgrade to Premium
@@ -263,13 +263,13 @@ export function MembershipPage() {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center gap-3 px-6 pt-8">
         <button
           type="button"
           onClick={() => navigate("/artisan/dashboard")}
           aria-label="Back"
-          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/70 bg-white/70 text-primary-900 backdrop-blur-lg"
         >
           <ChevronLeft size={20} />
         </button>

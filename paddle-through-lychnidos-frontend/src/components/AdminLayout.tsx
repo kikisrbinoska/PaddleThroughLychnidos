@@ -47,8 +47,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg md:flex">
-      <aside className="flex flex-col border-b border-border-default bg-surface-card md:w-64 md:flex-none md:border-b-0 md:border-r">
+    <div className="min-h-svh md:flex">
+      <aside className="flex flex-col border-b border-white/70 bg-white/70 backdrop-blur-lg md:w-64 md:flex-none md:border-b-0 md:border-r">
         <div className="px-6 py-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
             Paddle through Lychnidos

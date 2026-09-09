@@ -11,12 +11,12 @@ const PAGE_SIZE = 20;
 function chipClasses(isSelected: boolean): string {
   return isSelected
     ? "border-primary-900 bg-primary-100 text-primary-900"
-    : "border-border-default bg-surface-card text-text-primary";
+    : "border-white/60 bg-white/55 text-text-primary backdrop-blur-md";
 }
 
 function ProductCardSkeleton() {
   return (
-    <div className="animate-pulse overflow-hidden rounded-2xl border border-border-default bg-surface-card p-2.5">
+    <div className="animate-pulse overflow-hidden rounded-2xl border border-white/60 bg-white/55 p-3">
       <div className="h-24 w-full rounded-xl bg-primary-100" />
       <div className="mt-2 h-3 w-3/4 rounded bg-primary-100" />
       <div className="mt-1.5 h-3 w-1/2 rounded bg-primary-100" />
@@ -88,7 +88,7 @@ export function MarketplacePage() {
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="px-6 pt-8">
         <h1 className="text-lg font-extrabold text-primary-900">Marketplace</h1>
         <p className="text-xs text-text-secondary">
@@ -122,7 +122,7 @@ export function MarketplacePage() {
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
               placeholder="0"
-              className="w-24 rounded-lg border border-border-default bg-surface-card px-3 py-1.5 text-xs text-text-primary outline-none focus:border-primary-700"
+              className="w-24 rounded-lg border border-border-default bg-surface-card/80 px-3 py-1.5 text-xs text-text-primary outline-none focus:border-primary-700"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -136,13 +136,13 @@ export function MarketplacePage() {
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
               placeholder="Any"
-              className="w-24 rounded-lg border border-border-default bg-surface-card px-3 py-1.5 text-xs text-text-primary outline-none focus:border-primary-700"
+              className="w-24 rounded-lg border border-border-default bg-surface-card/80 px-3 py-1.5 text-xs text-text-primary outline-none focus:border-primary-700"
             />
           </div>
           <button
             type="button"
             onClick={applyPriceRange}
-            className="rounded-lg bg-primary-900 px-4 py-1.5 text-xs font-semibold text-white"
+            className="rounded-lg bg-gradient-to-r from-primary-900 to-secondary-900 px-4 py-1.5 text-xs font-semibold text-white shadow-sm shadow-primary-900/20"
           >
             Apply
           </button>
@@ -159,7 +159,7 @@ export function MarketplacePage() {
         ) : error ? (
           <p className="text-sm text-text-secondary">{error}</p>
         ) : products.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary-300/60 bg-white/40 p-8 text-center backdrop-blur-md">
             <ShoppingBag size={28} className="text-text-secondary" />
             <p className="text-sm text-text-secondary">
               No products match your filters.
@@ -185,7 +185,7 @@ export function MarketplacePage() {
                   type="button"
                   disabled={pageNumber <= 1}
                   onClick={() => setPageNumber((p) => p - 1)}
-                  className="rounded-full border border-border-default bg-surface-card px-4 py-2 text-xs font-semibold text-primary-900 disabled:opacity-40"
+                  className="rounded-xl border border-white/60 bg-white/55 px-4 py-2 text-xs font-semibold text-primary-900 backdrop-blur-md disabled:opacity-40"
                 >
                   Previous
                 </button>
@@ -196,7 +196,7 @@ export function MarketplacePage() {
                   type="button"
                   disabled={pageNumber >= totalPages}
                   onClick={() => setPageNumber((p) => p + 1)}
-                  className="rounded-full border border-border-default bg-surface-card px-4 py-2 text-xs font-semibold text-primary-900 disabled:opacity-40"
+                  className="rounded-xl border border-white/60 bg-white/55 px-4 py-2 text-xs font-semibold text-primary-900 backdrop-blur-md disabled:opacity-40"
                 >
                   Next
                 </button>

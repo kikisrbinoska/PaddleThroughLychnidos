@@ -44,6 +44,9 @@
   --color-nosija-gold-300: #f5d871;
   --color-nosija-gold-100: #fcf0c8;
 
+  --color-amber-700: #b45309;
+  --color-amber-100: #fef3c7;
+
   --color-surface-bg: #fdfcf8;
   --color-surface-card: #ffffff;
   --color-text-primary: #1a1a1a;
@@ -57,6 +60,11 @@
 
 body {
   margin: 0;
+  /* Flat fallback only - the app renders its ambient gradient via the
+     AppLayout wrapper in App.tsx (bg-gradient-to-b from-primary-100
+     via-[#F1FCEF] to-secondary-100). This stays as a plain color so there's
+     no flash-of-flat-bg before the wrapper paints, and so any content that
+     ever renders outside that wrapper still gets a sane background. */
   background-color: var(--color-surface-bg);
   color: var(--color-text-primary);
   font-family: var(--font-sans);

@@ -16,7 +16,10 @@ import { getCategoryAccent } from "../utils/categoryStyle";
 
 function MetricCard({ value, label }: { value: number; label: string }) {
   return (
-    <Card className="flex flex-1 flex-col items-center gap-0.5 p-3 text-center">
+    <Card
+      variant="light"
+      className="flex flex-1 flex-col items-center gap-0.5 p-4 text-center"
+    >
       <p className="text-xl font-extrabold text-primary-900">{value}</p>
       <p className="text-xs text-text-secondary">{label}</p>
     </Card>
@@ -139,7 +142,7 @@ export function ProfilePage() {
     .toUpperCase();
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center justify-between px-6 pt-8">
         <div className="flex items-center gap-3">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary-900 to-secondary-900 text-lg font-bold text-white">
@@ -164,7 +167,7 @@ export function ProfilePage() {
           type="button"
           onClick={() => navigate("/profile/settings")}
           aria-label="Settings"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
         >
           <Settings size={18} />
         </button>
@@ -221,8 +224,14 @@ export function ProfilePage() {
                 </p>
               ) : (
                 <div className="flex flex-col gap-2.5">
+                  {/* Solid (non-blurred) tinted card, not the "light"
+                      glass variant - this list can grow to 50 items and
+                      the no-blur-on-list-items rule applies. */}
                   {reviews.map((review) => (
-                    <Card key={review.id} className="flex flex-col gap-2">
+                    <Card
+                      key={review.id}
+                      className="flex flex-col gap-2 border-white/70 bg-white/85"
+                    >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-1 text-nosija-gold-700">
                           {Array.from({ length: 5 }).map((_, index) => (
@@ -273,7 +282,7 @@ export function ProfilePage() {
               <section>
                 <Link
                   to="/artisan/dashboard"
-                  className="flex items-center gap-2 rounded-2xl border border-primary-800 bg-primary-100 p-4"
+                  className="flex items-center gap-2 rounded-2xl border border-primary-200/50 bg-primary-100/50 p-4 backdrop-blur-lg"
                 >
                   <Wrench size={18} className="text-primary-900" />
                   <p className="text-sm font-bold text-primary-900">
@@ -286,7 +295,7 @@ export function ProfilePage() {
             <section>
               <Link
                 to="/itineraries?view=plan"
-                className="flex items-center justify-between rounded-2xl border border-border-default bg-surface-card p-4"
+                className="flex items-center justify-between rounded-2xl border border-white/60 bg-white/55 p-4 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-2">
                   <Stamp size={18} className="text-primary-900" />
@@ -303,7 +312,7 @@ export function ProfilePage() {
             <section>
               <Link
                 to="/cart"
-                className="flex items-center justify-between rounded-2xl border border-border-default bg-surface-card p-4"
+                className="flex items-center justify-between rounded-2xl border border-white/60 bg-white/55 p-4 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-2">
                   <ShoppingBag size={18} className="text-primary-900" />

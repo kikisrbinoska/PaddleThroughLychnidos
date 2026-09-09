@@ -173,7 +173,7 @@ function StopBuilder({
           {stops.map((stop, index) => (
             <div
               key={stop.key}
-              className="flex flex-col gap-2 rounded-xl border border-border-default bg-surface-bg p-3"
+              className="flex flex-col gap-2 rounded-xl border border-border-default bg-primary-100/40 p-3"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-sm font-bold text-text-primary">
@@ -332,7 +332,7 @@ export function EditItineraryPage() {
         <p className="mt-6 text-sm text-text-secondary">Loading...</p>
       ) : (
         <div className="mt-6 flex flex-col gap-5">
-          <Card className="flex flex-col gap-4">
+          <Card variant="strong" className="flex flex-col gap-4">
             <TextField
               id="itinerary-title"
               label="Title"
@@ -409,7 +409,7 @@ export function EditItineraryPage() {
             </div>
           </Card>
 
-          <Card>
+          <Card variant="strong">
             <p className="mb-3 text-sm font-bold text-text-primary">Stops</p>
             <StopBuilder stops={stops} onChange={setStops} />
           </Card>
@@ -423,7 +423,7 @@ export function EditItineraryPage() {
             <button
               type="button"
               onClick={() => navigate("/admin/itineraries")}
-              className="flex items-center gap-1.5 rounded-full border border-border-default px-5 py-2.5 text-sm font-semibold text-text-primary"
+              className="flex items-center gap-1.5 rounded-xl border border-white/70 bg-white/70 px-5 py-2.5 text-sm font-semibold text-text-primary backdrop-blur-lg"
             >
               <X size={14} />
               Cancel

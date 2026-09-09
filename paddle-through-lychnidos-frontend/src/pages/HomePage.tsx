@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Newspaper, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { shopService } from "../services/shopService";
 import { regionService } from "../services/regionService";
 import { newsService } from "../services/newsService";
@@ -9,6 +9,9 @@ import type { NewsItemListEntry, Region, ShopListItem } from "../types";
 import { HorizontalScrollRow } from "../components/HorizontalScrollRow";
 import { ShopCard } from "../components/ShopCard";
 import { RegionChip } from "../components/RegionChip";
+import { NewsCard } from "../components/NewsCard";
+import { BackgroundBlob } from "../components/BackgroundBlob";
+import logo from "../assets/logo.png";
 
 interface SectionHeaderProps {
   title: string;
@@ -18,7 +21,10 @@ interface SectionHeaderProps {
 function SectionHeader({ title, seeAllTo }: SectionHeaderProps) {
   return (
     <div className="mb-3 flex items-center justify-between">
-      <h2 className="text-lg font-extrabold text-primary-900">{title}</h2>
+      <div>
+        <h2 className="text-lg font-extrabold text-primary-900">{title}</h2>
+        <div className="mt-1 h-[3px] w-10 rounded-full bg-gradient-to-r from-primary-900 to-secondary-900" />
+      </div>
       {seeAllTo && (
         <Link
           to={seeAllTo}
@@ -76,20 +82,21 @@ export function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
-      <header className="flex items-center justify-between px-6 pt-8">
-        <div>
-          <p className="text-xs text-text-secondary">Welcome to</p>
-          <h1 className="bg-gradient-to-r from-primary-900 to-secondary-900 bg-clip-text text-lg font-extrabold text-transparent">
-            Paddle through Lychnidos
-          </h1>
+    <div className="relative min-h-svh overflow-hidden pb-24">
+      <BackgroundBlob position="-top-10 -right-16" tint="primary" />
+      <BackgroundBlob position="top-40 -left-20" size="h-56 w-56" tint="secondary" />
+
+      <header className="relative flex items-center justify-between px-6 pt-8">
+        <div className="flex items-center gap-3">
+          <p className="text-sm font-semibold text-text-secondary">Welcome to</p>
+          <img src={logo} alt="Paddle through Lychnidos" className="h-20 w-20 object-contain" />
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => navigate("/cart")}
             aria-label="My list"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
           >
             <ShoppingBag size={18} />
             {itemCount > 0 && (
@@ -101,7 +108,7 @@ export function HomePage() {
         </div>
       </header>
 
-      <div className="mt-8 flex flex-col gap-8 px-6">
+      <div className="relative mt-8 flex flex-col gap-8 px-6">
         <section>
           <SectionHeader title="Artisan Shops" seeAllTo="/shops" />
           {isLoading ? (
@@ -111,7 +118,7 @@ export function HomePage() {
           ) : (
             <HorizontalScrollRow>
               {featuredShops.map((shop) => (
-                <ShopCard key={shop.id} shop={shop} />
+                <ShopCard key={shop.id} shop={shop} variant="gradient" />
               ))}
             </HorizontalScrollRow>
           )}
@@ -123,11 +130,13 @@ export function HomePage() {
             <p className="text-sm text-text-secondary">Loading...</p>
           ) : (
             <HorizontalScrollRow className="md:grid-cols-4 lg:grid-cols-6">
-              {regions.map((region) => (
+              {regions.map((region, index) => (
                 <RegionChip
                   key={region.id}
                   region={region}
                   onClick={(r) => navigate(`/map?regionId=${r.id}`)}
+                  variant="gradient"
+                  index={index}
                 />
               ))}
             </HorizontalScrollRow>
@@ -143,31 +152,9 @@ export function HomePage() {
           ) : (
             <HorizontalScrollRow>
               {latestNews.map((news) => (
-                <Link
-                  key={news.id}
-                  to={`/magazine/${news.id}`}
-                  className="w-48 flex-none snap-start overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm md:w-full"
-                >
-                  <div className="flex h-24 w-full items-center justify-center bg-brown-100 text-brown-500">
-                    {news.thumbnailUrl ? (
-                      <img
-                        src={news.thumbnailUrl}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <Newspaper size={24} />
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-1 p-3">
-                    <h3 className="line-clamp-1 text-sm font-bold text-text-primary">
-                      {news.title}
-                    </h3>
-                    <p className="line-clamp-2 text-xs text-text-secondary">
-                      {news.summary}
-                    </p>
-                  </div>
-                </Link>
+                <div key={news.id} className="w-48 flex-none snap-start md:w-full">
+                  <NewsCard news={news} />
+                </div>
               ))}
             </HorizontalScrollRow>
           )}

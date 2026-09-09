@@ -9,16 +9,35 @@ export interface ShopCardProps {
   // Overrides the default fixed-width sizing (w-40, meant for horizontal
   // scroll rows) - pass "w-full" when placing this card in a grid instead.
   className?: string;
+  // "default" (white card, used everywhere) vs "gradient" (soft blue-green
+  // gradient, used only on the Home page's featured rows).
+  variant?: "default" | "gradient";
+  // Bumps the title to a larger size for the Shops listing page's grid,
+  // where titles need to read at a glance - left off elsewhere (e.g. Home's
+  // horizontal row) so this doesn't become an app-wide font change.
+  titleSize?: "default" | "large";
 }
+
+const variantClasses: Record<NonNullable<ShopCardProps["variant"]>, string> = {
+  default: "border-white/60 bg-white/55 backdrop-blur-xl shadow-primary-900/5",
+  gradient: "border-primary-200 bg-gradient-to-br from-primary-100 to-secondary-100",
+};
+
+const titleSizeClasses: Record<NonNullable<ShopCardProps["titleSize"]>, string> = {
+  default: "text-sm font-bold",
+  large: "text-base font-bold",
+};
 
 export function ShopCard({
   shop,
   className = "w-40 flex-none snap-start md:w-full",
+  variant = "default",
+  titleSize = "default",
 }: ShopCardProps) {
   return (
     <Link
       to={`/shop/${shop.id}`}
-      className={`overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm ${className}`}
+      className={`overflow-hidden rounded-2xl border shadow-sm ${variantClasses[variant]} ${className}`}
     >
       <div className="relative h-28 w-full">
         <CategoryImage shop={shop} className="h-full w-full" />
@@ -30,7 +49,7 @@ export function ShopCard({
       </div>
 
       <div className="flex flex-col gap-1 p-3">
-        <h3 className="truncate text-sm font-bold text-text-primary">
+        <h3 className={`truncate text-text-primary ${titleSizeClasses[titleSize]}`}>
           {shop.name}
         </h3>
         <div className="flex flex-wrap items-center gap-1.5">

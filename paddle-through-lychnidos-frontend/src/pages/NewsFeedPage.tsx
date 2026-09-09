@@ -88,7 +88,7 @@ export function NewsFeedPage() {
   }, [category, pageNumber, totalPages, isLoading, isLoadingMore]);
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="px-6 pt-8">
         <h1 className="text-2xl font-extrabold text-primary-900">Magazine</h1>
         <p className="text-text-secondary">
@@ -110,7 +110,7 @@ export function NewsFeedPage() {
                 className={`flex-none rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors ${
                   isSelected
                     ? "border-primary-900 bg-primary-900 text-white"
-                    : "border-border-default bg-surface-card text-text-primary hover:border-primary-500"
+                    : "border-white/60 bg-white/55 text-text-primary backdrop-blur-md hover:border-primary-500"
                 }`}
               >
                 {tab.label}

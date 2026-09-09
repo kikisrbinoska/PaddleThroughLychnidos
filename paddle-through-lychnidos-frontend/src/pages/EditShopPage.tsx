@@ -151,13 +151,13 @@ export function EditShopPage() {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center gap-3 px-6 pt-8">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="Back"
-          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/70 bg-white/70 text-primary-900 backdrop-blur-lg"
         >
           <ChevronLeft size={20} />
         </button>
@@ -170,7 +170,11 @@ export function EditShopPage() {
         {isLoading ? (
           <p className="text-sm text-text-secondary">Loading...</p>
         ) : (
-          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className="flex flex-col gap-4 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg"
+          >
             {!isEditing && (
               <p className="rounded-lg bg-secondary-100 px-3 py-2 text-xs text-secondary-900">
                 New shops are reviewed by our team before they go live -

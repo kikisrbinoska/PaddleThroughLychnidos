@@ -274,7 +274,7 @@ export function ReviewsSection({ shopId }: ReviewsSectionProps) {
               </button>
             </div>
           </div>
-          <p className="mt-1.5 text-sm text-text-secondary">{myReview.comment}</p>
+          <p className="mt-1.5 text-sm text-text-primary">{myReview.comment}</p>
         </div>
       ) : null}
 
@@ -288,10 +288,13 @@ export function ReviewsSection({ shopId }: ReviewsSectionProps) {
             No reviews yet - be the first to share your experience.
           </p>
         ) : (
+          // Individual review cards intentionally skip backdrop-blur - this
+          // list can grow long, and blur must live on a section container,
+          // not on every scrolling list item. Solid-ish tinted bg instead.
           otherReviews.map((review) => (
             <div
               key={review.id}
-              className="rounded-2xl border border-white/40 bg-white/50 p-3 backdrop-blur-lg"
+              className="rounded-2xl border border-white/50 bg-white/80 p-3.5"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-xs font-semibold text-text-primary">
@@ -299,7 +302,7 @@ export function ReviewsSection({ shopId }: ReviewsSectionProps) {
                 </p>
                 <StarDisplay rating={review.rating} />
               </div>
-              <p className="mt-1 text-xs text-text-secondary">{review.comment}</p>
+              <p className="mt-1 text-sm text-text-primary">{review.comment}</p>
             </div>
           ))
         )}

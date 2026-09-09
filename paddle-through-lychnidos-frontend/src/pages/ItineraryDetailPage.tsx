@@ -55,6 +55,7 @@ export function ItineraryDetailPage() {
   const [travelPlanEntryId, setTravelPlanEntryId] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<number | null>(null);
+  const [coverImageFailed, setCoverImageFailed] = useState(false);
 
   const mapRef = useRef<LeafletMap | null>(null);
 
@@ -148,7 +149,7 @@ export function ItineraryDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-2 bg-surface-bg px-4 text-center">
+      <div className="flex min-h-svh flex-col items-center justify-center gap-2 px-4 text-center">
         <p className="text-text-secondary">Loading itinerary...</p>
       </div>
     );
@@ -156,7 +157,7 @@ export function ItineraryDetailPage() {
 
   if (error || !itinerary) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-2 bg-surface-bg px-4 text-center">
+      <div className="flex min-h-svh flex-col items-center justify-center gap-2 px-4 text-center">
         <h1 className="text-2xl font-extrabold text-primary-900">
           Itinerary not found
         </h1>
@@ -174,12 +175,13 @@ export function ItineraryDetailPage() {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-28">
+    <div className="min-h-svh pb-28">
       <div className="relative h-48 w-full">
-        {itinerary.coverImageUrl ? (
+        {itinerary.coverImageUrl && !coverImageFailed ? (
           <img
             src={itinerary.coverImageUrl}
             alt={itinerary.title}
+            onError={() => setCoverImageFailed(true)}
             className="h-full w-full object-cover"
           />
         ) : (
@@ -216,11 +218,11 @@ export function ItineraryDetailPage() {
 
       <div className="px-6 pt-4">
         {itinerary.description && (
-          <p className="text-sm text-text-secondary">{itinerary.description}</p>
+          <p className="text-base font-medium text-text-secondary">{itinerary.description}</p>
         )}
 
         {positions.length > 0 && (
-          <div className="mt-4 overflow-hidden rounded-2xl border border-border-default">
+          <div className="mt-4 overflow-hidden rounded-2xl border border-white/60">
             <MapContainer
               center={positions[0]}
               zoom={16}
@@ -261,8 +263,8 @@ export function ItineraryDetailPage() {
                   onClick={() => setSelectedOrder(stop.order)}
                   className={`flex w-full items-start gap-3 rounded-2xl border p-3 text-left transition-colors ${
                     isSelected
-                      ? "border-secondary-700 bg-secondary-100/60"
-                      : "border-border-default bg-surface-card"
+                      ? "border-secondary-700 bg-secondary-100/60 backdrop-blur-md"
+                      : "border-white/60 bg-white/55 backdrop-blur-md"
                   }`}
                 >
                   <span
@@ -312,7 +314,7 @@ export function ItineraryDetailPage() {
         </ol>
       </div>
 
-      <div className="fixed inset-x-0 bottom-16 z-[900] border-t border-border-default bg-surface-card/95 p-3.5 backdrop-blur-xl">
+      <div className="fixed inset-x-0 bottom-16 z-[900] border-t border-white/60 bg-white/70 p-3.5 backdrop-blur-xl">
         <div className="mx-auto max-w-md">
           <button
             type="button"

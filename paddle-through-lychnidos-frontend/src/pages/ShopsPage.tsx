@@ -86,18 +86,19 @@ export function ShopsPage() {
 
   function applyFilters() {
     setAppliedFilters(draftFilters);
+    setSearchInput(draftFilters.searchWord);
     setPageNumber(1);
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center justify-between px-6 pt-8">
         <h1 className="text-lg font-extrabold text-primary-900">Shops</h1>
         <button
           type="button"
           onClick={openFilters}
           aria-label="Open filters"
-          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
         >
           <SlidersHorizontal size={18} />
           {activeFilterCount > 0 && (
@@ -109,17 +110,19 @@ export function ShopsPage() {
       </header>
 
       <div className="mt-4 px-6">
-        <div className="relative">
+        <div className="group relative">
           <Search
             size={16}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary"
+            className={`pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 group-focus-within:text-secondary-900 ${
+              searchInput ? "text-secondary-900" : "text-text-secondary"
+            }`}
           />
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search shops..."
-            className="w-full rounded-xl border border-border-default bg-surface-card py-2.5 pl-9 pr-3 text-sm text-text-primary outline-none focus:border-primary-500"
+            className="w-full rounded-xl border border-white/60 bg-white/55 py-2.5 pl-9 pr-3 text-sm text-text-primary outline-none backdrop-blur-md focus:border-primary-500"
           />
         </div>
       </div>
@@ -137,7 +140,12 @@ export function ShopsPage() {
           <>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {shops.map((shop) => (
-                <ShopCard key={shop.id} shop={shop} className="w-full" />
+                <ShopCard
+                  key={shop.id}
+                  shop={shop}
+                  className="w-full"
+                  titleSize="large"
+                />
               ))}
             </div>
 
@@ -147,7 +155,7 @@ export function ShopsPage() {
                   type="button"
                   disabled={pageNumber <= 1}
                   onClick={() => setPageNumber((p) => p - 1)}
-                  className="rounded-full border border-border-default bg-surface-card px-4 py-2 text-xs font-semibold text-primary-900 disabled:opacity-40"
+                  className="rounded-xl border border-white/60 bg-white/55 px-4 py-2 text-xs font-semibold text-primary-900 backdrop-blur-md disabled:opacity-40"
                 >
                   Previous
                 </button>
@@ -158,7 +166,7 @@ export function ShopsPage() {
                   type="button"
                   disabled={pageNumber >= totalPages}
                   onClick={() => setPageNumber((p) => p + 1)}
-                  className="rounded-full border border-border-default bg-surface-card px-4 py-2 text-xs font-semibold text-primary-900 disabled:opacity-40"
+                  className="rounded-xl border border-white/60 bg-white/55 px-4 py-2 text-xs font-semibold text-primary-900 backdrop-blur-md disabled:opacity-40"
                 >
                   Next
                 </button>

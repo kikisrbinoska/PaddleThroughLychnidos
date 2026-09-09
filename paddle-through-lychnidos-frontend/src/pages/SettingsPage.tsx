@@ -138,13 +138,13 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center gap-3 px-6 pt-8">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="Back"
-          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
         >
           <ChevronLeft size={20} />
         </button>
@@ -163,7 +163,7 @@ export function SettingsPage() {
               <form
                 onSubmit={handleProfileSubmit}
                 noValidate
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-4 rounded-2xl border border-white/60 bg-white/55 p-4 shadow-lg shadow-primary-900/5 backdrop-blur-xl"
               >
                 <TextField
                   id="name"
@@ -215,7 +215,7 @@ export function SettingsPage() {
               <form
                 onSubmit={handlePasswordSubmit}
                 noValidate
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-4 rounded-2xl border border-white/60 bg-white/55 p-4 shadow-lg shadow-primary-900/5 backdrop-blur-xl"
               >
                 <TextField
                   id="currentPassword"
@@ -270,7 +270,7 @@ export function SettingsPage() {
             <section>
               <h2 className="mb-3 text-sm font-bold text-text-primary">Language</h2>
               {/* Placeholder - no localization is implemented yet. */}
-              <div className="flex items-center justify-between rounded-xl border border-border-default bg-surface-card px-4 py-3 opacity-60">
+              <div className="flex items-center justify-between rounded-xl border border-white/60 bg-white/55 px-4 py-3 opacity-60 backdrop-blur-md">
                 <div className="flex items-center gap-2 text-sm text-text-primary">
                   <Globe size={16} />
                   English

@@ -76,13 +76,13 @@ export function PassportPage() {
   }, [isAuthenticated, isAuthLoading, navigate]);
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center gap-3 px-6 pt-8">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="Back"
-          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
         >
           <ChevronLeft size={20} />
         </button>
@@ -104,7 +104,7 @@ export function PassportPage() {
             </div>
 
             {stamps.length === 0 ? (
-              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary-300/60 bg-white/40 p-8 text-center backdrop-blur-md">
                 <Stamp size={28} className="text-text-secondary" />
                 <p className="text-sm text-text-secondary">
                   Visit shops and leave reviews to start collecting stamps.

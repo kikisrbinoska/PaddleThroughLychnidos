@@ -68,7 +68,7 @@ function ShopCartGroup({
   const hasContactMethod = Boolean(shopDetail?.phoneNumber || shopDetail?.email);
 
   return (
-    <div className="rounded-2xl border border-border-default bg-surface-card p-4">
+    <div className="rounded-2xl border border-white/60 bg-white/55 p-4 shadow-lg shadow-primary-900/5 backdrop-blur-xl">
       <Link
         to={`/shop/${group.shopId}`}
         className="text-sm font-extrabold text-primary-900 hover:underline"
@@ -234,13 +234,13 @@ export function CartPage() {
   const grandTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center gap-3 px-6 pt-8">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="Back"
-          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
         >
           <ChevronLeft size={20} />
         </button>
@@ -249,7 +249,7 @@ export function CartPage() {
 
       <div className="mx-auto mt-6 flex w-full max-w-2xl flex-col gap-4 px-6">
         {items.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary-300/60 bg-white/40 p-8 text-center backdrop-blur-md">
             <ShoppingBag size={28} className="text-text-secondary" />
             <p className="text-sm text-text-secondary">
               Your list is empty - browse shops to add products you're interested in.
@@ -265,7 +265,7 @@ export function CartPage() {
           </div>
         ) : (
           <>
-            <div className="rounded-2xl border border-border-default bg-primary-100 p-4">
+            <div className="rounded-2xl border border-primary-200/50 bg-primary-100/50 p-4 backdrop-blur-lg">
               <p className="text-xs font-semibold text-primary-900">
                 Estimated total across all shops
               </p>

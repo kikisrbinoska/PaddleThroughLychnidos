@@ -35,7 +35,7 @@ type RoutesView = "routes" | "plan";
 
 function ItineraryCardSkeleton() {
   return (
-    <div className="animate-pulse overflow-hidden rounded-2xl border border-border-default bg-surface-card">
+    <div className="animate-pulse overflow-hidden rounded-2xl border border-white/60 bg-white/55">
       <div className="h-28 w-full bg-primary-100" />
       <div className="flex flex-col gap-2 p-3">
         <div className="h-4 w-3/4 rounded bg-primary-100" />
@@ -72,7 +72,7 @@ function ViewToggle({
             className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
               isSelected
                 ? "border-primary-900 bg-primary-900 text-white"
-                : "border-border-default bg-surface-card text-text-primary hover:border-primary-500"
+                : "border-white/60 bg-white/55 text-text-primary backdrop-blur-md hover:border-primary-500"
             }`}
           >
             {option.label}
@@ -95,7 +95,7 @@ function ShopEntryRow({
   if (!entry.shop) return null;
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3">
+    <div className="flex items-center gap-3 rounded-2xl border border-white/60 bg-white/55 p-3 backdrop-blur-md">
       <Link
         to={`/shop/${entry.shop.id}`}
         className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100"
@@ -139,7 +139,7 @@ function ItineraryEntryRow({
   if (!entry.itinerary) return null;
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-border-default bg-surface-card p-3">
+    <div className="flex items-center gap-3 rounded-2xl border border-white/60 bg-white/55 p-3 backdrop-blur-md">
       <Link
         to={`/itineraries/${entry.itinerary.id}`}
         className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100"
@@ -196,7 +196,7 @@ function DayPlanCard({
   });
 
   return (
-    <div className="rounded-2xl border border-border-default bg-surface-card p-3.5">
+    <div className="rounded-2xl border border-white/60 bg-white/55 p-3.5 backdrop-blur-md">
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-sm font-bold text-text-primary">{plan.title}</p>
@@ -307,7 +307,7 @@ function CuratedRoutesView() {
           type="button"
           onClick={openFilters}
           aria-label="Open filters"
-          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
         >
           <SlidersHorizontal size={18} />
           {activeFilterCount > 0 && (
@@ -349,7 +349,7 @@ function CuratedRoutesView() {
                   type="button"
                   disabled={pageNumber <= 1}
                   onClick={() => setPageNumber((p) => p - 1)}
-                  className="rounded-full border border-border-default bg-surface-card px-4 py-2 text-xs font-semibold text-primary-900 disabled:opacity-40"
+                  className="rounded-xl border border-white/60 bg-white/55 px-4 py-2 text-xs font-semibold text-primary-900 backdrop-blur-md disabled:opacity-40"
                 >
                   Previous
                 </button>
@@ -360,7 +360,7 @@ function CuratedRoutesView() {
                   type="button"
                   disabled={pageNumber >= totalPages}
                   onClick={() => setPageNumber((p) => p + 1)}
-                  className="rounded-full border border-border-default bg-surface-card px-4 py-2 text-xs font-semibold text-primary-900 disabled:opacity-40"
+                  className="rounded-xl border border-white/60 bg-white/55 px-4 py-2 text-xs font-semibold text-primary-900 backdrop-blur-md disabled:opacity-40"
                 >
                   Next
                 </button>
@@ -480,7 +480,7 @@ function MyPlanView() {
 
   if (!isAuthenticated) {
     return (
-      <div className="mt-6 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+      <div className="mt-6 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary-300/60 bg-white/40 p-8 text-center backdrop-blur-md">
         <p className="text-sm text-text-secondary">
           Log in to see the shops and routes you've saved.
         </p>
@@ -506,7 +506,7 @@ function MyPlanView() {
           <button
             type="button"
             onClick={() => setIsBuilderOpen(true)}
-            className="flex items-center gap-1.5 rounded-full bg-primary-900 px-3.5 py-2 text-xs font-semibold text-white"
+            className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary-900 to-secondary-900 px-3.5 py-2 text-xs font-semibold text-white shadow-sm shadow-primary-900/20"
           >
             <Calendar size={14} />
             New day plan
@@ -538,7 +538,7 @@ function MyPlanView() {
       ) : error ? (
         <p className="text-sm text-text-secondary">{error}</p>
       ) : isEmpty ? (
-        <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary-300/60 bg-white/40 p-8 text-center backdrop-blur-md">
           <MapPin size={24} className="text-text-secondary" />
           <p className="text-sm text-text-secondary">
             Save shops and routes to build your personal Ohrid itinerary.
@@ -551,7 +551,7 @@ function MyPlanView() {
               Saved Shops &amp; Places
             </h2>
             {shopEntries.length === 0 ? (
-              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-6 text-center">
+              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary-300/60 bg-white/40 p-6 text-center backdrop-blur-md">
                 <Store size={24} className="text-text-secondary" />
                 <p className="text-sm text-text-secondary">
                   You haven't saved any shops yet.
@@ -579,7 +579,7 @@ function MyPlanView() {
               Saved Itineraries
             </h2>
             {itineraryEntries.length === 0 ? (
-              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-6 text-center">
+              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-primary-300/60 bg-white/40 p-6 text-center backdrop-blur-md">
                 <MapPin size={24} className="text-text-secondary" />
                 <p className="text-sm text-text-secondary">
                   You haven't saved any itineraries yet.
@@ -627,7 +627,7 @@ export function ItinerariesPage() {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="px-6 pt-8">
         <h1 className="text-lg font-extrabold text-primary-900">Routes</h1>
         <p className="text-xs text-text-secondary">

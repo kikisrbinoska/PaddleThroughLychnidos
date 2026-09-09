@@ -151,7 +151,7 @@ export function ManageCategoriesPage() {
     <AdminLayout>
       <h2 className="text-xl font-extrabold text-primary-900">Categories</h2>
 
-      <Card className="mt-6">
+      <Card variant="strong" className="mt-6">
         <p className="mb-3 flex items-center gap-1.5 text-sm font-bold text-text-primary">
           <Plus size={16} />
           Add category
@@ -174,7 +174,7 @@ export function ManageCategoriesPage() {
           <p className="text-sm text-text-secondary">No categories yet.</p>
         ) : (
           categories.map((category) => (
-            <Card key={category.id} className="flex flex-col gap-2">
+            <Card key={category.id} variant="strong" className="flex flex-col gap-2">
               {editingId === category.id ? (
                 <CategoryForm
                   draft={editDraft}

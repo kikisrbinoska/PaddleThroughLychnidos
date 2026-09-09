@@ -106,7 +106,7 @@ function VerificationCard({
   }
 
   return (
-    <Card className="flex flex-col gap-3">
+    <Card variant="strong" className="flex flex-col gap-3">
       <div>
         <p className="text-sm font-bold text-text-primary">{request.shopName}</p>
         <p className="mt-0.5 text-xs text-text-secondary">
@@ -243,7 +243,7 @@ export function VerificationRequestsPage() {
             className={`rounded-full border px-4 py-2 text-xs font-semibold ${
               tab === t.value
                 ? "border-primary-900 bg-primary-900 text-white"
-                : "border-border-default bg-surface-card text-text-primary"
+                : "border-white/70 bg-white/70 text-text-primary backdrop-blur-lg"
             }`}
           >
             {t.label}
@@ -257,7 +257,7 @@ export function VerificationRequestsPage() {
         ) : error ? (
           <p className="text-sm text-text-secondary">{error}</p>
         ) : requests.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default p-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-border-default bg-white/60 p-8 text-center backdrop-blur-lg">
             <BadgeCheck size={28} className="text-text-secondary" />
             <p className="text-sm text-text-secondary">
               No {tab.toLowerCase()} verification requests.

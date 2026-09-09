@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Clock, MapPin } from "lucide-react";
 import type { ItineraryListItem } from "../types";
@@ -14,16 +15,19 @@ export function ItineraryCard({
   itinerary,
   className = "w-40 flex-none snap-start md:w-full",
 }: ItineraryCardProps) {
+  const [imageFailed, setImageFailed] = useState(false);
+
   return (
     <Link
       to={`/itineraries/${itinerary.id}`}
-      className={`overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm ${className}`}
+      className={`overflow-hidden rounded-2xl border border-white/60 bg-white/55 shadow-lg shadow-primary-900/5 backdrop-blur-xl ${className}`}
     >
       <div className="relative h-28 w-full">
-        {itinerary.coverImageUrl ? (
+        {itinerary.coverImageUrl && !imageFailed ? (
           <img
             src={itinerary.coverImageUrl}
             alt={itinerary.title}
+            onError={() => setImageFailed(true)}
             className="h-full w-full object-cover"
           />
         ) : (
@@ -36,10 +40,10 @@ export function ItineraryCard({
       </div>
 
       <div className="flex flex-col gap-1 p-3">
-        <h3 className="truncate text-sm font-bold text-text-primary">
+        <h3 className="truncate text-base font-bold text-text-primary">
           {itinerary.title}
         </h3>
-        <p className="line-clamp-2 text-xs text-text-secondary">
+        <p className="line-clamp-2 text-sm font-medium text-text-secondary">
           {itinerary.description}
         </p>
         <div className="mt-1 flex flex-wrap items-center gap-1.5">

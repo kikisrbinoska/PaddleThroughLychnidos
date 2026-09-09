@@ -45,7 +45,7 @@ export function ManageItinerariesPage() {
         <h2 className="text-xl font-extrabold text-primary-900">Itineraries</h2>
         <Link
           to="/admin/itineraries/new"
-          className="flex items-center gap-1.5 rounded-full bg-primary-900 px-4 py-2 text-sm font-semibold text-white"
+          className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary-900 to-secondary-900 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-primary-900/20"
         >
           <Plus size={16} />
           Create Itinerary
@@ -61,7 +61,7 @@ export function ManageItinerariesPage() {
           <p className="text-sm text-text-secondary">No itineraries yet.</p>
         ) : (
           itineraries.map((itinerary) => (
-            <Card key={itinerary.id} className="flex flex-col gap-2">
+            <Card key={itinerary.id} variant="strong" className="flex flex-col gap-2">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-bold text-text-primary">

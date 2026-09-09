@@ -24,7 +24,7 @@ export function ProductCard({
   return (
     <Link
       to={`/product/${product.id}`}
-      className="block rounded-2xl border border-white/60 bg-white/55 p-2.5 backdrop-blur-md"
+      className="block rounded-2xl border border-white/60 bg-white/55 p-3 backdrop-blur-md"
     >
       {product.imageUrl ? (
         <img

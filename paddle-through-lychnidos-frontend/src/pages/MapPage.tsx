@@ -175,6 +175,11 @@ export function MapPage() {
 
   function focusRegion(parsed: ParsedRegion) {
     setFocusedBounds(parsed.bounds);
+    setAppliedFilters((current) =>
+      current.regionId === parsed.region.id
+        ? current
+        : { ...current, regionId: parsed.region.id },
+    );
   }
 
   function resetView() {
@@ -246,7 +251,7 @@ export function MapPage() {
         <button
           type="button"
           onClick={resetView}
-          className="absolute left-4 top-4 z-[500] rounded-full bg-surface-card px-4 py-2 text-xs font-semibold text-primary-900 shadow-lg"
+          className="absolute left-4 top-4 z-[500] rounded-full border border-white/60 bg-white/70 px-4 py-2 text-xs font-semibold text-primary-900 shadow-lg backdrop-blur-md"
         >
           Back to full map
         </button>
@@ -256,7 +261,7 @@ export function MapPage() {
         type="button"
         onClick={openFilters}
         aria-label="Open filters"
-        className="absolute bottom-4 right-4 z-[500] flex h-14 w-14 items-center justify-center rounded-full bg-primary-900 text-white shadow-lg"
+        className="absolute bottom-4 right-4 z-[500] flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-primary-900 to-secondary-900 text-white shadow-lg shadow-primary-900/30"
       >
         <SlidersHorizontal size={22} />
         {activeFilterCount > 0 && (

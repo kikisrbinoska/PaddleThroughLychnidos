@@ -4,6 +4,7 @@ import { authService } from "../services/authService";
 import { getErrorMessage } from "../services/errorMessage";
 import { Button } from "../components/Button";
 import { TextField } from "../components/TextField";
+import { BackgroundBlob } from "../components/BackgroundBlob";
 
 export function ForgotPasswordPage() {
   const navigate = useNavigate();
@@ -33,8 +34,11 @@ export function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-svh flex-col justify-center px-6 pb-24">
-      <div className="mx-auto w-full max-w-sm">
+    <div className="relative flex min-h-svh flex-col justify-center overflow-hidden px-6 pb-24">
+      <BackgroundBlob position="top-8 -right-16" tint="primary" />
+      <BackgroundBlob position="bottom-8 -left-16" size="h-56 w-56" tint="secondary" />
+
+      <div className="relative mx-auto w-full max-w-sm">
         <h1 className="mb-1 text-2xl font-extrabold text-primary-900">
           Reset your password
         </h1>
@@ -43,7 +47,11 @@ export function ForgotPasswordPage() {
           link to reset your password.
         </p>
 
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="flex flex-col gap-4 rounded-2xl border border-white/60 bg-white/55 p-6 shadow-lg shadow-primary-900/5 backdrop-blur-xl"
+        >
           <TextField
             id="email"
             label="Email"

@@ -21,7 +21,7 @@ export interface FilterBottomSheetProps {
 function chipClasses(isSelected: boolean): string {
   return isSelected
     ? "border-primary-900 bg-primary-100 text-primary-900"
-    : "border-border-default bg-surface-card text-text-primary";
+    : "border-border-default bg-white/70 text-text-primary";
 }
 
 export function FilterBottomSheet({
@@ -49,13 +49,18 @@ export function FilterBottomSheet({
     });
   }
 
+  const hasActiveFilters =
+    filters.categoryId !== null ||
+    filters.regionId !== null ||
+    filters.searchWord !== "";
+
   function clearAll() {
-    onChange({ ...filters, categoryId: null, regionId: null });
+    onChange({ searchWord: "", categoryId: null, regionId: null });
   }
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-end justify-center bg-black/40 md:items-center">
-      <div className="flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-3xl border border-border-default bg-surface-card p-6 md:max-w-md md:rounded-3xl">
+      <div className="flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-3xl border border-white/70 bg-white/80 p-6 backdrop-blur-lg md:max-w-md md:rounded-3xl">
         <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-border-default md:hidden" />
 
         <div className="mb-4 flex items-center justify-between">
@@ -114,13 +119,15 @@ export function FilterBottomSheet({
           >
             Apply Filters
           </Button>
-          <button
-            type="button"
-            onClick={clearAll}
-            className="text-center text-sm font-semibold text-text-secondary"
-          >
-            Clear all
-          </button>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={clearAll}
+              className="text-center text-sm font-semibold text-text-secondary"
+            >
+              Clear all filters
+            </button>
+          )}
         </div>
       </div>
     </div>

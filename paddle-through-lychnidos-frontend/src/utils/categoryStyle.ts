@@ -4,14 +4,14 @@
 // runtime (caught by CategoryImage's onError, see CategoryImage.tsx)
 // instead of failing the whole Vite build.
 const CATEGORY_BACKGROUND_PATHS: Record<string, string> = {
-  Jewelry: "/src/assets/category-backgrounds/jewelry-category.jpg",
-  TraditionalCostume: "/src/assets/category-backgrounds/costume-category.jpg",
-  WoodCarving: "/src/assets/category-backgrounds/woodcarving-category.jpg",
-  HandmadePaper: "/src/assets/category-backgrounds/paper-category.jpg",
-  Iconography: "/src/assets/category-backgrounds/iconography-category.jpg",
-  ArtGallery: "/src/assets/category-backgrounds/artgallery-category.jpg",
-  CraftWorkshopGeneral: "/src/assets/category-backgrounds/craft-category.jpg",
-  SouvenirShop: "/src/assets/category-backgrounds/souvenir-category.jpg",
+  Jewelry: "/src/assets/category-backgrounds/jewelry-default.jpg",
+  TraditionalCostume: "/src/assets/category-backgrounds/embroidery-default.jpg",
+  WoodCarving: "/src/assets/category-backgrounds/woodcarving-default.jpg",
+  HandmadePaper: "/src/assets/category-backgrounds/paper-default.jpg",
+  Iconography: "/src/assets/category-backgrounds/iconography-default.jpg",
+  ArtGallery: "/src/assets/category-backgrounds/general-craft-default.jpg",
+  CraftWorkshopGeneral: "/src/assets/category-backgrounds/general-craft-default.jpg",
+  SouvenirShop: "/src/assets/category-backgrounds/souvenir-default.jpg",
 };
 
 export function getCategoryBackgroundPath(categoryName: string): string | null {

@@ -19,7 +19,7 @@ const navItems: NavItem[] = [
 
 export function BottomNav() {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-[1100] border-t border-border-default bg-surface-card">
+    <nav className="fixed inset-x-0 bottom-0 z-[1100] border-t border-white/60 bg-white/70 backdrop-blur-xl">
       <ul className="flex items-center justify-around">
         {navItems.map(({ to, label, icon: Icon }) => (
           <li key={to} className="flex-1">

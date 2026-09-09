@@ -51,7 +51,7 @@ export function VideoDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-2 bg-surface-bg px-4 text-center">
+      <div className="flex min-h-svh flex-col items-center justify-center gap-2 px-4 text-center">
         <p className="text-text-secondary">Loading video...</p>
       </div>
     );
@@ -59,7 +59,7 @@ export function VideoDetailPage() {
 
   if (error || !video) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-2 bg-surface-bg px-4 text-center">
+      <div className="flex min-h-svh flex-col items-center justify-center gap-2 px-4 text-center">
         <h1 className="text-2xl font-extrabold text-primary-900">
           Video not found
         </h1>
@@ -74,13 +74,13 @@ export function VideoDetailPage() {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-24">
+    <div className="min-h-svh pb-24">
       <header className="flex items-center gap-3 px-6 pt-8">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="Back"
-          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
         >
           <ChevronLeft size={20} />
         </button>

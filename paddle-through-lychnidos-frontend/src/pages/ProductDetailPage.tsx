@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { BadgeCheck, ChevronLeft, Minus, Plus, ShoppingBag, Store } from "lucide-react";
+import { AlertCircle, BadgeCheck, ChevronLeft, Minus, Plus, ShoppingBag, Store } from "lucide-react";
 import { productService } from "../services/productService";
 import { getErrorMessage } from "../services/errorMessage";
 import { useCart } from "../hooks/useCart";
@@ -54,7 +54,7 @@ export function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-2 bg-surface-bg px-4 text-center">
+      <div className="flex min-h-svh flex-col items-center justify-center gap-2 px-4 text-center">
         <p className="text-text-secondary">Loading product...</p>
       </div>
     );
@@ -62,7 +62,7 @@ export function ProductDetailPage() {
 
   if (error || !product) {
     return (
-      <div className="flex min-h-svh flex-col items-center justify-center gap-2 bg-surface-bg px-4 text-center">
+      <div className="flex min-h-svh flex-col items-center justify-center gap-2 px-4 text-center">
         <h1 className="text-2xl font-extrabold text-primary-900">Product not found</h1>
         <p className="text-text-secondary">{error ?? "This product could not be found."}</p>
         <Link to="/products" className="mt-2 text-sm font-semibold text-primary-800 underline">
@@ -89,13 +89,13 @@ export function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-svh bg-surface-bg pb-32">
+    <div className="min-h-svh pb-32">
       <header className="flex items-center gap-3 px-6 pt-8">
         <button
           type="button"
           onClick={() => navigate(-1)}
           aria-label="Back"
-          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-border-default bg-surface-card text-primary-900"
+          className="flex h-10 w-10 flex-none items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
         >
           <ChevronLeft size={20} />
         </button>
@@ -150,7 +150,7 @@ export function ProductDetailPage() {
         )}
 
         {cartItem ? (
-          <div className="flex items-center justify-between rounded-xl border border-border-default bg-surface-card p-3">
+          <div className="flex items-center justify-between rounded-xl border border-white/60 bg-white/55 p-4 backdrop-blur-md">
             <p className="text-sm font-semibold text-text-primary">In your list</p>
             <div className="flex items-center gap-3">
               <button
@@ -191,9 +191,10 @@ export function ProductDetailPage() {
           </Button>
         )}
 
-        <p className="text-xs text-text-secondary">
-          Availability isn't guaranteed - confirm with the seller before your visit.
-        </p>
+        <div className="flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-xs text-amber-700">
+          <AlertCircle size={14} className="flex-none" />
+          <span>Availability isn't guaranteed - confirm with the seller before your visit.</span>
+        </div>
       </div>
     </div>
   );

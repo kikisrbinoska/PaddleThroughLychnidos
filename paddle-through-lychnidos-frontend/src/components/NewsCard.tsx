@@ -1,30 +1,39 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Newspaper } from "lucide-react";
 import type { NewsItemListEntry } from "../types";
 import { Badge } from "./Badge";
 import { formatRelativeDate } from "../utils/relativeDate";
+import { getNewsPlaceholder } from "../utils/newsPlaceholder";
 
 export interface NewsCardProps {
   news: NewsItemListEntry;
 }
 
 export function NewsCard({ news }: NewsCardProps) {
+  const [placeholderFailed, setPlaceholderFailed] = useState(false);
+  const imageSrc = news.thumbnailUrl ?? getNewsPlaceholder(news.id);
+
   return (
     <Link
       to={`/magazine/${news.id}`}
-      className="overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm"
+      // No backdrop-blur here - NewsFeedPage renders this in an infinite
+      // scroll grid that can grow well past the "long list" threshold, and
+      // blur belongs on a section container, not every scrolling item.
+      className="overflow-hidden rounded-2xl border border-white/60 bg-white/85 shadow-sm"
     >
       <div className="relative h-32 w-full bg-brown-100">
-        {news.thumbnailUrl ? (
-          <img
-            src={news.thumbnailUrl}
-            alt=""
-            className="h-full w-full object-cover"
-          />
-        ) : (
+        {placeholderFailed ? (
           <div className="flex h-full w-full items-center justify-center text-brown-500">
             <Newspaper size={28} />
           </div>
+        ) : (
+          <img
+            src={imageSrc}
+            alt=""
+            onError={() => setPlaceholderFailed(true)}
+            className="h-full w-full object-cover"
+          />
         )}
       </div>
 

@@ -8,10 +8,16 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-primary-800 text-white hover:bg-primary-900",
-  secondary: "bg-secondary-700 text-white hover:bg-secondary-800",
+  primary:
+    "bg-gradient-to-r from-primary-900 to-secondary-900 text-white shadow-md shadow-primary-900/20 hover:brightness-105",
+  // Secondary parallels primary's gradient treatment but stays green-leaning
+  // (no blue stop) so the two remain visually distinct - secondary is used
+  // for confirm/success-adjacent actions that shouldn't compete with the
+  // primary brand gradient.
+  secondary:
+    "bg-gradient-to-r from-secondary-700 to-secondary-900 text-white shadow-md shadow-secondary-900/20 hover:brightness-105",
   outline:
-    "bg-transparent text-primary-800 border border-primary-800 hover:bg-primary-100",
+    "bg-white/55 backdrop-blur-xl border border-white/60 text-primary-900 shadow-sm hover:bg-white/70",
 };
 
 export function Button({
@@ -22,7 +28,7 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 disabled:pointer-events-none ${variantClasses[variant]} ${className}`}
+      className={`inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold transition-colors disabled:opacity-50 disabled:pointer-events-none ${variantClasses[variant]} ${className}`}
       {...rest}
     >
       {children}

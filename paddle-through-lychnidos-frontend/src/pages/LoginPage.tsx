@@ -6,6 +6,7 @@ import { Button } from "../components/Button";
 import { TextField } from "../components/TextField";
 import { WaveBackground } from "../components/WaveBackground";
 import { Wordmark } from "../components/Wordmark";
+import { BackgroundBlob } from "../components/BackgroundBlob";
 
 interface FormErrors {
   username?: string;
@@ -69,8 +70,10 @@ export function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-svh flex-col overflow-hidden bg-surface-bg">
+    <div className="relative flex min-h-svh flex-col overflow-hidden">
       <WaveBackground />
+      <BackgroundBlob position="top-24 -right-16" tint="secondary" />
+      <BackgroundBlob position="bottom-8 -left-16" size="h-56 w-56" tint="primary" />
 
       <div className="relative flex flex-1 flex-col justify-center px-6 pb-24 pt-16">
         <div className="mx-auto w-full max-w-md">
@@ -84,7 +87,7 @@ export function LoginPage() {
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="flex flex-col gap-4 rounded-2xl border border-border-default bg-surface-card p-6 shadow-sm"
+            className="flex flex-col gap-4 rounded-2xl border border-white/60 bg-white/55 p-6 shadow-lg shadow-primary-900/5 backdrop-blur-xl"
           >
             <TextField
               id="username"

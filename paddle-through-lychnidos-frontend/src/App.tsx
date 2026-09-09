@@ -59,7 +59,7 @@ function AppLayout() {
     !location.pathname.startsWith("/admin");
 
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-b from-primary-100 via-[#F1FCEF] to-secondary-100">
       <Routes>
         <Route path="/" element={<SplashPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
@@ -245,7 +245,7 @@ function AppLayout() {
         />
       </Routes>
       {showBottomNav && <BottomNav />}
-    </>
+    </div>
   );
 }
 

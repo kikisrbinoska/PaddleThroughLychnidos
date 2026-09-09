@@ -10,7 +10,10 @@ export function VideoCard({ video }: VideoCardProps) {
   return (
     <Link
       to={`/learn/video/${video.id}`}
-      className="overflow-hidden rounded-2xl border border-border-default bg-surface-card shadow-sm"
+      // No backdrop-blur here - LearnPage renders this in an infinite
+      // scroll grid that can grow well past the "long list" threshold, and
+      // blur belongs on a section container, not every scrolling item.
+      className="overflow-hidden rounded-2xl border border-white/60 bg-white/85 shadow-sm"
     >
       <div className="relative aspect-video w-full bg-primary-100">
         {video.thumbnailUrl && (
