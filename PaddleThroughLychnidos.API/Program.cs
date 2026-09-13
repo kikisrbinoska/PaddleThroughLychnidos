@@ -46,14 +46,17 @@ builder.Services.AddAuthorization();
 
 // Add CORS
 // Defaults to the Vite dev server origin when unset, so plain `dotnet run`
-// dev workflows are unaffected; Docker Compose overrides this to the
-// nginx-mapped host port via the FRONTEND_ORIGIN env var.
-var frontendOrigin = builder.Configuration["FRONTEND_ORIGIN"] ?? "http://localhost:5173";
+// dev workflows are unaffected; Docker Compose overrides this via the
+// FRONTEND_ORIGIN env var. Comma-separated so the same machine can be
+// reached both as localhost and via its LAN IP (e.g. for testing from a
+// phone on the same WiFi) at the same time.
+var frontendOrigins = (builder.Configuration["FRONTEND_ORIGIN"] ?? "http://localhost:5173")
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(frontendOrigin)
+        policy.WithOrigins(frontendOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
