@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: PaddleThroughLychnidos.API/Dockerfile
+      args:
+        ASPNETCORE_ENVIRONMENT: Production
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Database: "Host=db;Port=5432;Database=${POSTGRES_DB};User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      AUTO_MIGRATE: ${AUTO_MIGRATE:-true}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost}
+      Jwt__Secret: ${JWT_SECRET}
+      Jwt__Issuer: ${JWT_ISSUER:-PaddleThroughLychnidos}
+      Jwt__Audience: ${JWT_AUDIENCE:-PaddleThroughLychnidos}
+      YouTube__ApiKey: ${YOUTUBE_API_KEY:-}
+    ports:
+      - "${API_HTTP_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  web:
+    build:
+      context: ./paddle-through-lychnidos-frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:${API_HTTP_PORT:-8080}/api
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "${WEB_HTTP_PORT:-80}:80"
+
+volumes:
+  db-data:

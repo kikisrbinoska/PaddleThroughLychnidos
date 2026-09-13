@@ -12,7 +12,7 @@ export interface NewsCardProps {
 
 export function NewsCard({ news }: NewsCardProps) {
   const [placeholderFailed, setPlaceholderFailed] = useState(false);
-  const imageSrc = news.thumbnailUrl ?? getNewsPlaceholder(news.id);
+  const imageSrc = news.thumbnailUrl?.trim() || getNewsPlaceholder(news.id);
 
   return (
     <Link

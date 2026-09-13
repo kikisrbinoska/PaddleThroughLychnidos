@@ -12,17 +12,21 @@ namespace PaddleThroughLychnidos.Infrastructure.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // A placeholder row (Id=1, Name="regio", Description="string")
-            // already exists from manual Swagger testing, and Shop rows
-            // reference RegionId=1 via a Restrict FK - it can't be deleted
-            // and reinserted. Overwrite it in place with the real Varosh
-            // data instead, so existing shop-region links stay intact.
+            // On a database that already has a placeholder row (Id=1, from
+            // manual Swagger testing) with Shop rows referencing it via a
+            // Restrict FK, overwrite it in place with the real Varosh data
+            // so existing shop-region links stay intact. On a fresh database
+            // (no manual testing, e.g. a new Docker Compose volume) that row
+            // never existed, so insert it instead - later migrations
+            // (SeedItineraries) depend on Region Id=1 existing either way.
             migrationBuilder.Sql(
-                "UPDATE public.\"Regions\" " +
-                "SET \"Name\" = 'Varosh - Old Town of Ohrid - 6000 Ohrid, North Macedonia', " +
-                "\"Description\" = '', " +
-                "\"PolygonGeoJson\" = '{\"type\":\"Polygon\",\"coordinates\":[[[20.787599,41.114936],[20.788264,41.109979],[20.799301,41.111026],[20.800473,41.113924],[20.794001,41.116244],[20.789311,41.115731],[20.787599,41.114936]]]}' " +
-                "WHERE \"Id\" = 1;");
+                "INSERT INTO public.\"Regions\" (\"Id\", \"Name\", \"Description\", \"PolygonGeoJson\") " +
+                "VALUES (1, 'Varosh - Old Town of Ohrid - 6000 Ohrid, North Macedonia', '', " +
+                "'{\"type\":\"Polygon\",\"coordinates\":[[[20.787599,41.114936],[20.788264,41.109979],[20.799301,41.111026],[20.800473,41.113924],[20.794001,41.116244],[20.789311,41.115731],[20.787599,41.114936]]]}') " +
+                "ON CONFLICT (\"Id\") DO UPDATE SET " +
+                "\"Name\" = EXCLUDED.\"Name\", " +
+                "\"Description\" = EXCLUDED.\"Description\", " +
+                "\"PolygonGeoJson\" = EXCLUDED.\"PolygonGeoJson\";");
 
             migrationBuilder.InsertData(
                 schema: "public",

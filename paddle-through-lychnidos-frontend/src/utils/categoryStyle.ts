@@ -1,17 +1,18 @@
-// Category background images live in src/assets/category-backgrounds/ and
-// are added by hand (not bulk-imported) - referenced here by expected path
+// Category background images live in public/category-backgrounds/ and are
+// added by hand (not bulk-imported) - referenced here by expected path
 // rather than a static `import`, so a missing file 404s the <img> at
 // runtime (caught by CategoryImage's onError, see CategoryImage.tsx)
-// instead of failing the whole Vite build.
+// instead of failing the whole Vite build. Files under public/ are served
+// as-is at the same path in both dev and the production build.
 const CATEGORY_BACKGROUND_PATHS: Record<string, string> = {
-  Jewelry: "/src/assets/category-backgrounds/jewelry-default.jpg",
-  TraditionalCostume: "/src/assets/category-backgrounds/embroidery-default.jpg",
-  WoodCarving: "/src/assets/category-backgrounds/woodcarving-default.jpg",
-  HandmadePaper: "/src/assets/category-backgrounds/paper-default.jpg",
-  Iconography: "/src/assets/category-backgrounds/iconography-default.jpg",
-  ArtGallery: "/src/assets/category-backgrounds/general-craft-default.jpg",
-  CraftWorkshopGeneral: "/src/assets/category-backgrounds/general-craft-default.jpg",
-  SouvenirShop: "/src/assets/category-backgrounds/souvenir-default.jpg",
+  Jewelry: "/category-backgrounds/jewelry-default.jpg",
+  TraditionalCostume: "/category-backgrounds/embroidery-default.jpg",
+  WoodCarving: "/category-backgrounds/woodcarving-default.jpg",
+  HandmadePaper: "/category-backgrounds/paper-default.jpg",
+  Iconography: "/category-backgrounds/iconography-default.jpg",
+  ArtGallery: "/category-backgrounds/general-craft-default.jpg",
+  CraftWorkshopGeneral: "/category-backgrounds/general-craft-default.jpg",
+  SouvenirShop: "/category-backgrounds/souvenir-default.jpg",
 };
 
 export function getCategoryBackgroundPath(categoryName: string): string | null {

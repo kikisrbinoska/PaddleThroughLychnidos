@@ -47,7 +47,19 @@
       "Bash(cat /tmp/verify_api.log 2>&1 | grep -i \"listening\\\\|error\\\\|fail\" | head -10)",
       "Bash(curl -s \"http://localhost:7125/api/regions\")",
       "Bash(powershell -Command \"Get-Process -Name PaddleThroughLychnidos.API -ErrorAction SilentlyContinue | Stop-Process -Force\")",
-      "Bash(unset GOOGLE_PLACES_API_KEY)"
+      "Bash(unset GOOGLE_PLACES_API_KEY)",
+      "Bash(curl -s -i -X OPTIONS http://localhost:8080/api/shops?pageSize=10 -H 'Origin: http://localhost' -H 'Access-Control-Request-Method: GET')",
+      "Bash(git check-ignore *)",
+      "Bash(python3 \"C:\\\\Users\\\\krist\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-krist-OneDrive-Desktop-PaddleThroughLychnidos\\\\3a04c942-398d-4d32-914a-db7f99524081\\\\scratchpad\\\\gen_shop_import.py\")",
+      "Bash(python \"C:\\\\Users\\\\krist\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-krist-OneDrive-Desktop-PaddleThroughLychnidos\\\\3a04c942-398d-4d32-914a-db7f99524081\\\\scratchpad\\\\gen_shop_import.py\")",
+      "Bash(curl -s \"http://localhost:8080/api/shops?pageSize=5\")",
+      "Bash(curl -s \"http://localhost:8080/api/learn/videos?category=TraditionalFood&pageNumber=1&pageSize=12\")",
+      "Bash(curl -s \"http://localhost:8080/api/learn/videos?category=TraditionalFood&pageNumber=1&pageSize=5\")",
+      "Bash(mv src/assets/category-backgrounds/jewerly-default.jpg src/assets/category-backgrounds/jewelry-default.jpg)",
+      "Bash(mkdir -p public/category-backgrounds public/news-placeholders public/itineraries)",
+      "Bash(cp src/assets/category-backgrounds/*.jpg public/category-backgrounds/)",
+      "Bash(cp src/assets/news-placeholders/*.jpg public/news-placeholders/)",
+      "Bash(cp src/assets/itineraries/*.jpg public/itineraries/)"
     ],
     "additionalDirectories": [
       "c:\\Users\\krist\\OneDrive\\Desktop\\PaddleThroughLychnidos\\paddle-through-lychnidos-frontend\\src\\assets"

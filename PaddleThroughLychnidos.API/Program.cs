@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PaddleThroughLychnidos.API;
@@ -6,6 +7,7 @@ using PaddleThroughLychnidos.API.Middlewares;
 using PaddleThroughLychnidos.Application;
 using PaddleThroughLychnidos.Infrastructure;
 using PaddleThroughLychnidos.Infrastructure.Authentication;
+using PaddleThroughLychnidos.Infrastructure.Data.DataContext;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,11 +45,15 @@ builder.Services
 builder.Services.AddAuthorization();
 
 // Add CORS
+// Defaults to the Vite dev server origin when unset, so plain `dotnet run`
+// dev workflows are unaffected; Docker Compose overrides this to the
+// nginx-mapped host port via the FRONTEND_ORIGIN env var.
+var frontendOrigin = builder.Configuration["FRONTEND_ORIGIN"] ?? "http://localhost:5173";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // Vite dev server
+        policy.WithOrigins(frontendOrigin)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -92,6 +98,16 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Gated behind AUTO_MIGRATE rather than always running - convenient for
+// local Docker Compose dev, but left off by default so it never runs
+// unattended once this deploys somewhere that isn't local (e.g. Azure).
+if (builder.Configuration.GetValue<bool>("AUTO_MIGRATE"))
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await db.Database.MigrateAsync();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -114,5 +130,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Minimal liveness endpoint - used by the Docker Compose healthcheck to
+// gate startup ordering (e.g. so `web` doesn't come up before `api` can
+// actually serve requests).
+app.MapGet("/health", () => Results.Ok("Healthy"));
 
 app.Run();
