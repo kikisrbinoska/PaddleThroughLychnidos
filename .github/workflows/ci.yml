@@ -1,7 +1,7 @@
 name: CI
 
-# Build/validate only - no deployment, no registry push, no Azure steps.
-# That comes later, once Azure deployment is in scope.
+# Build/validate only - no deployment, no registry push. Deployment to AWS
+# runs separately in deploy.yml, triggered once this workflow succeeds on main.
 on:
   push:
     branches: ["**"]

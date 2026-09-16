@@ -1,0 +1,30 @@
+services:
+  api:
+    image: ${ECR_IMAGE}
+    restart: unless-stopped
+    environment:
+      ConnectionStrings__Database: ${DB_CONNECTION_STRING}
+      AUTO_MIGRATE: ${AUTO_MIGRATE:-false}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN}
+      Jwt__Secret: ${JWT_SECRET}
+      Jwt__Issuer: ${JWT_ISSUER:-PaddleThroughLychnidos}
+      Jwt__Audience: ${JWT_AUDIENCE:-PaddleThroughLychnidos}
+      YouTube__ApiKey: ${YOUTUBE_API_KEY:-}
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  nginx:
+    build:
+      context: ./deploy/nginx
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "80:80"
