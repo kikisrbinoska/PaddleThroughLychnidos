@@ -26,6 +26,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # TEMPORARY - prints the OIDC token's claims so the IAM trust policy's
+      # sub condition can be set to match exactly. Remove once fixed.
+      - name: Debug - print OIDC token claims
+        run: |
+          TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r '.value')
+          PAYLOAD=$(echo "$TOKEN" | cut -d '.' -f2)
+          PAD=$((4 - ${#PAYLOAD} % 4))
+          if [ "$PAD" -ne 4 ]; then PAYLOAD="$PAYLOAD$(printf '=%.0s' $(seq 1 $PAD))"; fi
+          echo "$PAYLOAD" | tr '_-' '/+' | base64 -d | jq .
+
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
