@@ -56,12 +56,16 @@ target database automatically the first time it connects (via Npgsql) if it
 doesn't exist yet, then applies migrations - no manual `CREATE DATABASE` is
 needed.
 
-For the *first* deploy only, run the deploy script with AUTO_MIGRATE=true:
+For the *first* deploy only, run the deploy script with its second argument
+set to `true`. This is a positional argument, not an environment variable -
+the script runs under `sudo -u ec2-user -i`, which starts a clean login
+shell and drops any env var set ahead of the sudo call, so AUTO_MIGRATE has
+to be passed as `$2` to actually reach the script:
 ```
-AUTO_MIGRATE=true sudo -u ec2-user -i bash /opt/paddle/deploy.sh <ECR_REGISTRY>/paddle-api:latest
+sudo -u ec2-user -i bash /opt/paddle/deploy.sh <ECR_REGISTRY>/paddle-api:latest true
 ```
 Confirm it came up clean (`docker compose -f /opt/paddle/docker-compose.prod.yml logs api`),
-then leave AUTO_MIGRATE unset (defaults to false in deploy.sh) for every
+then omit the second argument (defaults to false in deploy.sh) for every
 deploy after - it's gated off by default specifically so it never re-runs
 unattended in CI.
 

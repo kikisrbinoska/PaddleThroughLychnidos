@@ -56,7 +56,7 @@ jobs:
             --instance-ids "$EC2_INSTANCE_ID" \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy paddle-api $IMAGE_TAG" \
-            --parameters "commands=[\"sudo -u ec2-user -i bash /opt/paddle/deploy.sh $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG\"]" \
+            --parameters "commands=[\"sudo -u ec2-user -i bash /opt/paddle/deploy.sh $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG false\"]" \
             --query "Command.CommandId" \
             --output text)
 
