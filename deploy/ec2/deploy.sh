@@ -35,6 +35,11 @@ YOUTUBE_API_KEY=$YOUTUBE_API_KEY
 EOF
 chmod 600 "$APP_DIR/.env"
 
+# Bind-mount target for docker-compose.prod.yml's uploads volume - created
+# explicitly (rather than relying on Docker's auto-create-as-root on first
+# mount) so it exists with the deploying user's ownership from the start.
+mkdir -p "$APP_DIR/uploads"
+
 docker compose -f "$APP_DIR/docker-compose.prod.yml" pull api
 docker compose -f "$APP_DIR/docker-compose.prod.yml" build nginx
 docker compose -f "$APP_DIR/docker-compose.prod.yml" up -d --remove-orphans

@@ -19,6 +19,11 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
         public string Email { get; set; } = string.Empty;
         public string InstagramHandle { get; set; } = string.Empty;
         public string? Website { get; set; }
+        // Same "first uploaded image" pattern as ShopListItem.ImageUrl -
+        // this response never had an image field at all, so CategoryImage
+        // (which reads GetByIdResponse.imageUrl) always fell through to the
+        // category placeholder regardless of what the artisan uploaded.
+        public string ImageUrl { get; set; } = string.Empty;
         public decimal? Rating { get; set; }
         public int? UserRatingCount { get; set; }
         public bool IsVerified { get; set; }

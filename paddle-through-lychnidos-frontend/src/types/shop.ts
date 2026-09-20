@@ -67,6 +67,9 @@ export interface ShopDetail {
   instagramHandle: string;
   // Populated for shops imported from Google Places; null otherwise.
   website: string | null;
+  // First uploaded shop photo, or "" if none yet - CategoryImage falls
+  // back to the category placeholder when this is empty.
+  imageUrl: string;
   rating: number | null;
   userRatingCount: number | null;
   isVerified: boolean;

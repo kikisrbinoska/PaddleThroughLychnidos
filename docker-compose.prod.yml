@@ -10,6 +10,14 @@ services:
       Jwt__Issuer: ${JWT_ISSUER:-PaddleThroughLychnidos}
       Jwt__Audience: ${JWT_AUDIENCE:-PaddleThroughLychnidos}
       YouTube__ApiKey: ${YOUTUBE_API_KEY:-}
+    # Bind-mounted to a fixed host path (outside the container's own
+    # filesystem) so uploaded shop/product photos and verification
+    # documents survive `docker compose up -d` recreating this container on
+    # every deploy - without this, every push to main silently deleted
+    # every file anyone had uploaded since the previous deploy, even though
+    # the database rows referencing them stayed intact.
+    volumes:
+      - /opt/paddle/uploads:/app/wwwroot/uploads
     expose:
       - "8080"
     healthcheck:

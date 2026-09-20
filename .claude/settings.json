@@ -75,7 +75,11 @@
       "Bash(xargs grep -l \"img src=\\\\|<img\")",
       "Bash(curl -s \"http://16.16.24.158/api/shops?pageSize=3\")",
       "Bash(curl -s \"http://16.16.24.158/api/itineraries?pageSize=1\")",
-      "Bash(grep -rn \"img src=\\\\|<img$\" src/pages/VerificationRequestPage.tsx src/components/ShopCard.tsx src/pages/ShopDetailPage.tsx)"
+      "Bash(grep -rn \"img src=\\\\|<img$\" src/pages/VerificationRequestPage.tsx src/components/ShopCard.tsx src/pages/ShopDetailPage.tsx)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://16.16.24.158/uploads/\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"http://16.16.24.158/uploads/verification/test.pdf\")",
+      "Bash(curl -s \"http://16.16.24.158/api/shops/9\" -o /dev/null -w \"auth check: %{http_code}\\\\n\")",
+      "Bash(ECR_IMAGE=test DB_CONNECTION_STRING=test FRONTEND_ORIGIN=test JWT_SECRET=test docker compose -f docker-compose.prod.yml config)"
     ],
     "additionalDirectories": [
       "c:\\Users\\krist\\OneDrive\\Desktop\\PaddleThroughLychnidos\\paddle-through-lychnidos-frontend\\src\\assets"

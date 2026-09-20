@@ -27,7 +27,11 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
 
         public async Task<GetByIdResponse> Handle(GetByIdRequest request, CancellationToken cancellationToken)
         {
-            var shop = await _shopRepository.GetByIdAsync(request.Id);
+            // GetByIdAsync goes through EF's FindAsync and does not include
+            // Images, so shop.Images below would always be empty and
+            // ImageUrl would always come back blank - GetByIdWithDetailsAsync
+            // eager-loads it (see IShopRepository.GetByIdWithDetailsAsync).
+            var shop = await _shopRepository.GetByIdWithDetailsAsync(request.Id);
             if (shop == null)
             {
                 throw new PaddleThroughLychnidosException($"Shop with Id {request.Id} not found.", HttpStatusCode.NotFound);
@@ -81,6 +85,7 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
                 Email = shop.Email,
                 InstagramHandle = shop.InstagramHandle,
                 Website = shop.Website,
+                ImageUrl = shop.Images.Select(i => i.Url).FirstOrDefault() ?? string.Empty,
                 Rating = shop.Rating,
                 UserRatingCount = shop.UserRatingCount,
                 IsVerified = shop.IsVerified,
