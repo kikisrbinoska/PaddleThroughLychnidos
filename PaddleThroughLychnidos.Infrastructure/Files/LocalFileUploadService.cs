@@ -12,7 +12,11 @@ namespace PaddleThroughLychnidos.Infrastructure.Files
     // across instances.
     public class LocalFileUploadService : IFileUploadService
     {
-        private const long MaxFileSizeBytes = 10 * 1024 * 1024; // 10 MB
+        // Matches ArtisanController's [RequestSizeLimit(10_000_000)] on the
+        // single-file upload endpoints exactly - a mismatch here meant
+        // files between ~9.5 and 10 MiB could be rejected by Kestrel before
+        // ever reaching this check, with a much less useful error.
+        private const long MaxFileSizeBytes = 10_000_000;
 
         private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
         {

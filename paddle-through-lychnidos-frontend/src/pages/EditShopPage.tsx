@@ -11,6 +11,7 @@ import { TextField } from "../components/TextField";
 import { ShopLocationPicker } from "../components/ShopLocationPicker";
 import { WeeklyHoursPicker, type WeeklyHoursEntry } from "../components/WeeklyHoursPicker";
 import { resolveUploadUrl } from "../utils/resolveUploadUrl";
+import { validateImageFile } from "../utils/imageUpload";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -135,6 +136,13 @@ export function EditShopPage() {
     event.target.value = "";
     if (!file) return;
 
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      setFormError(validationError);
+      return;
+    }
+
+    setFormError("");
     setIsUploadingImage(true);
     try {
       if (isEditing && existingShop) {

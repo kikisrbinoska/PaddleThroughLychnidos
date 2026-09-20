@@ -8,6 +8,7 @@ import { getErrorMessage } from "../services/errorMessage";
 import { Button } from "../components/Button";
 import { TextField } from "../components/TextField";
 import { resolveUploadUrl } from "../utils/resolveUploadUrl";
+import { validateImageFile } from "../utils/imageUpload";
 
 export function EditProductPage() {
   const { shopId, id } = useParams<{ shopId: string; id: string }>();
@@ -64,6 +65,13 @@ export function EditProductPage() {
     event.target.value = "";
     if (!file) return;
 
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      setFormError(validationError);
+      return;
+    }
+
+    setFormError("");
     setIsUploadingImage(true);
     try {
       const url = await artisanService.uploadProductImage(file);

@@ -77,10 +77,18 @@ public class ExceptionHandlingMiddleware
     private static async Task UnknownExceptionResponse(HttpContext context, Exception? inner)
     {
         context.Response.StatusCode = 500;
+
+        // Same Detail/Title shape the other branches use - getErrorMessage
+        // (frontend) only reads those keys, so returning a differently
+        // shaped body here means the real message never reaches the user,
+        // it just silently falls back to whatever generic text the caller
+        // passed (see EditShopPage.handleImageUpload for an example).
         await context.Response.WriteAsJsonAsync(new
         {
-            error = inner?.Message ?? "Unexpected error",
-            type = inner?.GetType().Name ?? "Unknown"
+            Status = 500,
+            Type = "Unexpected error",
+            Title = "Unexpected error",
+            Detail = inner?.Message ?? "Unexpected error",
         });
     }
 
