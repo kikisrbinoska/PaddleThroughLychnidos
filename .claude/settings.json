@@ -69,7 +69,13 @@
       "Bash(curl -s \"http://16.16.24.158/api/products?shopId=27\")",
       "Bash(curl -s \"https://api.github.com/repos/kikisrbinoska/PaddleThroughLychnidos/actions/runs?branch=main&per_page=3\")",
       "Bash(curl -s \"http://16.16.24.158/api/itineraries/1\")",
-      "Bash(curl -s \"http://addle-through-lychnidos-web-2026.s3-website.eu-north-1.amazonaws.com/\" -I)"
+      "Bash(curl -s \"http://addle-through-lychnidos-web-2026.s3-website.eu-north-1.amazonaws.com/\" -I)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X POST \"http://16.16.24.158/api/artisan/shop-images\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X DELETE \"http://16.16.24.158/api/artisan/shop/9/images/1\")",
+      "Bash(xargs grep -l \"img src=\\\\|<img\")",
+      "Bash(curl -s \"http://16.16.24.158/api/shops?pageSize=3\")",
+      "Bash(curl -s \"http://16.16.24.158/api/itineraries?pageSize=1\")",
+      "Bash(grep -rn \"img src=\\\\|<img$\" src/pages/VerificationRequestPage.tsx src/components/ShopCard.tsx src/pages/ShopDetailPage.tsx)"
     ],
     "additionalDirectories": [
       "c:\\Users\\krist\\OneDrive\\Desktop\\PaddleThroughLychnidos\\paddle-through-lychnidos-frontend\\src\\assets"

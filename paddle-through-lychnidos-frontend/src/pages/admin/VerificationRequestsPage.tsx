@@ -7,6 +7,7 @@ import { AdminLayout } from "../../components/AdminLayout";
 import { Card } from "../../components/Card";
 import { Button } from "../../components/Button";
 import { DocumentPreviewModal } from "../../components/DocumentPreviewModal";
+import { resolveUploadUrl } from "../../utils/resolveUploadUrl";
 
 function isPdfUrl(url: string): boolean {
   return url.toLowerCase().endsWith(".pdf");
@@ -135,7 +136,7 @@ function VerificationCard({
               {isPdfUrl(url) ? (
                 <FileText size={24} className="text-text-secondary" />
               ) : (
-                <img src={url} alt="Verification document" className="h-full w-full object-cover" />
+                <img src={resolveUploadUrl(url)} alt="Verification document" className="h-full w-full object-cover" />
               )}
             </button>
           ))}

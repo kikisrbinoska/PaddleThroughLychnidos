@@ -1,4 +1,5 @@
 import { Download, X } from "lucide-react";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 export interface DocumentPreviewModalProps {
   url: string;
@@ -14,6 +15,7 @@ function isPdf(url: string): boolean {
 // on the extension is enough to pick the right preview, no content-type
 // metadata needed.
 export function DocumentPreviewModal({ url, onClose }: DocumentPreviewModalProps) {
+  const resolvedUrl = resolveUploadUrl(url);
   const fileName = url.split("/").pop() ?? "document";
 
   return (
@@ -29,7 +31,7 @@ export function DocumentPreviewModal({ url, onClose }: DocumentPreviewModalProps
           <p className="truncate text-sm font-bold text-text-primary">{fileName}</p>
           <div className="flex flex-none items-center gap-1">
             <a
-              href={url}
+              href={resolvedUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Open in new tab to download or print"
@@ -51,13 +53,13 @@ export function DocumentPreviewModal({ url, onClose }: DocumentPreviewModalProps
         <div className="flex-1 overflow-auto bg-surface-bg p-2">
           {isPdf(url) ? (
             <iframe
-              src={url}
+              src={resolvedUrl}
               title={fileName}
               className="h-[75vh] w-full rounded-lg border border-border-default bg-white"
             />
           ) : (
             <img
-              src={url}
+              src={resolvedUrl}
               alt={fileName}
               className="mx-auto max-h-[75vh] w-auto rounded-lg object-contain"
             />

@@ -15,6 +15,7 @@ import { getErrorMessage } from "../services/errorMessage";
 import { useAuth } from "../hooks/useAuth";
 import type { ItineraryDetail } from "../types";
 import { createItineraryStopIcon } from "../utils/itineraryStopIcon";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 import "leaflet/dist/leaflet.css";
 
 function formatSuggestedTime(value: string): string {
@@ -179,7 +180,7 @@ export function ItineraryDetailPage() {
       <div className="relative h-48 w-full">
         {itinerary.coverImageUrl && !coverImageFailed ? (
           <img
-            src={itinerary.coverImageUrl}
+            src={resolveUploadUrl(itinerary.coverImageUrl)}
             alt={itinerary.title}
             onError={() => setCoverImageFailed(true)}
             className="h-full w-full object-cover"
@@ -278,7 +279,7 @@ export function ItineraryDetailPage() {
                   <div className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100">
                     {stop.shop.imageUrl && (
                       <img
-                        src={stop.shop.imageUrl}
+                        src={resolveUploadUrl(stop.shop.imageUrl)}
                         alt={stop.shop.name}
                         className="h-full w-full object-cover"
                       />

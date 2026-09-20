@@ -13,6 +13,7 @@ import type { PassportStamp, ReviewListItem, UserProfile } from "../types";
 import { Card } from "../components/Card";
 import { Badge } from "../components/Badge";
 import { getCategoryAccent } from "../utils/categoryStyle";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 function MetricCard({ value, label }: { value: number; label: string }) {
   return (
@@ -39,7 +40,7 @@ function StampPreviewBadge({ stamp }: { stamp: PassportStamp }) {
       >
         {stamp.thumbnailUrl ? (
           <img
-            src={stamp.thumbnailUrl}
+            src={resolveUploadUrl(stamp.thumbnailUrl)}
             alt=""
             className="h-full w-full object-cover"
           />

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { BadgeCheck } from "lucide-react";
 import type { ProductListItem } from "../types";
 import { getCategoryAccent } from "../utils/categoryStyle";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 export interface ProductCardProps {
   product: ProductListItem;
@@ -28,7 +29,7 @@ export function ProductCard({
     >
       {product.imageUrl ? (
         <img
-          src={product.imageUrl}
+          src={resolveUploadUrl(product.imageUrl)}
           alt={product.name}
           className="h-24 w-full rounded-xl object-cover"
         />

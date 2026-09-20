@@ -23,6 +23,7 @@ import {
   durationBucketToRange,
   type ItineraryFilters,
 } from "../components/ItineraryFilterBottomSheet";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 const PAGE_SIZE = 20;
 
@@ -100,7 +101,7 @@ function ShopEntryRow({
         <div className="h-28 w-full bg-primary-100">
           {entry.shop.imageUrl && (
             <img
-              src={entry.shop.imageUrl}
+              src={resolveUploadUrl(entry.shop.imageUrl)}
               alt={entry.shop.name}
               className="h-full w-full object-cover"
             />
@@ -143,7 +144,7 @@ function ItineraryEntryRow({
         <div className="h-28 w-full bg-primary-100">
           {entry.itinerary.coverImageUrl && (
             <img
-              src={entry.itinerary.coverImageUrl}
+              src={resolveUploadUrl(entry.itinerary.coverImageUrl)}
               alt={entry.itinerary.title}
               className="h-full w-full object-cover"
             />

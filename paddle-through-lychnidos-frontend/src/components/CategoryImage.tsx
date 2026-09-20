@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getCategoryAccent, getShopImage } from "../utils/categoryStyle";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 export interface CategoryImageProps {
   shop: { imageUrl?: string | null; categoryName: string; name: string };
@@ -25,7 +26,7 @@ export function CategoryImage({ shop, className = "" }: CategoryImageProps) {
 
   return (
     <img
-      src={src}
+      src={resolveUploadUrl(src)}
       alt={shop.name}
       onError={() => setFailed(true)}
       className={`object-cover ${className}`}

@@ -18,6 +18,7 @@ import { getErrorMessage } from "../services/errorMessage";
 import type { OwnedShop } from "../types";
 import { Card } from "../components/Card";
 import { Button } from "../components/Button";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 function MetricCard({
   icon: Icon,
@@ -190,7 +191,7 @@ function ShopCard({ shop }: { shop: OwnedShop }) {
       <div className="flex items-center gap-3">
         <div className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100">
           {shop.images[0] && (
-            <img src={shop.images[0].url} alt="" className="h-full w-full object-cover" />
+            <img src={resolveUploadUrl(shop.images[0].url)} alt="" className="h-full w-full object-cover" />
           )}
         </div>
         <div className="min-w-0 flex-1">

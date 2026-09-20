@@ -6,6 +6,7 @@ import { getErrorMessage } from "../services/errorMessage";
 import { useAuth } from "../hooks/useAuth";
 import type { PassportStamp } from "../types";
 import { getCategoryAccent } from "../utils/categoryStyle";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 // Deterministic small tilt per stamp (based on id) so the page reads like
 // stamps pressed by hand rather than a perfectly aligned grid.
@@ -36,7 +37,7 @@ function StampBadge({ stamp }: { stamp: PassportStamp }) {
         >
           {stamp.thumbnailUrl ? (
             <img
-              src={stamp.thumbnailUrl}
+              src={resolveUploadUrl(stamp.thumbnailUrl)}
               alt=""
               className="h-full w-full object-cover opacity-90 mix-blend-multiply"
             />

@@ -7,6 +7,7 @@ import { productVideoService } from "../services/productVideoService";
 import { getErrorMessage } from "../services/errorMessage";
 import { Button } from "../components/Button";
 import { TextField } from "../components/TextField";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 export function EditProductPage() {
   const { shopId, id } = useParams<{ shopId: string; id: string }>();
@@ -156,7 +157,7 @@ export function EditProductPage() {
               <p className="mb-2 text-sm font-medium text-text-primary">Product image</p>
               <div className="h-32 w-32 overflow-hidden rounded-xl bg-primary-100">
                 {imageUrl ? (
-                  <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+                  <img src={resolveUploadUrl(imageUrl)} alt="" className="h-full w-full object-cover" />
                 ) : (
                   <label className="flex h-full w-full cursor-pointer items-center justify-center text-text-secondary">
                     {isUploadingImage ? (

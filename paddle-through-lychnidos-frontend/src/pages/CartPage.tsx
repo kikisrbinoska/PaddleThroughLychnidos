@@ -6,6 +6,7 @@ import { useCart, type CartItem } from "../hooks/useCart";
 import type { ShopDetail } from "../types";
 import { toWhatsAppNumber } from "../utils/whatsapp";
 import { Button } from "../components/Button";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 interface ShopGroup {
   shopId: number;
@@ -85,7 +86,7 @@ function ShopCartGroup({
             >
               {item.productImage ? (
                 <img
-                  src={item.productImage}
+                  src={resolveUploadUrl(item.productImage)}
                   alt={item.productName}
                   className="h-full w-full object-cover"
                 />

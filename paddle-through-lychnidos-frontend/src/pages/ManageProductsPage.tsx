@@ -5,6 +5,7 @@ import { productService } from "../services/productService";
 import { getErrorMessage } from "../services/errorMessage";
 import type { ProductListItem } from "../types";
 import { Button } from "../components/Button";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 function ProductRow({
   product,
@@ -32,7 +33,7 @@ function ProductRow({
     <div className="flex items-center gap-3 rounded-2xl border border-white/70 bg-white/70 p-4 backdrop-blur-lg">
       <div className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100">
         {product.imageUrl && (
-          <img src={product.imageUrl} alt="" className="h-full w-full object-cover" />
+          <img src={resolveUploadUrl(product.imageUrl)} alt="" className="h-full w-full object-cover" />
         )}
       </div>
       <div className="min-w-0 flex-1">

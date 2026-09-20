@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Clock, MapPin } from "lucide-react";
 import type { ItineraryListItem } from "../types";
 import { Badge } from "./Badge";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 export interface ItineraryCardProps {
   itinerary: ItineraryListItem;
@@ -25,7 +26,7 @@ export function ItineraryCard({
       <div className="relative h-28 w-full">
         {itinerary.coverImageUrl && !imageFailed ? (
           <img
-            src={itinerary.coverImageUrl}
+            src={resolveUploadUrl(itinerary.coverImageUrl)}
             alt={itinerary.title}
             onError={() => setImageFailed(true)}
             className="h-full w-full object-cover"

@@ -5,6 +5,7 @@ import { getErrorMessage } from "../services/errorMessage";
 import type { TravelPlanShopSummary } from "../types";
 import { Button } from "./Button";
 import { TextField } from "./TextField";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 export interface DayPlanBuilderProps {
   savedShops: TravelPlanShopSummary[];
@@ -134,7 +135,7 @@ export function DayPlanBuilder({ savedShops, onClose, onCreated }: DayPlanBuilde
                       <div className="h-10 w-10 flex-none overflow-hidden rounded-lg bg-primary-100">
                         {shop.imageUrl && (
                           <img
-                            src={shop.imageUrl}
+                            src={resolveUploadUrl(shop.imageUrl)}
                             alt=""
                             className="h-full w-full object-cover"
                           />

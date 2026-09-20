@@ -10,6 +10,7 @@ import { Button } from "../components/Button";
 import { TextField } from "../components/TextField";
 import { ShopLocationPicker } from "../components/ShopLocationPicker";
 import { WeeklyHoursPicker, type WeeklyHoursEntry } from "../components/WeeklyHoursPicker";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -395,7 +396,7 @@ export function EditShopPage() {
                 {isEditing
                   ? existingImages.map((image) => (
                       <div key={image.id} className="relative h-16 w-16 overflow-hidden rounded-xl bg-primary-100">
-                        <img src={image.url} alt="" className="h-full w-full object-cover" />
+                        <img src={resolveUploadUrl(image.url)} alt="" className="h-full w-full object-cover" />
                         <button
                           type="button"
                           onClick={() => handleDeleteImage(image.id)}
@@ -409,7 +410,7 @@ export function EditShopPage() {
                     ))
                   : newPhotoUrls.map((url) => (
                       <div key={url} className="relative h-16 w-16 overflow-hidden rounded-xl bg-primary-100">
-                        <img src={url} alt="" className="h-full w-full object-cover" />
+                        <img src={resolveUploadUrl(url)} alt="" className="h-full w-full object-cover" />
                         <button
                           type="button"
                           onClick={() => removeNewPhoto(url)}

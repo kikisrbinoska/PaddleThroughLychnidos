@@ -7,6 +7,7 @@ import { useCart } from "../hooks/useCart";
 import { useAuth } from "../hooks/useAuth";
 import type { ProductDetail } from "../types";
 import { Button } from "../components/Button";
+import { resolveUploadUrl } from "../utils/resolveUploadUrl";
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -106,7 +107,7 @@ export function ProductDetailPage() {
         <div className="aspect-square w-full overflow-hidden rounded-2xl bg-primary-100">
           {product.imageUrl ? (
             <img
-              src={product.imageUrl}
+              src={resolveUploadUrl(product.imageUrl)}
               alt={product.name}
               className="h-full w-full object-cover"
             />
