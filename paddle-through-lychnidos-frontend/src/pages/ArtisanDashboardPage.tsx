@@ -189,8 +189,8 @@ function ShopCard({ shop }: { shop: OwnedShop }) {
     <Card variant="strong" className="flex flex-col gap-4">
       <div className="flex items-center gap-3">
         <div className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100">
-          {shop.imageUrls[0] && (
-            <img src={shop.imageUrls[0]} alt="" className="h-full w-full object-cover" />
+          {shop.images[0] && (
+            <img src={shop.images[0].url} alt="" className="h-full w-full object-cover" />
           )}
         </div>
         <div className="min-w-0 flex-1">

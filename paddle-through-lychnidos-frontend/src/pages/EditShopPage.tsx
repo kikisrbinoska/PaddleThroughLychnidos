@@ -1,13 +1,15 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ChevronLeft, ImagePlus } from "lucide-react";
+import { ChevronLeft, ImagePlus, X } from "lucide-react";
 import { artisanService } from "../services/artisanService";
 import { categoryService } from "../services/categoryService";
 import { regionService } from "../services/regionService";
 import { getErrorMessage } from "../services/errorMessage";
-import type { Category, OwnedShop, Region, ShopFormFields } from "../types";
+import type { Category, OwnedShop, OwnedShopImage, Region, ShopFormFields } from "../types";
 import { Button } from "../components/Button";
 import { TextField } from "../components/TextField";
+import { ShopLocationPicker } from "../components/ShopLocationPicker";
+import { WeeklyHoursPicker, type WeeklyHoursEntry } from "../components/WeeklyHoursPicker";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -15,6 +17,9 @@ const EMPTY_FIELDS: ShopFormFields = {
   name: "",
   description: "",
   story: "",
+  latitude: 0,
+  longitude: 0,
+  address: "",
   categoryId: 0,
   regionId: null,
   phoneNumber: "",
@@ -22,7 +27,19 @@ const EMPTY_FIELDS: ShopFormFields = {
   instagramHandle: "",
   website: "",
   openingHours: "",
+  structuredHoursJson: null,
+  imageUrls: [],
 };
+
+function parseHours(json: string | null): WeeklyHoursEntry[] {
+  if (!json) return [];
+  try {
+    const parsed = JSON.parse(json);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
 export function EditShopPage() {
   const { shopId } = useParams<{ shopId: string }>();
@@ -35,8 +52,14 @@ export function EditShopPage() {
   const [regions, setRegions] = useState<Region[]>([]);
 
   const [fields, setFields] = useState<ShopFormFields>(EMPTY_FIELDS);
-  const [images, setImages] = useState<string[]>([]);
+  const [hoursEntries, setHoursEntries] = useState<WeeklyHoursEntry[]>([]);
+  // Editing: images already saved on the shop (each deletable individually).
+  const [existingImages, setExistingImages] = useState<OwnedShopImage[]>([]);
+  // Creating: photos uploaded so far, held as bare URLs until the shop
+  // itself is created and these get attached via AddRequest.imageUrls.
+  const [newPhotoUrls, setNewPhotoUrls] = useState<string[]>([]);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [deletingImageId, setDeletingImageId] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,11 +78,15 @@ export function EditShopPage() {
 
         if (shop) {
           setExistingShop(shop);
-          setImages(shop.imageUrls);
+          setExistingImages(shop.images);
+          setHoursEntries(parseHours(shop.structuredHoursJson));
           setFields({
             name: shop.name,
             description: shop.description,
             story: shop.story,
+            latitude: shop.latitude,
+            longitude: shop.longitude,
+            address: shop.address,
             categoryId: shop.categoryId,
             regionId: shop.regionId,
             phoneNumber: shop.phoneNumber,
@@ -67,6 +94,8 @@ export function EditShopPage() {
             instagramHandle: shop.instagramHandle,
             website: shop.website ?? "",
             openingHours: shop.openingHours,
+            structuredHoursJson: shop.structuredHoursJson,
+            imageUrls: [],
           });
         }
       })
@@ -103,17 +132,39 @@ export function EditShopPage() {
   async function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     event.target.value = "";
-    if (!file || !existingShop) return;
+    if (!file) return;
 
     setIsUploadingImage(true);
     try {
-      const response = await artisanService.uploadShopImage(existingShop.id, file);
-      setImages((current) => [...current, response.url]);
+      if (isEditing && existingShop) {
+        const response = await artisanService.uploadShopImage(existingShop.id, file);
+        setExistingImages((current) => [...current, { id: response.id, url: response.url }]);
+      } else {
+        const url = await artisanService.uploadShopImageStandalone(file);
+        setNewPhotoUrls((current) => [...current, url]);
+      }
     } catch (err) {
       setFormError(getErrorMessage(err, "Could not upload image."));
     } finally {
       setIsUploadingImage(false);
     }
+  }
+
+  async function handleDeleteImage(imageId: number) {
+    if (!existingShop) return;
+    setDeletingImageId(imageId);
+    try {
+      await artisanService.deleteShopImage(existingShop.id, imageId);
+      setExistingImages((current) => current.filter((img) => img.id !== imageId));
+    } catch (err) {
+      setFormError(getErrorMessage(err, "Could not remove this photo."));
+    } finally {
+      setDeletingImageId(null);
+    }
+  }
+
+  function removeNewPhoto(url: string) {
+    setNewPhotoUrls((current) => current.filter((u) => u !== url));
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -123,14 +174,20 @@ export function EditShopPage() {
 
     if (!validate()) return;
 
+    const payload: ShopFormFields = {
+      ...fields,
+      structuredHoursJson: hoursEntries.length > 0 ? JSON.stringify(hoursEntries) : null,
+      imageUrls: newPhotoUrls,
+    };
+
     setIsSubmitting(true);
     try {
       if (isEditing && existingShop) {
-        await artisanService.updateShop(existingShop.id, fields);
+        await artisanService.updateShop(existingShop.id, payload);
         setSubmittedMessage("Your shop has been updated.");
         setTimeout(() => navigate("/artisan/dashboard"), 1200);
       } else {
-        const response = await artisanService.createShop(fields);
+        const response = await artisanService.createShop(payload);
         setSubmittedMessage(
           response.message ||
             "Your shop has been submitted for review and will be visible to visitors once approved, usually within 2-3 business days.",
@@ -265,6 +322,24 @@ export function EditShopPage() {
               </select>
             </div>
 
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-text-primary">Location</label>
+              <ShopLocationPicker
+                latitude={fields.latitude}
+                longitude={fields.longitude}
+                onChange={(latitude, longitude) => {
+                  setFields((current) => ({ ...current, latitude, longitude }));
+                }}
+              />
+            </div>
+
+            <TextField
+              id="address"
+              label="Address"
+              value={fields.address}
+              onChange={(e) => update("address", e.target.value)}
+            />
+
             <TextField
               id="phoneNumber"
               label="Phone"
@@ -294,7 +369,7 @@ export function EditShopPage() {
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="openingHours" className="text-sm font-medium text-text-primary">
-                Opening hours
+                Opening hours (short summary)
               </label>
               <input
                 id="openingHours"
@@ -303,38 +378,65 @@ export function EditShopPage() {
                 placeholder="e.g. Mon-Sat 9:00-18:00"
                 className="rounded-xl border border-border-default bg-surface-card px-4 py-2.5 text-sm text-text-primary outline-none focus:border-primary-700"
               />
+              <p className="text-xs text-text-secondary">
+                Shown as text on your shop page. Set exact hours below so visitors also see
+                whether you're open right now.
+              </p>
             </div>
 
-            {isEditing && (
-              <div>
-                <p className="mb-2 text-sm font-medium text-text-primary">Photos</p>
-                <div className="flex flex-wrap gap-2.5">
-                  {images.map((url) => (
-                    <div
-                      key={url}
-                      className="h-16 w-16 overflow-hidden rounded-xl bg-primary-100"
-                    >
-                      <img src={url} alt="" className="h-full w-full object-cover" />
-                    </div>
-                  ))}
-                  <label className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-xl border border-dashed border-border-default text-text-secondary">
-                    {isUploadingImage ? (
-                      "..."
-                    ) : (
-                      <>
-                        <ImagePlus size={18} />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                        />
-                      </>
-                    )}
-                  </label>
-                </div>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-text-primary">Weekly hours</label>
+              <WeeklyHoursPicker entries={hoursEntries} onChange={setHoursEntries} />
+            </div>
+
+            <div>
+              <p className="mb-2 text-sm font-medium text-text-primary">Photos</p>
+              <div className="flex flex-wrap gap-2.5">
+                {isEditing
+                  ? existingImages.map((image) => (
+                      <div key={image.id} className="relative h-16 w-16 overflow-hidden rounded-xl bg-primary-100">
+                        <img src={image.url} alt="" className="h-full w-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteImage(image.id)}
+                          disabled={deletingImageId === image.id}
+                          aria-label="Remove photo"
+                          className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white disabled:opacity-50"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))
+                  : newPhotoUrls.map((url) => (
+                      <div key={url} className="relative h-16 w-16 overflow-hidden rounded-xl bg-primary-100">
+                        <img src={url} alt="" className="h-full w-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => removeNewPhoto(url)}
+                          aria-label="Remove photo"
+                          className="absolute right-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
+                <label className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-xl border border-dashed border-border-default text-text-secondary">
+                  {isUploadingImage ? (
+                    "..."
+                  ) : (
+                    <>
+                      <ImagePlus size={18} />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </>
+                  )}
+                </label>
               </div>
-            )}
+            </div>
 
             {formError && (
               <p className="rounded-lg bg-nosija-red-100 px-3 py-2 text-sm text-nosija-red-900">

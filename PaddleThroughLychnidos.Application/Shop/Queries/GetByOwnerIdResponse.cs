@@ -1,5 +1,11 @@
 namespace PaddleThroughLychnidos.Application.Shop.Queries
 {
+    public class OwnedShopImageDto
+    {
+        public int Id { get; set; }
+        public string Url { get; set; } = string.Empty;
+    }
+
     public class OwnedShopDto
     {
         public int Id { get; set; }
@@ -21,12 +27,13 @@ namespace PaddleThroughLychnidos.Application.Shop.Queries
         public int? UserRatingCount { get; set; }
         public bool IsVerified { get; set; }
         public string OpeningHours { get; set; } = string.Empty;
+        public string? StructuredHoursJson { get; set; }
         public string Status { get; set; } = string.Empty;
         public string? RejectionReason { get; set; }
         public int ViewCount { get; set; }
         public int SavedCount { get; set; }
         public int ReviewCount { get; set; }
-        public List<string> ImageUrls { get; set; } = new();
+        public List<OwnedShopImageDto> Images { get; set; } = new();
         public bool HasPendingVerificationRequest { get; set; }
         public string MembershipTier { get; set; } = string.Empty;
         public DateTime? MembershipActivatedAt { get; set; }

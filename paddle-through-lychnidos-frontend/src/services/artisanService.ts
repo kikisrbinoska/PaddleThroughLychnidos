@@ -54,6 +54,20 @@ export const artisanService = {
       .then((res) => res.data);
   },
 
+  deleteShopImage: (shopId: number, imageId: number) =>
+    apiClient.delete(`/artisan/shop/${shopId}/images/${imageId}`).then(() => undefined),
+
+  // Used only on the create-shop form, before a shop id exists - returns
+  // just the uploaded URL, attached to the shop via ShopFormFields.imageUrls
+  // once the shop is actually created.
+  uploadShopImageStandalone: (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return apiClient
+      .post<{ url: string }>("/artisan/shop-images", formData)
+      .then((res) => res.data.url);
+  },
+
   uploadProductImage: (file: File) => {
     const formData = new FormData();
     formData.append("file", file);

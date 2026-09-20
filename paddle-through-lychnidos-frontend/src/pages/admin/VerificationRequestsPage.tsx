@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import { BadgeCheck, Check, X } from "lucide-react";
+import { BadgeCheck, Check, FileText, X } from "lucide-react";
 import { adminService } from "../../services/adminService";
 import { getErrorMessage } from "../../services/errorMessage";
 import type { AdminVerificationRequest, VerificationRequestStatus } from "../../types";
 import { AdminLayout } from "../../components/AdminLayout";
 import { Card } from "../../components/Card";
 import { Button } from "../../components/Button";
+import { DocumentPreviewModal } from "../../components/DocumentPreviewModal";
+
+function isPdfUrl(url: string): boolean {
+  return url.toLowerCase().endsWith(".pdf");
+}
 
 const TABS: { value: VerificationRequestStatus; label: string }[] = [
   { value: "Pending", label: "Pending" },
@@ -78,6 +83,7 @@ function VerificationCard({
   const [isRejecting, setIsRejecting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const isActionable = request.status === "Pending" && onApprove && onReject;
 
@@ -119,17 +125,25 @@ function VerificationCard({
       {request.documentUrls.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {request.documentUrls.map((url) => (
-            <a
+            <button
               key={url}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="h-20 w-20 flex-none overflow-hidden rounded-lg border border-border-default"
+              type="button"
+              onClick={() => setPreviewUrl(url)}
+              aria-label="Preview verification document"
+              className="flex h-20 w-20 flex-none items-center justify-center overflow-hidden rounded-lg border border-border-default bg-surface-bg"
             >
-              <img src={url} alt="Verification document" className="h-full w-full object-cover" />
-            </a>
+              {isPdfUrl(url) ? (
+                <FileText size={24} className="text-text-secondary" />
+              ) : (
+                <img src={url} alt="Verification document" className="h-full w-full object-cover" />
+              )}
+            </button>
           ))}
         </div>
+      )}
+
+      {previewUrl && (
+        <DocumentPreviewModal url={previewUrl} onClose={() => setPreviewUrl(null)} />
       )}
 
       {request.status !== "Pending" && (

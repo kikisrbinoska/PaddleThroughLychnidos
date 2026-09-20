@@ -62,6 +62,7 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
             shop.InstagramHandle = request.InstagramHandle;
             shop.Website = request.Website;
             shop.OpeningHours = request.OpeningHours;
+            shop.StructuredHoursJson = request.StructuredHoursJson;
 
             // Editing does NOT change Status - a Rejected shop stays
             // Rejected until the artisan explicitly resubmits (see

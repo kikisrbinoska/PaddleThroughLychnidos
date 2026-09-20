@@ -28,5 +28,18 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
         public string InstagramHandle { get; set; } = string.Empty;
         public string? Website { get; set; }
         public string OpeningHours { get; set; } = string.Empty;
+
+        // Structured day/open/close windows from the artisan-facing hours
+        // picker, serialized the same way as Shop.StructuredHoursJson (a
+        // JSON array of Domain.Shared.WeeklyHoursEntry). Null/empty when
+        // the artisan hasn't set structured hours - OpeningHours above is
+        // still required as the free-text fallback shown everywhere else.
+        public string? StructuredHoursJson { get; set; }
+
+        // Photos attached during creation, already uploaded via
+        // POST /api/artisan/shop-images beforehand (that endpoint exists
+        // precisely because a shop has no id yet at this point) - handler
+        // attaches these as ShopImage rows once the shop id is known.
+        public List<string> ImageUrls { get; set; } = new();
     }
 }

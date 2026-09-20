@@ -68,7 +68,8 @@
       "Bash(curl -s \"http://16.16.24.158/api/products?shopId=13\")",
       "Bash(curl -s \"http://16.16.24.158/api/products?shopId=27\")",
       "Bash(curl -s \"https://api.github.com/repos/kikisrbinoska/PaddleThroughLychnidos/actions/runs?branch=main&per_page=3\")",
-      "Bash(curl -s \"http://16.16.24.158/api/itineraries/1\")"
+      "Bash(curl -s \"http://16.16.24.158/api/itineraries/1\")",
+      "Bash(curl -s \"http://addle-through-lychnidos-web-2026.s3-website.eu-north-1.amazonaws.com/\" -I)"
     ],
     "additionalDirectories": [
       "c:\\Users\\krist\\OneDrive\\Desktop\\PaddleThroughLychnidos\\paddle-through-lychnidos-frontend\\src\\assets"

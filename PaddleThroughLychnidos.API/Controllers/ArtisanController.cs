@@ -122,6 +122,41 @@ namespace PaddleThroughLychnidos.API.Controllers
             return Ok(response);
         }
 
+        // DELETE api/artisan/shop/5/images/12
+        [HttpDelete("shop/{shopId:int}/images/{imageId:int}")]
+        public async Task<ActionResult<ShopImageCommands.DeleteResponse>> DeleteShopImage(int shopId, int imageId)
+        {
+            var userId = GetCurrentUserId();
+
+            // Same ownership guard as upload, plus confirming the image
+            // actually belongs to this shop (not just any shop this
+            // artisan happens to own) before deleting it - ShopImage.Commands
+            // .DeleteHandler itself has no ownership check.
+            var shop = await _mediator.Send(new ShopQueries.GetOwnedByIdRequest { ShopId = shopId, OwnerId = userId });
+            if (!shop.Images.Any(i => i.Id == imageId))
+            {
+                throw new PaddleThroughLychnidosException("Image not found on this shop", HttpStatusCode.NotFound);
+            }
+
+            _logger.LogInformation("Deleting image {imageId} from shop {shopId} for artisan {userId}", imageId, shopId, userId);
+            var response = await _mediator.Send(new ShopImageCommands.DeleteRequest { Id = imageId });
+            return Ok(response);
+        }
+
+        // POST api/artisan/shop-images (multipart/form-data, field name "file")
+        // Same pattern as product-images below - saves the file and returns
+        // its URL only, since a shop may not exist yet at upload time (the
+        // create-shop form uploads photos first, then submits the returned
+        // URLs as part of Shop.Commands.AddRequest.ImageUrls).
+        [HttpPost("shop-images")]
+        [RequestSizeLimit(10_000_000)]
+        public async Task<ActionResult<UploadedFileResponse>> UploadShopImageStandalone(IFormFile file, CancellationToken cancellationToken)
+        {
+            var url = await _fileUploadService.SaveAsync(file, "shops", cancellationToken);
+            _logger.LogInformation("Uploaded standalone shop image for artisan {userId}", GetCurrentUserId());
+            return Ok(new UploadedFileResponse { Url = url });
+        }
+
         // POST api/artisan/product-images (multipart/form-data, field name "file")
         // Saves the file and returns its URL only - not tied to a specific
         // product yet, since a product may not exist at upload time (the

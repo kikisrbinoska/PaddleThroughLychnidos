@@ -63,11 +63,22 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
                 Website = request.Website,
                 IsVerified = false,
                 OpeningHours = request.OpeningHours,
+                StructuredHoursJson = request.StructuredHoursJson,
                 Status = status,
                 CreatedAt = DateTime.UtcNow,
             };
 
             await _shopRepository.AddAsync(shop);
+
+            foreach (var url in request.ImageUrls)
+            {
+                shop.Images.Add(new Domain.Entities.ShopImage { ShopId = shop.Id, Url = url });
+            }
+
+            if (request.ImageUrls.Count > 0)
+            {
+                await _shopRepository.UpdateAsync(shop);
+            }
 
             return new AddResponse
             {

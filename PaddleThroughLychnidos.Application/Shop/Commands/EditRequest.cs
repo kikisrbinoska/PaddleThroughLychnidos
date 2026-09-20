@@ -24,5 +24,8 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
         public string InstagramHandle { get; set; } = string.Empty;
         public string? Website { get; set; }
         public string OpeningHours { get; set; } = string.Empty;
+
+        // See AddRequest.StructuredHoursJson - same shape, same optionality.
+        public string? StructuredHoursJson { get; set; }
     }
 }

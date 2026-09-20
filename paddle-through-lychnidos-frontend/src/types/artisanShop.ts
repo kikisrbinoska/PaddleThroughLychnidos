@@ -15,6 +15,12 @@ export const MembershipTier = {
 
 export type MembershipTier = (typeof MembershipTier)[keyof typeof MembershipTier];
 
+// Mirrors PaddleThroughLychnidos.Application.Shop.Queries.OwnedShopImageDto.
+export interface OwnedShopImage {
+  id: number;
+  url: string;
+}
+
 // Mirrors PaddleThroughLychnidos.Application.Shop.Queries.OwnedShopDto,
 // returned inside GetByOwnerIdResponse.shops (GET /api/artisan/shops) and
 // directly by GET /api/artisan/shops/{id}.
@@ -38,12 +44,13 @@ export interface OwnedShop {
   userRatingCount: number | null;
   isVerified: boolean;
   openingHours: string;
+  structuredHoursJson: string | null;
   status: ShopStatusName;
   rejectionReason: string | null;
   viewCount: number;
   savedCount: number;
   reviewCount: number;
-  imageUrls: string[];
+  images: OwnedShopImage[];
   hasPendingVerificationRequest: boolean;
   membershipTier: MembershipTierName;
   membershipActivatedAt: string | null;
@@ -59,6 +66,9 @@ export interface ShopFormFields {
   name: string;
   description: string;
   story: string;
+  latitude: number;
+  longitude: number;
+  address: string;
   categoryId: number;
   regionId: number | null;
   phoneNumber: string;
@@ -66,6 +76,11 @@ export interface ShopFormFields {
   instagramHandle: string;
   website: string;
   openingHours: string;
+  structuredHoursJson: string | null;
+  // Create-only: photo URLs already uploaded via POST /artisan/shop-images
+  // before the shop exists. Ignored by EditRequest - editing manages
+  // photos separately through the per-shop upload/delete endpoints.
+  imageUrls: string[];
 }
 
 // Mirrors PaddleThroughLychnidos.Application.Shop.Commands.AddResponse /

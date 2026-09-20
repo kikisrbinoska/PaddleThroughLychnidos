@@ -51,6 +51,9 @@ namespace PaddleThroughLychnidos.Application.Shop.Commands
 
             RuleFor(x => x.OpeningHours)
                 .MaximumLength(500);
+
+            RuleFor(x => x.StructuredHoursJson)
+                .MaximumLength(4000);
         }
     }
 }
