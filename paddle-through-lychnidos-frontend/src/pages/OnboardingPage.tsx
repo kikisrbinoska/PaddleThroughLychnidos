@@ -55,35 +55,36 @@ export function OnboardingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="relative flex min-h-svh flex-col overflow-hidden px-6 py-10">
+    <div className="relative flex h-svh flex-col overflow-hidden px-6 py-6 md:py-10">
       <LakeWaveBackground />
       <BackgroundBlob position="-top-16 -right-16" tint="primary" />
       <BackgroundBlob position="bottom-16 -left-16" size="h-56 w-56" tint="secondary" />
 
-      <div className="relative mx-auto flex w-full max-w-3xl flex-col items-center gap-2 pb-8">
-        <img src={logo} alt="Paddle through Lychnidos" className="h-36 w-36 object-contain md:h-44 md:w-44" />
-        <h1 className="mt-2 text-xl font-extrabold text-primary-900 md:text-2xl">
+      <div className="relative mx-auto flex w-full max-w-3xl shrink-0 flex-col items-center gap-1 pb-3 md:gap-2 md:pb-8">
+        <img src={logo} alt="Paddle through Lychnidos" className="h-16 w-16 object-contain sm:h-24 sm:w-24 md:h-44 md:w-44" />
+        <h1 className="mt-1 text-lg font-extrabold text-primary-900 md:mt-2 md:text-2xl">
           Why are you here?
         </h1>
       </div>
 
-      <div className="relative mx-auto grid w-full max-w-3xl flex-1 grid-cols-2 gap-4 content-start md:grid-cols-3">
+      <div className="relative mx-auto grid w-full max-w-3xl min-h-0 flex-1 grid-cols-2 gap-2.5 content-start overflow-y-auto md:grid-cols-3 md:gap-4">
         {FEATURE_CARDS.map((card) => {
           const Icon = card.icon;
           return (
             <div
               key={card.title}
-              className="flex flex-col items-center gap-3 rounded-2xl border border-white/60 bg-white/55 p-4 text-center shadow-lg shadow-primary-900/5 backdrop-blur-xl"
+              className="flex flex-col items-center gap-1.5 rounded-2xl border border-white/60 bg-white/55 p-2.5 text-center shadow-lg shadow-primary-900/5 backdrop-blur-xl md:gap-3 md:p-4"
             >
               <div
-                className={`flex h-14 w-14 items-center justify-center rounded-full ${accentClasses[card.accent]}`}
+                className={`flex h-9 w-9 items-center justify-center rounded-full sm:h-14 sm:w-14 ${accentClasses[card.accent]}`}
               >
-                <Icon size={26} />
+                <Icon size={18} className="sm:hidden" />
+                <Icon size={26} className="hidden sm:block" />
               </div>
-              <h2 className="text-sm font-bold text-text-primary">
+              <h2 className="text-xs font-bold text-text-primary sm:text-sm">
                 {card.title}
               </h2>
-              <p className="text-xs text-text-secondary">
+              <p className="hidden text-xs text-text-secondary sm:block">
                 {card.description}
               </p>
             </div>
@@ -91,7 +92,7 @@ export function OnboardingPage() {
         })}
       </div>
 
-      <div className="relative mx-auto mt-8 flex w-full max-w-3xl flex-col items-center gap-4">
+      <div className="relative mx-auto mt-3 flex w-full max-w-3xl shrink-0 flex-col items-center gap-4 md:mt-8">
         <Button onClick={() => navigate("/home")} className="w-full max-w-xs">
           Get Started
         </Button>

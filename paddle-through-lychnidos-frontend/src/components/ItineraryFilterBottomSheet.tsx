@@ -58,54 +58,56 @@ export function ItineraryFilterBottomSheet({
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-end justify-center bg-black/40 md:items-center">
-      <div className="flex max-h-[85vh] w-full flex-col overflow-y-auto rounded-t-3xl border border-white/70 bg-white/80 p-6 backdrop-blur-lg md:max-w-md md:rounded-3xl">
-        <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-border-default md:hidden" />
+      <div className="flex max-h-[85vh] w-full flex-col rounded-t-3xl border border-white/70 bg-white/80 backdrop-blur-lg md:max-w-md md:rounded-3xl">
+        <div className="flex-1 overflow-y-auto p-6 pb-2">
+          <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-border-default md:hidden" />
 
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-extrabold text-primary-900">Filters</h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close filters"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-text-secondary hover:bg-primary-100"
-          >
-            <X size={18} />
-          </button>
-        </div>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-extrabold text-primary-900">Filters</h2>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close filters"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-text-secondary hover:bg-primary-100"
+            >
+              <X size={18} />
+            </button>
+          </div>
 
-        <div className="mb-6">
-          <h3 className="mb-2 text-sm font-bold text-text-primary">Region</h3>
-          <div className="flex flex-wrap gap-2">
-            {regions.map((region) => (
-              <button
-                key={region.id}
-                type="button"
-                onClick={() => toggleRegion(region.id)}
-                className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${chipClasses(filters.regionId === region.id)}`}
-              >
-                {region.name.split(" - ")[0]}
-              </button>
-            ))}
+          <div className="mb-6">
+            <h3 className="mb-2 text-sm font-bold text-text-primary">Region</h3>
+            <div className="flex flex-wrap gap-2">
+              {regions.map((region) => (
+                <button
+                  key={region.id}
+                  type="button"
+                  onClick={() => toggleRegion(region.id)}
+                  className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${chipClasses(filters.regionId === region.id)}`}
+                >
+                  {region.name.split(" - ")[0]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-bold text-text-primary">Duration</h3>
+            <div className="flex flex-wrap gap-2">
+              {DURATION_OPTIONS.map((option) => (
+                <button
+                  key={option.label}
+                  type="button"
+                  onClick={() => toggleDuration(option.value)}
+                  className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${chipClasses(filters.durationBucket === option.value)}`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="mb-6">
-          <h3 className="mb-2 text-sm font-bold text-text-primary">Duration</h3>
-          <div className="flex flex-wrap gap-2">
-            {DURATION_OPTIONS.map((option) => (
-              <button
-                key={option.label}
-                type="button"
-                onClick={() => toggleDuration(option.value)}
-                className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${chipClasses(filters.durationBucket === option.value)}`}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-auto flex flex-col gap-3">
+        <div className="flex shrink-0 flex-col gap-3 border-t border-white/60 p-6 pt-4">
           <Button
             onClick={() => {
               onApply();

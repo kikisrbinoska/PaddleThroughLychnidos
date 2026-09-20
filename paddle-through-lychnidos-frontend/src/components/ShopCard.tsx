@@ -19,8 +19,8 @@ export interface ShopCardProps {
 }
 
 const variantClasses: Record<NonNullable<ShopCardProps["variant"]>, string> = {
-  default: "border-white/60 bg-white/55 backdrop-blur-xl shadow-primary-900/5",
-  gradient: "border-primary-200 bg-gradient-to-br from-primary-100 to-secondary-100",
+  default: "border-white/60 bg-white/55 backdrop-blur-xl shadow-primary-900/10",
+  gradient: "border-primary-200 bg-gradient-to-br from-primary-100 to-secondary-100 shadow-primary-900/10",
 };
 
 const titleSizeClasses: Record<NonNullable<ShopCardProps["titleSize"]>, string> = {
@@ -37,7 +37,7 @@ export function ShopCard({
   return (
     <Link
       to={`/shop/${shop.id}`}
-      className={`overflow-hidden rounded-2xl border shadow-sm ${variantClasses[variant]} ${className}`}
+      className={`overflow-hidden rounded-2xl border shadow-md transition-shadow duration-200 hover:shadow-lg ${variantClasses[variant]} ${className}`}
     >
       <div className="relative h-28 w-full">
         <CategoryImage shop={shop} className="h-full w-full" />

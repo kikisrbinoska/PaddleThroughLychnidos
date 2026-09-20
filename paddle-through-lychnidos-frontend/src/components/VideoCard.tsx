@@ -13,7 +13,7 @@ export function VideoCard({ video }: VideoCardProps) {
       // No backdrop-blur here - LearnPage renders this in an infinite
       // scroll grid that can grow well past the "long list" threshold, and
       // blur belongs on a section container, not every scrolling item.
-      className="overflow-hidden rounded-2xl border border-white/60 bg-white/85 shadow-sm"
+      className="overflow-hidden rounded-2xl border border-white/60 bg-white/85 shadow-md shadow-secondary-900/10 transition-shadow duration-200 hover:shadow-lg"
     >
       <div className="relative aspect-video w-full bg-primary-100">
         {video.thumbnailUrl && (

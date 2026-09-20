@@ -112,9 +112,10 @@ export function ShopsPage() {
       <div className="mt-4 px-6">
         <div className="group relative">
           <Search
-            size={16}
+            size={18}
+            strokeWidth={2.5}
             className={`pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-200 group-focus-within:text-secondary-900 ${
-              searchInput ? "text-secondary-900" : "text-text-secondary"
+              searchInput ? "text-secondary-900" : "text-primary-900/70"
             }`}
           />
           <input
@@ -122,7 +123,7 @@ export function ShopsPage() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search shops..."
-            className="w-full rounded-xl border border-white/60 bg-white/55 py-2.5 pl-9 pr-3 text-sm text-text-primary outline-none backdrop-blur-md focus:border-primary-500"
+            className="w-full rounded-xl border border-white/60 bg-white/55 py-2.5 pl-10 pr-3 text-sm text-text-primary outline-none backdrop-blur-md focus:border-primary-500"
           />
         </div>
       </div>

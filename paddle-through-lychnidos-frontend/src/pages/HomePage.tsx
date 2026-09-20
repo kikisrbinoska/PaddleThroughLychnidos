@@ -5,6 +5,7 @@ import { shopService } from "../services/shopService";
 import { regionService } from "../services/regionService";
 import { newsService } from "../services/newsService";
 import { useCart } from "../hooks/useCart";
+import { useAuth } from "../hooks/useAuth";
 import type { NewsItemListEntry, Region, ShopListItem } from "../types";
 import { HorizontalScrollRow } from "../components/HorizontalScrollRow";
 import { ShopCard } from "../components/ShopCard";
@@ -37,9 +38,29 @@ function SectionHeader({ title, seeAllTo }: SectionHeaderProps) {
   );
 }
 
+function ShopCardSkeleton() {
+  return (
+    <div className="w-40 flex-none animate-pulse overflow-hidden rounded-2xl border border-white/60 bg-white/55 md:w-full">
+      <div className="h-28 w-full bg-primary-100" />
+      <div className="flex flex-col gap-2 p-3">
+        <div className="h-4 w-3/4 rounded bg-primary-100" />
+        <div className="h-3 w-1/2 rounded bg-primary-100" />
+      </div>
+    </div>
+  );
+}
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
 export function HomePage() {
   const navigate = useNavigate();
   const { itemCount } = useCart();
+  const { user } = useAuth();
   const [featuredShops, setFeaturedShops] = useState<ShopListItem[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
   const [latestNews, setLatestNews] = useState<NewsItemListEntry[]>([]);
@@ -88,15 +109,22 @@ export function HomePage() {
 
       <header className="relative flex items-center justify-between px-6 pt-8">
         <div className="flex items-center gap-3">
-          <p className="text-sm font-semibold text-text-secondary">Welcome to</p>
-          <img src={logo} alt="Paddle through Lychnidos" className="h-20 w-20 object-contain" />
+          <img src={logo} alt="Paddle through Lychnidos" className="h-14 w-14 object-contain" />
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
+              {getGreeting()}
+            </p>
+            <p className="text-lg font-extrabold text-primary-900">
+              {user?.name ?? "Explorer"}
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => navigate("/cart")}
             aria-label="My list"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 backdrop-blur-md"
+            className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/60 bg-white/55 text-primary-900 shadow-sm shadow-primary-900/10 backdrop-blur-md transition-shadow hover:shadow-md"
           >
             <ShoppingBag size={18} />
             {itemCount > 0 && (
@@ -108,11 +136,30 @@ export function HomePage() {
         </div>
       </header>
 
+      <div className="relative mx-6 mt-6 overflow-hidden rounded-3xl border border-white/60 bg-gradient-to-br from-primary-900 to-secondary-900 px-6 py-6 shadow-lg shadow-primary-900/20">
+        <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+          Lake Ohrid awaits
+        </p>
+        <p className="mt-1 max-w-xs text-lg font-extrabold text-white">
+          Discover artisan shops, routes and stories from Lychnidos
+        </p>
+        <Link
+          to="/shops"
+          className="mt-4 inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-primary-900 shadow-sm"
+        >
+          Start exploring
+        </Link>
+      </div>
+
       <div className="relative mt-8 flex flex-col gap-8 px-6">
         <section>
           <SectionHeader title="Artisan Shops" seeAllTo="/shops" />
           {isLoading ? (
-            <p className="text-sm text-text-secondary">Loading...</p>
+            <div className="flex gap-3 overflow-hidden">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <ShopCardSkeleton key={index} />
+              ))}
+            </div>
           ) : featuredShops.length === 0 ? (
             <p className="text-sm text-text-secondary">No shops yet.</p>
           ) : (
@@ -127,7 +174,14 @@ export function HomePage() {
         <section>
           <SectionHeader title="Explore by Region" />
           {isLoading ? (
-            <p className="text-sm text-text-secondary">Loading...</p>
+            <div className="flex gap-3 overflow-hidden">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-24 w-24 flex-none animate-pulse rounded-2xl bg-primary-100"
+                />
+              ))}
+            </div>
           ) : (
             <HorizontalScrollRow className="md:grid-cols-4 lg:grid-cols-6">
               {regions.map((region, index) => (
@@ -146,7 +200,14 @@ export function HomePage() {
         <section>
           <SectionHeader title="Latest from the Magazine" seeAllTo="/magazine" />
           {isNewsLoading ? (
-            <p className="text-sm text-text-secondary">Loading...</p>
+            <div className="flex gap-3 overflow-hidden">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-32 w-48 flex-none animate-pulse rounded-2xl bg-primary-100"
+                />
+              ))}
+            </div>
           ) : latestNews.length === 0 ? (
             <p className="text-sm text-text-secondary">No news yet.</p>
           ) : (

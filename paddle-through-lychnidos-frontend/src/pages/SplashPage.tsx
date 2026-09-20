@@ -23,8 +23,8 @@ export function SplashPage() {
   });
 
   return (
-    <div className="relative flex min-h-svh flex-col overflow-hidden">
-      <div className="h-[50vh] w-full">
+    <div className="relative flex h-svh flex-col overflow-hidden">
+      <div className="h-[34vh] w-full shrink-0 sm:h-[42vh] md:h-[50vh]">
         <ImageCarousel images={SPLASH_IMAGES} />
       </div>
 
@@ -33,29 +33,29 @@ export function SplashPage() {
 
       <div
         {...swipeHandlers}
-        className="relative flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center md:gap-4"
+        className="relative flex min-h-0 flex-1 flex-col items-center justify-center gap-2 px-6 py-2 text-center md:gap-4"
       >
-        <Wordmark className="text-4xl md:text-5xl" />
-        <p className="text-sm text-text-secondary md:text-base">
+        <Wordmark className="text-3xl md:text-5xl" />
+        <p className="text-xs text-text-secondary md:text-base">
           Let your adventure begin
         </p>
 
-        <GlassCard className="mt-2 max-w-sm">
+        <GlassCard className="mt-1 max-w-sm py-3 md:mt-2 md:py-4">
           <Quote
-            size={18}
+            size={16}
             className="mx-auto mb-1 text-primary-700"
             fill="currentColor"
           />
-          <p className="font-serif text-base italic text-text-primary md:text-lg">
+          <p className="font-serif text-sm italic text-text-primary md:text-lg">
             "Upon the road of autumn's forest, sleeps the endless lake"
           </p>
-          <p className="mt-2 text-xs text-text-secondary">
+          <p className="mt-1 text-xs text-text-secondary md:mt-2">
             — Lasgush Poradeci
           </p>
         </GlassCard>
 
-        <div className="mt-4 flex flex-col items-center gap-1 md:hidden">
-          <ChevronUp size={20} className="animate-bounce text-primary-700" />
+        <div className="mt-2 flex flex-col items-center gap-0.5 md:hidden">
+          <ChevronUp size={18} className="animate-bounce text-primary-700" />
           <p className="text-xs text-text-secondary">Swipe to continue</p>
         </div>
 

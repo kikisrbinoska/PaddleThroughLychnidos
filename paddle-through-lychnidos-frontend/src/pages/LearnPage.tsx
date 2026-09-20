@@ -105,10 +105,10 @@ export function LearnPage() {
                 role="tab"
                 aria-selected={isSelected}
                 onClick={() => setCategory(tab.value)}
-                className={`rounded-xl border px-4 py-3 text-sm font-semibold transition-colors ${
+                className={`rounded-xl border px-4 py-3 text-sm font-semibold shadow-sm transition-colors ${
                   isSelected
-                    ? "border-primary-900 bg-primary-900 text-white"
-                    : "border-white/60 bg-white/55 text-text-primary backdrop-blur-md hover:border-primary-500"
+                    ? "border-secondary-900 bg-secondary-900 text-white shadow-secondary-900/20"
+                    : "border-white/60 bg-white/55 text-text-primary backdrop-blur-md hover:border-secondary-500"
                 }`}
               >
                 {tab.label}

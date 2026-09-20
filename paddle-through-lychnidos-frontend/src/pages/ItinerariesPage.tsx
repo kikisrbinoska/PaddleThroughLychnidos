@@ -95,33 +95,32 @@ function ShopEntryRow({
   if (!entry.shop) return null;
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-white/60 bg-white/55 p-3 backdrop-blur-md">
-      <Link
-        to={`/shop/${entry.shop.id}`}
-        className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100"
-      >
-        {entry.shop.imageUrl && (
-          <img
-            src={entry.shop.imageUrl}
-            alt={entry.shop.name}
-            className="h-full w-full object-cover"
-          />
-        )}
-      </Link>
-      <Link to={`/shop/${entry.shop.id}`} className="min-w-0 flex-1">
-        <p className="truncate text-sm font-bold text-text-primary">
-          {entry.shop.name}
-        </p>
-        <p className="text-xs text-text-secondary">Shop</p>
+    <div className="group relative overflow-hidden rounded-2xl border border-white/60 bg-white/55 shadow-md shadow-primary-900/10 backdrop-blur-xl transition-shadow duration-200 hover:shadow-lg">
+      <Link to={`/shop/${entry.shop.id}`} className="block">
+        <div className="h-28 w-full bg-primary-100">
+          {entry.shop.imageUrl && (
+            <img
+              src={entry.shop.imageUrl}
+              alt={entry.shop.name}
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
+        <div className="flex flex-col gap-1 p-3">
+          <p className="truncate text-sm font-bold text-text-primary">
+            {entry.shop.name}
+          </p>
+          <p className="text-xs text-text-secondary">Shop</p>
+        </div>
       </Link>
       <button
         type="button"
         onClick={onRemove}
         disabled={isRemoving}
         aria-label={`Remove ${entry.shop.name} from travel plan`}
-        className="flex h-9 w-9 flex-none items-center justify-center rounded-full text-nosija-red-700 hover:bg-nosija-red-100 disabled:opacity-50"
+        className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-nosija-red-700 backdrop-blur-md hover:bg-nosija-red-100 disabled:opacity-50"
       >
-        <Trash2 size={16} />
+        <Trash2 size={14} />
       </button>
     </div>
   );
@@ -139,32 +138,31 @@ function ItineraryEntryRow({
   if (!entry.itinerary) return null;
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-white/60 bg-white/55 p-3 backdrop-blur-md">
-      <Link
-        to={`/itineraries/${entry.itinerary.id}`}
-        className="h-14 w-14 flex-none overflow-hidden rounded-xl bg-primary-100"
-      >
-        {entry.itinerary.coverImageUrl && (
-          <img
-            src={entry.itinerary.coverImageUrl}
-            alt={entry.itinerary.title}
-            className="h-full w-full object-cover"
-          />
-        )}
-      </Link>
-      <Link to={`/itineraries/${entry.itinerary.id}`} className="min-w-0 flex-1">
-        <p className="truncate text-sm font-bold text-text-primary">
-          {entry.itinerary.title}
-        </p>
-        <div className="mt-0.5 flex items-center gap-2 text-[11px] text-text-secondary">
-          <span className="flex items-center gap-1">
-            <Clock size={11} />
-            {entry.itinerary.durationHours}h
-          </span>
-          <span className="flex items-center gap-1">
-            <MapPin size={11} />
-            {entry.itinerary.stopCount} stops
-          </span>
+    <div className="group relative overflow-hidden rounded-2xl border border-white/60 bg-white/55 shadow-md shadow-primary-900/10 backdrop-blur-xl transition-shadow duration-200 hover:shadow-lg">
+      <Link to={`/itineraries/${entry.itinerary.id}`} className="block">
+        <div className="h-28 w-full bg-primary-100">
+          {entry.itinerary.coverImageUrl && (
+            <img
+              src={entry.itinerary.coverImageUrl}
+              alt={entry.itinerary.title}
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
+        <div className="flex flex-col gap-1 p-3">
+          <p className="truncate text-sm font-bold text-text-primary">
+            {entry.itinerary.title}
+          </p>
+          <div className="mt-0.5 flex items-center gap-2 text-[11px] text-text-secondary">
+            <span className="flex items-center gap-1">
+              <Clock size={11} />
+              {entry.itinerary.durationHours}h
+            </span>
+            <span className="flex items-center gap-1">
+              <MapPin size={11} />
+              {entry.itinerary.stopCount} stops
+            </span>
+          </div>
         </div>
       </Link>
       <button
@@ -172,9 +170,9 @@ function ItineraryEntryRow({
         onClick={onRemove}
         disabled={isRemoving}
         aria-label={`Remove ${entry.itinerary.title} from travel plan`}
-        className="flex h-9 w-9 flex-none items-center justify-center rounded-full text-nosija-red-700 hover:bg-nosija-red-100 disabled:opacity-50"
+        className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-nosija-red-700 backdrop-blur-md hover:bg-nosija-red-100 disabled:opacity-50"
       >
-        <Trash2 size={16} />
+        <Trash2 size={14} />
       </button>
     </div>
   );
@@ -196,7 +194,7 @@ function DayPlanCard({
   });
 
   return (
-    <div className="rounded-2xl border border-white/60 bg-white/55 p-3.5 backdrop-blur-md">
+    <div className="rounded-2xl border border-white/60 bg-white/55 p-3.5 shadow-md shadow-primary-900/10 backdrop-blur-md">
       <div className="flex items-start justify-between gap-2">
         <div>
           <p className="text-sm font-bold text-text-primary">{plan.title}</p>
@@ -561,7 +559,7 @@ function MyPlanView() {
                 </Link>
               </div>
             ) : (
-              <div className="flex flex-col gap-2.5">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {shopEntries.map((entry) => (
                   <ShopEntryRow
                     key={entry.id}
@@ -589,7 +587,7 @@ function MyPlanView() {
                 </Link>
               </div>
             ) : (
-              <div className="flex flex-col gap-2.5">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {itineraryEntries.map((entry) => (
                   <ItineraryEntryRow
                     key={entry.id}
