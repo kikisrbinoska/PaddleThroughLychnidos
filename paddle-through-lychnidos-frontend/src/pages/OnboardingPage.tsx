@@ -61,30 +61,30 @@ export function OnboardingPage() {
       <BackgroundBlob position="bottom-16 -left-16" size="h-56 w-56" tint="secondary" />
 
       <div className="relative mx-auto flex w-full max-w-3xl shrink-0 flex-col items-center gap-1 pb-3 md:gap-2 md:pb-8">
-        <img src={logo} alt="Paddle through Lychnidos" className="h-16 w-16 object-contain sm:h-24 sm:w-24 md:h-44 md:w-44" />
+        <img src={logo} alt="Paddle through Lychnidos" className="h-20 w-20 object-contain sm:h-28 sm:w-28 md:h-44 md:w-44" />
         <h1 className="mt-1 text-lg font-extrabold text-primary-900 md:mt-2 md:text-2xl">
           Why are you here?
         </h1>
       </div>
 
-      <div className="relative mx-auto grid w-full max-w-3xl min-h-0 flex-1 grid-cols-2 gap-2.5 content-start overflow-y-auto md:grid-cols-3 md:gap-4">
+      <div className="relative mx-auto grid w-full max-w-3xl min-h-0 flex-1 grid-cols-2 gap-3 content-start overflow-y-auto md:grid-cols-3 md:gap-4">
         {FEATURE_CARDS.map((card) => {
           const Icon = card.icon;
           return (
             <div
               key={card.title}
-              className="flex flex-col items-center gap-1.5 rounded-2xl border border-white/60 bg-white/55 p-2.5 text-center shadow-lg shadow-primary-900/5 backdrop-blur-xl md:gap-3 md:p-4"
+              className="flex flex-col items-center gap-2 rounded-2xl border border-white/60 bg-white/55 p-3.5 text-center shadow-lg shadow-primary-900/5 backdrop-blur-xl md:gap-3 md:p-4"
             >
               <div
-                className={`flex h-9 w-9 items-center justify-center rounded-full sm:h-14 sm:w-14 ${accentClasses[card.accent]}`}
+                className={`flex h-12 w-12 items-center justify-center rounded-full sm:h-14 sm:w-14 ${accentClasses[card.accent]}`}
               >
-                <Icon size={18} className="sm:hidden" />
+                <Icon size={22} className="sm:hidden" />
                 <Icon size={26} className="hidden sm:block" />
               </div>
-              <h2 className="text-xs font-bold text-text-primary sm:text-sm">
+              <h2 className="text-sm font-bold text-text-primary">
                 {card.title}
               </h2>
-              <p className="hidden text-xs text-text-secondary sm:block">
+              <p className="text-xs text-text-secondary">
                 {card.description}
               </p>
             </div>

@@ -111,7 +111,10 @@ export function FilterBottomSheet({
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-col gap-3 border-t border-white/60 p-6 pt-4">
+        <div
+          className="flex shrink-0 flex-col gap-3 border-t border-white/60 bg-white/90 p-6 pt-4"
+          style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        >
           <Button
             onClick={() => {
               onApply();
@@ -121,15 +124,14 @@ export function FilterBottomSheet({
           >
             Apply Filters
           </Button>
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={clearAll}
-              className="text-center text-sm font-semibold text-text-secondary"
-            >
-              Clear all filters
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={clearAll}
+            disabled={!hasActiveFilters}
+            className="text-center text-sm font-semibold text-primary-800 underline underline-offset-2 disabled:text-text-secondary disabled:no-underline disabled:opacity-50"
+          >
+            Clear all filters
+          </button>
         </div>
       </div>
     </div>

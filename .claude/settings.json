@@ -59,7 +59,16 @@
       "Bash(mkdir -p public/category-backgrounds public/news-placeholders public/itineraries)",
       "Bash(cp src/assets/category-backgrounds/*.jpg public/category-backgrounds/)",
       "Bash(cp src/assets/news-placeholders/*.jpg public/news-placeholders/)",
-      "Bash(cp src/assets/itineraries/*.jpg public/itineraries/)"
+      "Bash(cp src/assets/itineraries/*.jpg public/itineraries/)",
+      "Bash(curl -s \"http://16.16.24.158/api/shops/9/products\")",
+      "Bash(curl -s \"http://16.16.24.158/api/products/search?query=pearl\")",
+      "Bash(curl -s \"http://16.16.24.158/api/shops/9\")",
+      "Bash(curl -s \"http://16.16.24.158/api/products?shopId=9\")",
+      "Bash(curl -s \"http://16.16.24.158/api/products/marketplace?search=pearl\")",
+      "Bash(curl -s \"http://16.16.24.158/api/products?shopId=13\")",
+      "Bash(curl -s \"http://16.16.24.158/api/products?shopId=27\")",
+      "Bash(curl -s \"https://api.github.com/repos/kikisrbinoska/PaddleThroughLychnidos/actions/runs?branch=main&per_page=3\")",
+      "Bash(curl -s \"http://16.16.24.158/api/itineraries/1\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\krist\\OneDrive\\Desktop\\PaddleThroughLychnidos\\paddle-through-lychnidos-frontend\\src\\assets"

@@ -107,7 +107,10 @@ export function ItineraryFilterBottomSheet({
           </div>
         </div>
 
-        <div className="flex shrink-0 flex-col gap-3 border-t border-white/60 p-6 pt-4">
+        <div
+          className="flex shrink-0 flex-col gap-3 border-t border-white/60 bg-white/90 p-6 pt-4"
+          style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}
+        >
           <Button
             onClick={() => {
               onApply();
@@ -120,7 +123,7 @@ export function ItineraryFilterBottomSheet({
           <button
             type="button"
             onClick={clearAll}
-            className="text-center text-sm font-semibold text-text-secondary"
+            className="text-center text-sm font-semibold text-primary-800 underline underline-offset-2"
           >
             Clear all
           </button>
