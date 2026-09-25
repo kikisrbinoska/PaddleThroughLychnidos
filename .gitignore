@@ -10,7 +10,7 @@ obj/
 # Rider / VS Code
 .idea/
 .vscode/
-".claude/"
+.claude/
 
 # Docker Compose secrets
 .env
