@@ -18,7 +18,6 @@ learning hub of craft-related video and news content.
 8. [Running with Docker](#running-with-docker)
 9. [Database Migrations](#database-migrations)
 10. [Deployment](#deployment)
-11. [License](#license)
 
 ## Overview
 
